@@ -1,0 +1,7 @@
+{
+  "in-stock": "入库管理",
+  "semi-in-stock": "半成品入库",
+  "production-reporting": "成品产量上报",
+  "production-confirm": "仓库成品产量确认",
+  "production-qc": "成品质检"
+}

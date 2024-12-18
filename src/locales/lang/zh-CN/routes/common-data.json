@@ -1,0 +1,18 @@
+{
+  "common-data": "基础数据",
+  "emp-post": "员工岗位维护",
+  "factory-product-line": "工厂产线维护",
+  "factory-warehouse": "工厂库存地点维护",
+  "material-craft": "物料工艺维护",
+  "major-category": "设备大类维护",
+  "product-device": "生产设备维护",
+  "material-pack-spec": "物料包装规格维护",
+  "rework-major-category": "分摊配置表",
+  "customer": "客户主数据",
+  "broad-heading": "大类属性维护",
+  "material-broad-heading": "物料类别维护",
+  "file-manage": "标准文件管理",
+  "supplier-address": "客户地址主数据",
+  "material-replace": "可替代料配置表",
+  "goal-standard": "达产标准"
+}

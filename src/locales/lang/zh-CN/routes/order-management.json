@@ -1,0 +1,8 @@
+{
+  "order-management": "订单管理",
+  "prod-plan-order": "生产计划",
+  "prod-order": "创建生产订单",
+  "rework-order": "创建返工订单",
+  "prod-blend": "生产订单配料",
+  "close-order": "关闭订单"
+}

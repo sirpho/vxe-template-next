@@ -1,0 +1,10 @@
+{
+  "order-settlement": "订单结算",
+  "device-proportion": "机器分摊确认",
+  "emp-proportion": "员工排班分摊确认",
+  "energy-reporting": "车间能源消耗上报",
+  "energy-allocation": "能源消耗分摊确认",
+  "balance-report": "车间消耗上报",
+  "allocation-confirmation": "原料消耗分摊确认",
+  "consumption-posting": "订单原料消耗过账"
+}

@@ -1,0 +1,9 @@
+{
+  "material-option": "材料领用",
+  "reissue-apply": "车间领料申请",
+  "issue-confirm": "仓库发料确认",
+  "return-material-apply": "车间退料申请",
+  "return-material-confirm": "仓库退料确认",
+  "issue-print": "领料单打印",
+  "return-material-print": "退料单打印"
+}

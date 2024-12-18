@@ -1,0 +1,13 @@
+{
+  "report": "报表",
+  "device-proportion": "能耗节超报表",
+  "membrane-excess-report": "膜节超报表",
+  "stuff-excess-report": "原材料节超报表",
+  "product-yield-report": "成品得率报表",
+  "stock-query": "库存查询报表",
+  "delivery-day-report": "出入库汇总",
+  "out-purchase-report": "外协加工订单查询",
+  "out-supplier-report": "外协供应商发货查询",
+  "in-stock-query": "入库明细报表",
+  "goal-standard-report": "达产率报表"
+}

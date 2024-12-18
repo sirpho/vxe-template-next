@@ -1,0 +1,17 @@
+@import "./variable";
+@import 'vxe-table/styles/index';
+
+.vxe-toolbar {
+  height: unset;
+  padding: 5.5px 10px;
+}
+
+.vxe-table--render-default.size--mini .vxe-table--empty-placeholder,
+.vxe-table--render-default.size--mini .vxe-table--empty-block {
+  min-height: 30px;
+}
+
+.vxe-table--render-default.border--inner .vxe-table--header-wrapper,
+.vxe-table--render-default.border--none .vxe-table--header-wrapper {
+  background-color: $vxe-table-header-background-color;
+}
