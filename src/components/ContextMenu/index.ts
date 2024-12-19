@@ -6,7 +6,6 @@ export { createContextMenu, destroyContextMenu } from './src/createContextMenu';
 
 export * from './src/typing';
 
-
 // 示例
 // <a-button type="primary" @contextmenu="handleMultipleContext"> Right Click on me </a-button>
 // import { useContextMenu } from '@/hooks/web/useContextMenu';

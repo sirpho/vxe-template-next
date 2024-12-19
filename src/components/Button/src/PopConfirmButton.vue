@@ -20,8 +20,8 @@
   export default defineComponent({
     name: 'PopButton',
     inheritAttrs: false,
-    emits: ['confirm', 'cancel', 'visibleChange'],
     props,
+    emits: ['confirm', 'cancel', 'visibleChange'],
     setup(props, { slots }) {
       const { t } = useI18n();
       const attrs = useAttrs();

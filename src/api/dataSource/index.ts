@@ -1,65 +1,78 @@
 import { defHttp } from '@/utils/http/axios';
-import { AreaVO } from './typing';
+import { arrayFieldRepeat, isObject } from '@sirpho/utils';
 
 enum Api {
-  mtrlType = '/common/datasource/getMtrlType',
-  area = '/common/datasource/getAuthorityArea',
-  base = '/common/datasource/getAuthorityBase',
-  company = '/common/datasource/getAuthorityCompany',
-  factory = '/common/datasource/getAuthorityFactory',
-  factory3nd = '/common/datasource/getAuthorityBaseFactory',
+  TAG = '/api/tag/utensil/list',
+  COMMON = '/api/enum/query/',
 }
 
 /**
- * @description: 获取登录用户的权限片区下拉源
+ * @description: 过期监控标签
  */
-export const getAuthorityArea = (data = {}): Promise<Result<AreaVO[]>> => {
-  return defHttp.post({ url: Api.area, data });
+export const getTagList = (): Promise<Result<any[]>> => {
+  return defHttp.get({ url: Api.TAG });
 };
 
 /**
- * @description: 获取所有基地
+ * @description: 通用枚举
  */
-export const getAllBase = (data = {}): Promise<Result<AreaVO[]>> => {
-  return defHttp.post({ url: Api.base, data });
+export const getCommonList = (params: { module: string }): Promise<Result<any[]>> => {
+  return defHttp.get({ url: `${Api.COMMON}${params.module}` });
 };
 
-/**
- * @description: 获取所有公司
- */
-export const getAllCompany = (data = {}): Promise<Result<AreaVO[]>> => {
-  return defHttp.post({ url: Api.company, data });
-};
-
-/**
- * @description: 获取所有工厂
- */
-export const getAllFactory = (data = {}): Promise<Result<AreaVO[]>> => {
-  return defHttp.post({ url: Api.factory, data });
-};
-
-/**
- * @description 获取物料类型下拉
- * @param data
- * @returns @
- */
-export const getMtrlType = (data = {}): Promise<Result<any>> => {
-  return defHttp.post({ url: Api.mtrlType, data });
-};
-
-/**
- * @description 获取基地下的权限工厂
- * @param data
- * @returns @
- */
-export const getAuthorityBaseFactory = (data = {}): Promise<Result<any>> => {
-  return defHttp.post({ url: Api.factory3nd, data });
-};
-
-export const dataSource = {
-  MTRL_TYPE: getMtrlType,
-  AREA: getAuthorityArea,
-  BASE: getAllBase,
-  COMPANY: getAllCompany,
-  FACTORY: getAllFactory,
-};
+export function getDictOptions(dictCode) {
+  return new Promise((resolve, reject) => {
+    let operation;
+    let valueKey = '';
+    let nameKey = '';
+    let mixLabel = true;
+    // 排除重复项
+    let excludeDuplicates = false;
+    const params: {
+      [key: string]: any;
+    } = {
+      limit: undefined,
+    };
+    switch (dictCode) {
+      case 'TAG': // 标签
+        operation = getTagList;
+        nameKey = 'name';
+        valueKey = 'id';
+        excludeDuplicates = true;
+        mixLabel = false;
+        break;
+      default: // 通用枚举
+        operation = getCommonList;
+        nameKey = 'name';
+        valueKey = 'value';
+        params.module = dictCode;
+        excludeDuplicates = true;
+        mixLabel = false;
+        break;
+    }
+    if (!operation) {
+      resolve([]);
+    }
+    operation(params)
+      .then((res) => {
+        let result = res.data || res.page || [];
+        result = result?.list || result;
+        const isObj = result.find((item) => isObject(item));
+        if (isObj) {
+          result = result.map((item) => ({
+            ...item,
+            label: mixLabel ? `${item[valueKey]}-${item[nameKey]}` : item[nameKey],
+            value: item[valueKey] || undefined,
+            name: item[nameKey] || undefined,
+          }));
+          if (excludeDuplicates) {
+            result = arrayFieldRepeat(result);
+          }
+        }
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}

@@ -47,7 +47,12 @@ function renderContent({ content }: Pick<ModalOptionsEx, 'content'>) {
 /**
  * @description: Create confirmation box
  */
-function createConfirm(options: { iconType: string; title: () => any; content: () => any; onOk: () => Promise<void> }) {
+function createConfirm(options: {
+  iconType: string;
+  title: () => any;
+  content: () => any;
+  onOk: () => Promise<void>;
+}) {
   const iconType = options.iconType || 'warning';
   Reflect.deleteProperty(options, 'iconType');
   const opt: ModalFuncProps = {

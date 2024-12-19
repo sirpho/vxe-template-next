@@ -1,18 +1,25 @@
 import { ref, computed, toRaw, watch } from 'vue';
 import { globalConfig } from '@/features/config';
-import { cloneDeep, isUndefined, isEmpty } from 'lodash-es';
+import { cloneDeep, isUndefined, isEmpty, isEqual } from 'lodash-es';
 import { message, SelectProps } from 'ant-design-vue';
 import { VxeColumnPropTypes } from 'vxe-table';
 import to from 'await-to-js';
-import { isEqual } from 'lodash-es';
 
-export const SelectCommonContext = function ({ props, emit, xTable, pullDownRef = {} as any, isModal = false }) {
+export const SelectCommonContext = function ({
+  props,
+  emit,
+  xTable,
+  pullDownRef = {} as any,
+  isModal = false,
+}) {
   // 单选选中的行数据
   const rowData = ref<Record<string, any>>({});
   //多行选中的数据
   const rowDataList = ref<Record<string, any>[]>([]); //
   //选择框模式下inputText的行为
-  const textChangeType = computed(() => (props.action ? props.action : props.autoFill ? 'autoFill' : 'clear'));
+  const textChangeType = computed(() =>
+    props.action ? props.action : props.autoFill ? 'autoFill' : 'clear',
+  );
   //记录数据展示table的数据源
   const gridData = ref<Record<string, any>[]>([]); // 下拉表数据
   //记录过滤的数据，未来可能弃用
@@ -37,7 +44,11 @@ export const SelectCommonContext = function ({ props, emit, xTable, pullDownRef 
     const { transformInputText } = props;
     const text = transformInputText(e);
     const textType = Object.prototype.toString.call(text);
-    if (textType !== '[object String]' && textType !== '[object Number]' && textType !== '[object Undefined]') {
+    if (
+      textType !== '[object String]' &&
+      textType !== '[object Number]' &&
+      textType !== '[object Undefined]'
+    ) {
       console.error('transformInputText方法返回值应为String/Number/Undefined');
       return e[label];
     }
@@ -215,13 +226,20 @@ export const SelectCommonContext = function ({ props, emit, xTable, pullDownRef 
     // 设置初始值
     if (mode === 'multiple' && Array.isArray(value)) {
       const _rowDataList = (Array.isArray(value) ? value : []).map(
-        (item) => gridData.value.find((itm) => itm[oValue] === item) || { [`${oLabel}`]: item, [`${oValue}`]: item },
+        (item) =>
+          gridData.value.find((itm) => itm[oValue] === item) || {
+            [`${oLabel}`]: item,
+            [`${oValue}`]: item,
+          },
       );
       rowDataList.value = cloneDeep(_rowDataList);
     }
     if (mode !== 'multiple') {
       inputValue.value = value;
-      const record = gridData.value.find((item) => item[oValue] == value) || { [`${oLabel}`]: value, [`${oValue}`]: value };
+      const record = gridData.value.find((item) => item[oValue] == value) || {
+        [`${oLabel}`]: value,
+        [`${oValue}`]: value,
+      };
       rowData.value = { ...record };
     }
   };
@@ -299,7 +317,10 @@ export const SelectCommonContext = function ({ props, emit, xTable, pullDownRef 
             },
           ],
         }));
-        columns.value = props.mode === 'multiple' ? [{ type: 'checkbox', width: 40, fixed: 'left' }, , ...newColumns] : newColumns;
+        columns.value =
+          props.mode === 'multiple'
+            ? [{ type: 'checkbox', width: 40, fixed: 'left' }, ...newColumns]
+            : newColumns;
         _columns.forEach((item) => {
           if (item.field) {
             filter.value = { ...filter.value, [item.field]: null };

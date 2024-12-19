@@ -74,7 +74,14 @@ export const useAsyncTaskStore = defineStore({
       this.visible = true;
       this.loading = true;
       const { pageSize, current } = this.pagination;
-      const [err, resp] = await to(list({ ...this.pagination, asyncType: this.asyncType, pageSize: pageSize, pageNumber: current }));
+      const [err, resp] = await to(
+        list({
+          ...this.pagination,
+          asyncType: this.asyncType,
+          pageSize: pageSize,
+          pageNumber: current,
+        }),
+      );
       this.loading = false;
       if (err) return;
       const { data } = resp;

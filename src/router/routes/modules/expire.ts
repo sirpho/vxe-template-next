@@ -8,30 +8,31 @@ import { t } from '@/hooks/web/useI18n';
 
 const route: AppRouteModule = {
   /**
-   * 基础数据
+   * 监测模块
    */
-  path: '/common-data',
-  name: 'common-data',
+  path: '/expire',
+  name: 'expire',
   component: LAYOUT,
-  redirect: '/common-data/enum',
+  redirect: '/expire/monitor',
   meta: {
-    icon: 'ic:baseline-batch-prediction',
-    title: t('routes.common-data.common-data'),
-    orderNo: 20,
+    icon: 'material-symbols:monitor-heart-outline-rounded',
+    title: t('routes.expire.monitor'),
+    orderNo: 1,
     // roles: [Attrs.HAS_20223268],
   },
   children: [
     /**
-     * 枚举字段管理
+     * 过期监测
      */
     {
-      path: 'enum',
-      name: 'Enum',
-      component: () => import('/@/views/common-data/enum/index.vue'),
+      path: 'monitor',
+      name: 'monitor',
+      // @ts-ignore
+      component: () => import('/@/views/expire/monitor/index.tsx'),
       meta: {
         // roles: [Attrs.HAS_20223278],
-        icon: 'codicon:symbol-enum',
-        title: t('routes.common-data.enum'),
+        icon: 'icon-park-outline:medicine-bottle',
+        title: t('routes.expire.monitor'),
       },
     },
   ],

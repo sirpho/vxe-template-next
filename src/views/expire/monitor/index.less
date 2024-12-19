@@ -1,0 +1,120 @@
+.monitor-page {
+  @media screen and (max-width: 800px) {
+    .toolbar {
+      flex-direction: column;
+
+      .search-select-wrapper {
+        flex-basis: unset;
+        width: 100%;
+
+        .search-select {
+          flex: 1;
+        }
+      }
+
+      .search-input {
+        flex-basis: unset;
+      }
+    }
+
+    .buoy {
+      position: fixed;
+      z-index: 5;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 48px;
+    }
+  }
+
+  .page-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 12px 12px 0;
+    gap: 12px;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .search-select-wrapper {
+      display: flex;
+      flex-basis: 412px;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-select {
+      flex-basis: 200px;
+      flex-shrink: 0;
+      width: 100%;
+    }
+
+    .search-input {
+      flex-basis: 250px;
+      flex-shrink: 0;
+      width: 100%;
+    }
+  }
+
+  .card-table-wrapper {
+    flex: 1;
+    overflow: hidden;
+
+    .card-table-wrapper-content {
+      height: 100%;
+      padding-right: 16px;
+      overflow: auto;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 1em;
+        background-color: rgb(50 50 50 / 30%);
+      }
+
+      &::-webkit-scrollbar-track {
+        border-radius: 1em;
+        background-color: rgb(50 50 50 / 10%);
+      }
+    }
+  }
+
+  .description-content {
+    .description-content-title {
+      color: #2b2b2b;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .description-content-text {
+      text-align: center;
+    }
+
+    .memo-wrapper {
+      margin-top: 12px;
+      color: #565656;
+    }
+
+    .line {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 20px;
+      color: #2b2b2b;
+      font-weight: bold;
+      gap: 2px;
+    }
+  }
+
+  .warning {
+    color: var(--ant-error-color);
+    font-weight: bold;
+  }
+}

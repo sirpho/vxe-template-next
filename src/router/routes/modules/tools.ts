@@ -15,9 +15,9 @@ const route: AppRouteModule = {
   component: LAYOUT,
   redirect: '/tools/obs',
   meta: {
-    icon: 'material-symbols:home-and-garden-outline',
+    icon: 'mynaui:tool',
     title: t('routes.tools.tools'),
-    orderNo: 1,
+    orderNo: 10,
     // roles: [Attrs.HAS_20223268],
   },
   children: [
@@ -31,6 +31,7 @@ const route: AppRouteModule = {
       component: () => import('/@/views/tools/desktop/index.tsx'),
       meta: {
         // roles: [Attrs.HAS_20223278],
+        icon: 'ph:desktop-duotone',
         title: t('routes.tools.desktop'),
       },
     },
@@ -45,6 +46,7 @@ const route: AppRouteModule = {
       component: () => import('/@/views/tools/dns/index.tsx'),
       meta: {
         // roles: [Attrs.HAS_20223278],
+        icon: 'eos-icons:dns',
         title: t('routes.tools.dns'),
       },
     },
@@ -59,6 +61,7 @@ const route: AppRouteModule = {
       component: () => import('/@/views/tools/obs/index.tsx'),
       meta: {
         // roles: [Attrs.HAS_20223278],
+        icon: 'line-md:cloud-up',
         title: t('routes.tools.obs'),
       },
     },

@@ -1,6 +1,6 @@
 import VXETable from 'vxe-table';
 import { isNil } from 'lodash-es';
-import FilterExtend from "./FilterExtend.vue";
+import FilterExtend from './FilterExtend.vue';
 
 // 创建一个复杂的筛选器
 VXETable.renderer.add('FilterExtend', {

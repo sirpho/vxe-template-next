@@ -12,9 +12,9 @@
     </Badge>
     <template #content>
       <div v-if="asyncTaskStore.mode === 'list'">
-        <Radio-group :value="asyncTaskStore.getAsyncType" size="small" @change="radioChange">
+        <RadioGroup :value="asyncTaskStore.getAsyncType" size="small" @change="radioChange">
           <RadioButton v-for="item in TASK_TYPE" :key="item" :value="item">{{ item }}</RadioButton>
-        </Radio-group>
+        </RadioGroup>
       </div>
 
       <List
@@ -30,7 +30,7 @@
                 <template #message>
                   <div class="flex">
                     <TypographyParagraph
-                      style="margin-bottom: 0; flex: 1; width: 100%"
+                      style=" flex: 1; width: 100%;margin-bottom: 0"
                       :ellipsis="{ rows: 1, tooltip: `${item.taskStatus}：${item.errMsg}` }"
                       :content="
                         !item.errMsg ? item.taskStatus : `${item.taskStatus}：${item.errMsg}`
@@ -54,7 +54,7 @@
                   {{ item.taskStatus }}
                 </template>
               </Alert>
-              <Row style="margin: 0.5em 0 0.25em 0">
+              <Row style="margin: 0.5em 0 0.25em">
                 <Col :span="16">
                   <Tooltip :title="item.fileName">
                     <TypographyText strong>{{ handleFileName(item.fileName) }}</TypographyText>
@@ -113,7 +113,7 @@
     Row,
     Col,
     Progress,
-    Radio,
+    RadioButton,
     TypographyLink,
     TypographyParagraph,
     Tooltip,
@@ -121,8 +121,6 @@
   import { CloudSyncOutlined } from '@ant-design/icons-vue';
   import { useDesign } from '@/hooks/web/useDesign';
   import { useAsyncTaskStore } from './store';
-
-  const { Group: RadioGroup, Button: RadioButton } = Radio;
 
   const TASK_STATUS = {
     waiting: '待执行',
@@ -194,8 +192,8 @@
   }
 
   :deep(.ant-scroll-number) {
-    transform: scale(0.5);
     top: 7px;
+    transform: scale(0.5);
   }
 
   :deep(.ant-popover-title) {
@@ -208,15 +206,15 @@
 
   .@{prefix-cls} {
     .ant-radio-group {
-      background: #f2f3f5;
       padding: 3px;
       border-radius: 2px;
+      background: #f2f3f5;
 
       .ant-radio-button-wrapper {
-        background: unset;
         height: 22px;
         border-width: 0;
         border-radius: 2px;
+        background: unset;
       }
 
       .ant-radio-button-wrapper::before {
@@ -228,13 +226,13 @@
       }
 
       .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-        background: #fff;
         outline: none;
+        background: #fff;
       }
     }
 
     .ant-list-sm .ant-list-item {
-      padding: 8px 0 4px 0;
+      padding: 8px 0 4px;
     }
 
     .ant-alert {

@@ -41,7 +41,7 @@
 
   import { useUserStore } from '@/store/modules/user';
   import { useFormRules, useFormValid } from './useLogin';
-  import {useRouter} from "vue-router";
+  import { useRouter } from 'vue-router';
 
   const FormItem = Form.Item;
   const InputPassword = Input.Password;

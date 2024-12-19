@@ -1,0 +1,34 @@
+import { computed } from 'vue';
+import { onMountedOrActivated } from '@vben/hooks';
+import { isArray } from '@sirpho/utils/validate';
+import { useDictStoreWithOut } from '@/store/modules/dict';
+import { getDictOptions } from '@/api/dataSource';
+
+export function useDict(val: string[]) {
+  const dict = useDictStoreWithOut();
+
+  async function getDict() {
+    let dictOptions;
+    if (isArray(val)) {
+      for (let i = 0; i < val.length; i += 1) {
+        const dictType = val[i];
+        if (!dict[dictType] || dict[dictType].length <= 0) {
+          dictOptions = await getDictOptions(dictType);
+          dict.setDictData(dictType, dictOptions);
+        }
+      }
+      return;
+    }
+  }
+
+  onMountedOrActivated(() => {
+    getDict();
+  });
+
+  const keys: string[] = val || [];
+  return keys.map((key) =>
+    computed(() => {
+      return dict.data[key] || [];
+    }),
+  );
+}

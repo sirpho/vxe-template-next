@@ -19,6 +19,7 @@ const dashboard: AppRouteModule = {
       name: 'Workbench',
       component: () => import('@/views/dashboard/workbench/index.vue'),
       meta: {
+        icon: 'mdi:monitor-dashboard',
         title: t('routes.dashboard.workbench'),
       },
     },
