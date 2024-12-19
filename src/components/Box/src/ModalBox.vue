@@ -371,53 +371,67 @@
 
   onMounted(doOnMount);
 </script>
-
+<script lang="ts">
+  export default {
+    name: 'ModalBox',
+  };
+</script>
 <style lang="scss">
   .modal-box-container {
     display: flex;
     align-items: center;
     width: 180px;
+
     .my-dropdown {
       min-height: 300px;
       background-color: #fff;
-      box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 6px 2px rgb(0 0 0 / 10%);
     }
+
     .vxe-table--render-default.size--mini .vxe-header--column:not(.col--ellipsis) {
       padding: 5px 0;
     }
+
     .ant-select-selection-overflow-item {
       max-width: 80px;
     }
   }
+
   .vxe-table .vxe-cell > .modal-box-container {
     width: 100%;
+
     .ant-select-sm {
       flex: 1;
-      border-radius: 4px 0 0 4px;
-      line-height: 28px;
       height: 28px;
+      border-radius: 4px 0 0 4px;
       box-shadow: none !important;
+      line-height: 28px;
+
       .ant-select-selector {
-        border-radius: 4px 0 0 4px;
         height: 28px !important;
-        line-height: 28px !important;
+        border-radius: 4px 0 0 4px;
         box-shadow: none !important;
+        line-height: 28px !important;
       }
     }
+
     .ant-input-affix-wrapper-sm {
+      height: 28px;
       border-radius: 4px 0 0 4px;
-      line-height: 28px;
-      height: 28px;
       box-shadow: none !important;
+      line-height: 28px;
     }
+
     .ant-btn-sm {
-      border-radius: 0 4px 4px 0;
       height: 28px;
+      border-radius: 0 4px 4px 0;
     }
   }
+
   .dropdown-table .vxe-table--header th .vxe-cell {
     display: flex !important;
     align-items: center;
+
     .vxe-cell--title {
       flex: 1;
     }

@@ -6,6 +6,7 @@
   import { useCalcHeight } from '@vben/hooks';
 
   export default defineComponent({
+    name: 'VxeContainer',
     props: {
       extraHeight: { type: Number, default: 0 },
       direction: { type: String, default: 'horizontal' },
@@ -82,20 +83,20 @@
   .default-theme.splitpanes--horizontal > .splitpanes__splitter,
   .default-theme .splitpanes--horizontal > .splitpanes__splitter {
     height: 0.5rem;
-    border-top: unset;
     margin-top: -1px;
+    border-top: unset;
   }
 
   .default-theme.splitpanes--vertical > .splitpanes__splitter,
   .default-theme .splitpanes--vertical > .splitpanes__splitter {
     width: 0.5rem;
-    border: none;
     margin: 0;
+    border: none;
   }
 
   .splitpanes.default-theme .splitpanes__splitter {
-    box-sizing: border-box;
     position: relative;
+    box-sizing: border-box;
     flex-shrink: 0;
     background: #f0f2f5;
   }

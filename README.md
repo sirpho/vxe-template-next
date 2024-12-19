@@ -1,12 +1,6 @@
-# songyu-informatization-next
+# vxe-template-next
 
-模板系统--前端 api见apifox
-
-### 测试地址
-**http://test.songyuprint.com/info**
-
-### 正式地址
-**https://info.songyuprint.com/**
+模板系统--前端
 
 ### 依赖安装
 
@@ -25,12 +19,3 @@ pnpm run build:alpha
 ```
 pnpm run build:release
 ```
-
-
-
-
-
-
-
-
-

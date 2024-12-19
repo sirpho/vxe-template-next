@@ -3,8 +3,13 @@
     <slot></slot>
   </div>
 </template>
+<script lang="ts">
+  export default {
+    name: 'PageContainer',
+  };
+</script>
 <style lang="scss">
-.wui-pro-page-container {
-  padding: 0.5rem;
-}
+  .wui-pro-page-container {
+    padding: 0.5rem;
+  }
 </style>

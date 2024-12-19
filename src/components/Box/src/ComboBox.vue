@@ -232,53 +232,69 @@
   };
   onMounted(doOnMount);
 </script>
+<script lang="ts">
+  export default {
+    name: 'ComboBox',
+  };
+</script>
 
 <style lang="scss">
   .combo-box-container {
     width: 160px;
+
     .my-dropdown {
       min-height: 300px;
       background-color: #fff;
-      box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 6px 2px rgb(0 0 0 / 10%);
     }
+
     .vxe-table--render-default.size--mini .vxe-header--column:not(.col--ellipsis) {
       padding: 5px 0;
     }
+
     .ant-select-selection-overflow-item {
       max-width: 80px;
     }
   }
+
   .vxe-table .vxe-cell > .vxe-pulldown.combo-box-container {
     width: 100%;
+
     .ant-select-sm {
-      border-radius: 4px;
-      line-height: 28px !important;
       height: 28px !important;
+      border-radius: 4px;
       box-shadow: none !important;
+      line-height: 28px !important;
+
       .ant-select-selector {
-        border-radius: 4px;
         height: 28px !important;
-        line-height: 28px !important;
+        border-radius: 4px;
         box-shadow: none !important;
+        line-height: 28px !important;
       }
+
       .ant-select-selection-item {
         line-height: 25px !important;
       }
     }
+
     .ant-input-affix-wrapper-sm {
+      height: 28px;
       border-radius: 4px;
-      line-height: 28px;
-      height: 28px;
       box-shadow: none !important;
+      line-height: 28px;
     }
+
     .ant-btn-sm {
-      border-radius: 0 4px 4px 0;
       height: 28px;
+      border-radius: 0 4px 4px 0;
     }
   }
+
   .dropdown-table .vxe-table--header th .vxe-cell {
     display: flex !important;
     align-items: center;
+
     .vxe-cell--title {
       flex: 1;
     }

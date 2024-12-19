@@ -2,10 +2,9 @@ import type { AppRouteModule } from '@/router/types';
 import { LAYOUT } from '@/router/constant';
 import { t } from '@/hooks/web/useI18n';
 
-export enum Attrs {
-  'HAS_20223268' = 20223268, //基础数据
-  'HAS_20223278' = 20223278, //工厂产线维护
-}
+// export enum Attrs {
+//   'HAS_20223268' = 20223268, //基础数据
+// }
 
 const route: AppRouteModule = {
   /**
@@ -14,7 +13,7 @@ const route: AppRouteModule = {
   path: '/common-data',
   name: 'common-data',
   component: LAYOUT,
-  redirect: '/common-data/factory-product-line',
+  redirect: '/common-data/enum',
   meta: {
     icon: 'material-symbols:home-and-garden-outline',
     title: t('routes.common-data.common-data'),
@@ -23,15 +22,15 @@ const route: AppRouteModule = {
   },
   children: [
     /**
-     * 工厂产线维护
+     * 枚举字段管理
      */
     {
-      path: 'factory-product-line',
-      name: 'FactoryProductLine',
-      component: () => import('/@/views/common-data/factory-product-line/index.vue'),
+      path: 'enum',
+      name: 'Enum',
+      component: () => import('/@/views/common-data/enum/index.vue'),
       meta: {
         // roles: [Attrs.HAS_20223278],
-        title: t('routes.common-data.factory-product-line'),
+        title: t('routes.common-data.enum'),
       },
     },
   ],

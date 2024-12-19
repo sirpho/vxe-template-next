@@ -19,8 +19,6 @@ import { setupStore } from '@/store';
 import { registerVarient } from '@/features/config';
 
 // vxe-table
-import '@/features/vxe-helpers/plugins/pro/vxe-table-pro.es6.min';
-import '@/features/vxe-helpers/plugins/pro/vxe-table-pro.min.css';
 import '@/features/vxe-helpers/plugins/xlsx';
 import '@/features/vxe-helpers/renderer';
 import '@/features/vxe-helpers/formats';
