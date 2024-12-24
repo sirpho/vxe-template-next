@@ -12,7 +12,7 @@ export default defineComponent({
       loading: false,
       thumbnails: [
         {
-          label: '小程序',
+          label: 'kellyone小程序',
           value:
             'https://fe-static.obs.cn-hz1.ctyun.cn/sirpho/f5fe620eafd44d5ca21b4906fa14b93b.png',
         },
@@ -106,8 +106,8 @@ export default defineComponent({
       }).finally(() => {
         state.loading = false;
       });
-      if (res.data.code === 200) {
-        window.open(`${res.data.data}?random=${Math.random()}`, '_blank');
+      if (res.code === 200) {
+        window.open(`${res.data}?random=${Math.random()}`, '_blank');
       }
     };
 
