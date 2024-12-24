@@ -41,7 +41,6 @@
   import { useMessage } from '@/hooks/web/useMessage';
   import { useI18n } from '@/hooks/web/useI18n';
   import { useErrorLogStore } from '@/store/modules/errorLog';
-  import { fireErrorApi } from '@/api/demo/error';
   import { getColumns } from './data';
   import { cloneDeep } from 'lodash-es';
 
@@ -91,7 +90,5 @@
     imgList.value.push(`${new Date().getTime()}.png`);
   }
 
-  async function fireAjaxError() {
-    await fireErrorApi();
-  }
+  async function fireAjaxError() {}
 </script>

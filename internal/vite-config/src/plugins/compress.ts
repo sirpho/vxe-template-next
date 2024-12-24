@@ -12,7 +12,7 @@ export function configCompressPlugin({
   compress: string;
   deleteOriginFile?: boolean;
 }): PluginOption[] {
-  const compressList = compress.split(',');
+  const compressList = compress?.split(',') || [];
 
   const plugins: PluginOption[] = [];
 

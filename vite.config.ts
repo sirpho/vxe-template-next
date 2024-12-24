@@ -15,13 +15,13 @@ export default defineApplicationConfig({
       ],
     },
     server: {
-      proxy: {
-        '/api': {
-          target: 'https://server.perflogs.top/',
-          changeOrigin: true,
-          ws: true,
-        },
-      },
+      // proxy: {
+      //   '/api': {
+      //     target: 'https://server.perflogs.top/',
+      //     changeOrigin: true,
+      //     ws: true,
+      //   },
+      // },
       open: true, // 项目启动后，自动打开
       warmup: {
         clientFiles: ['./index.html', './src/{views,components}/*'],
