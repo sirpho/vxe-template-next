@@ -140,7 +140,7 @@
     return ['zh_CN', 'en'].includes(lang) ? lang : 'zh_CN';
   });
 
-  const initOptions = computed((): RawEditorSettings => {
+  const initOptions = computed((): any => {
     const { height, options, toolbar, plugins } = props;
     const publicPath = import.meta.env.VITE_PUBLIC_PATH || '/';
     const ctyunPublicPath = 'https://staticfs-test.wahaha.com.cn';

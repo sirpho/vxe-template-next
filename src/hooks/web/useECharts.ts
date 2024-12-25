@@ -42,7 +42,8 @@ export function useECharts(
       return;
     }
 
-    chartInstance = echarts.init(el, t);
+    chartInstance = echarts.init(el, t, { renderer: 'canvas' });
+    chartInstance.showLoading();
     const { removeEvent } = useEventListener({
       el: window,
       name: 'resize',
@@ -57,11 +58,12 @@ export function useECharts(
     }
   }
 
-  function setOptions(options: EChartsOption, clear = true) {
+  function setOptions(options: any, clear = true) {
     cacheOptions.value = options;
     return new Promise((resolve) => {
       if (unref(elRef)?.offsetHeight === 0) {
         useTimeoutFn(() => {
+          chartInstance?.hideLoading();
           setOptions(unref(getOptions));
           resolve(null);
         }, 30);
@@ -75,6 +77,7 @@ export function useECharts(
           }
           clear && chartInstance?.clear();
 
+          chartInstance?.hideLoading();
           chartInstance?.setOption(unref(getOptions));
           resolve(null);
         }, 30);

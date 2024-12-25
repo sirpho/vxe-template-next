@@ -52,37 +52,6 @@
   @logo-prefix-cls: ~'@{namespace}-app-logo';
   @dark-bg: #293146;
 
-  html[data-theme='dark'] {
-    .@{prefix-cls} {
-      background-color: @dark-bg;
-
-      &::before {
-        background-image: url('@/assets/svg/login-bg-dark.svg');
-      }
-
-      .ant-input,
-      .ant-input-password {
-        background-color: #232a3b;
-      }
-
-      .ant-btn:not(.ant-btn-link, .ant-btn-primary) {
-        border: 1px solid #4a5569;
-      }
-
-      &-form {
-        background: transparent !important;
-      }
-
-      .app-iconify {
-        color: #fff;
-      }
-
-      .ant-divider-inner-text {
-        color: @text-color-secondary;
-      }
-    }
-  }
-
   .@{prefix-cls} {
     min-height: 100%;
     overflow: hidden;
