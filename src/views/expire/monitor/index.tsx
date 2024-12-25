@@ -127,44 +127,42 @@ export default defineComponent({
                 <Button class="buoy" type={'primary'} onClick={() => handleAdd()}>
                   录入
                 </Button>
-                <div class="search-select-wrapper">
-                  <Select
-                    class={'search-select'}
-                    v-model:value={formState.tag}
-                    placeholder="标签"
-                    allowClear
-                    onChange={() => getTableList()}
-                  >
-                    {(tagList.value || []).map((item) => (
-                      <Select.Option
-                        key={item.value}
-                        value={item.name}
-                        name={item.name}
-                        label={item.label}
-                      >
-                        {item.label}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                  <Select
-                    class={'search-select'}
-                    v-model:value={formState.type}
-                    placeholder="分类"
-                    allowClear
-                    onChange={() => getTableList()}
-                  >
-                    {(typeList.value || []).map((item) => (
-                      <Select.Option
-                        key={item.value}
-                        value={item.value}
-                        name={item.name}
-                        label={item.label}
-                      >
-                        {item.label}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </div>
+                <Select
+                  class={'search-select'}
+                  v-model:value={formState.tag}
+                  placeholder="标签"
+                  allowClear
+                  onChange={() => getTableList()}
+                >
+                  {(tagList.value || []).map((item) => (
+                    <Select.Option
+                      key={item.value}
+                      value={item.name}
+                      name={item.name}
+                      label={item.label}
+                    >
+                      {item.label}
+                    </Select.Option>
+                  ))}
+                </Select>
+                <Select
+                  class={'search-select'}
+                  v-model:value={formState.type}
+                  placeholder="分类"
+                  allowClear
+                  onChange={() => getTableList()}
+                >
+                  {(typeList.value || []).map((item) => (
+                    <Select.Option
+                      key={item.value}
+                      value={item.value}
+                      name={item.name}
+                      label={item.label}
+                    >
+                      {item.label}
+                    </Select.Option>
+                  ))}
+                </Select>
                 <InputSearch
                   class={'search-input'}
                   v-model:value={state.keyword}

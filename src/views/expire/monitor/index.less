@@ -3,17 +3,10 @@
     .toolbar {
       flex-direction: column;
 
-      .search-select-wrapper {
-        flex-basis: unset;
-        width: 100%;
-
-        .search-select {
-          flex: 1;
-        }
-      }
-
+      .search-select,
       .search-input {
-        flex-basis: unset;
+        width: 100% !important;
+        margin-bottom: 12px;
       }
     }
 
@@ -36,27 +29,11 @@
   }
 
   .toolbar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .search-select-wrapper {
-      display: flex;
-      flex-basis: 412px;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .search-select {
-      flex-basis: 200px;
-      flex-shrink: 0;
-      width: 100%;
-    }
-
+    .search-select,
     .search-input {
-      flex-basis: 250px;
-      flex-shrink: 0;
-      width: 100%;
+      width: 250px;
+      margin-right: 12px;
+      float: left;
     }
   }
 
@@ -114,7 +91,7 @@
   }
 
   .warning {
-    color: var(--ant-error-color);
+    color: var(--vxe-danger-color);
     font-weight: bold;
   }
 }
