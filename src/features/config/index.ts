@@ -79,7 +79,7 @@ export const vxeTableDefaultConfig: any = {
     },
     mouseConfig: {
       selected: false,
-      area: true,
+      area: false,
     },
     editConfig: {
       // 双击编辑

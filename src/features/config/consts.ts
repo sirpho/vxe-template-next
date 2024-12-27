@@ -5,9 +5,9 @@ export type SelectTableRemoteConfig = {
 };
 
 export const varients: Record<string, SelectTableRemoteConfig> = {
-  // 工厂下拉 - 带权限
-  factory: {
-    url: '/sy-manager/common/getUserFactoryList',
+  // 抖音分类标签
+  TiktokClass: {
+    url: '/api/tiktok/class/list',
     method: 'post',
   },
 };

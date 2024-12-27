@@ -2,11 +2,8 @@
   <PageContainer>
     <QueryFilterContainer>
       <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
-        <FormItem label="枚举名称" name="name">
+        <FormItem label="名称" name="name">
           <Input size="small" v-model:value="formState.name" />
-        </FormItem>
-        <FormItem label="所属模块" name="module">
-          <Input size="small" v-model:value="formState.module" />
         </FormItem>
         <FormItem>
           <Space>
@@ -30,21 +27,9 @@
           </Space>
         </template>
         <!-- 可编辑列 -->
-        <!-- 枚举名称 -->
+        <!-- 名称 -->
         <template #name="{ row }">
           <Input v-model:value="row.name" size="small" />
-        </template>
-        <!-- 枚举值 -->
-        <template #value="{ row }">
-          <Input v-model:value="row.value" size="small" />
-        </template>
-        <!-- 模块 -->
-        <template #module="{ row }">
-          <Input v-model:value="row.module" size="small" />
-        </template>
-        <!-- 排序 -->
-        <template #sortOrder="{ row }">
-          <InputNumber v-model:value="row.sortOrder" :precision="0" :min="1" size="small" />
         </template>
       </vxe-grid>
     </VxeContainer>
@@ -52,27 +37,16 @@
 </template>
 <script lang="ts" setup>
   import { onMounted, reactive, ref } from 'vue';
-  import {
-    Form,
-    FormItem,
-    Space,
-    Button,
-    message,
-    Modal,
-    Input,
-    InputNumber,
-  } from 'ant-design-vue';
+  import { Form, FormItem, Space, Button, message, Modal, Input } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
 
   interface FormState {
     name: string;
-    module: string;
   }
 
   const formState = reactive<FormState>({
-    name: '', // 枚举名称
-    module: '', // 所属模块
+    name: '', // 名称
   });
 
   const xTable = ref({} as VxeTableInstance);
@@ -85,8 +59,6 @@
    */
   const validRules = ref({
     name: [{ required: true, message: '必填项' }],
-    value: [{ required: true, message: '必填项' }],
-    module: [{ required: true, message: '必填项' }],
   } as VxeTablePropTypes.EditRules);
 
   const gridOptions = reactive<VxeGridProps>({
@@ -96,38 +68,12 @@
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 40, fixed: 'left', align: 'center' },
+      { type: 'seq', title: '序号', width: 120, align: 'center' },
       {
         field: 'name',
-        title: '枚举名称',
+        title: '名称',
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'name' },
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-      },
-      {
-        field: 'value',
-        title: '枚举值',
-        editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'value' },
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-      },
-      {
-        field: 'module',
-        title: '所属模块',
-        editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'module' },
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-      },
-      {
-        field: 'sortOrder',
-        title: '排序',
-        editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'sortOrder' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
@@ -205,7 +151,7 @@
 </script>
 <script lang="ts">
   export default {
-    name: 'Enum',
+    name: 'TiktokClass',
   };
 </script>
 <style lang="less" scoped>

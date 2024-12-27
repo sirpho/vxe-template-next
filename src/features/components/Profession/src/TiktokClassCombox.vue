@@ -6,14 +6,15 @@
 <script lang="ts" setup>
   import { useAttrs, computed } from 'vue';
   import { VxeGridProps } from 'vxe-table';
-  import type { SelectTableProps } from '@/features/components/ProSelectTable/typing';
+  import ComboBox from '@/components/Box/src/ComboBox.vue';
 
   interface Props {
     varient?: string;
     gridProps?: VxeGridProps;
     option?: Option;
-    value: SelectTableProps['value'];
+    value?: string | number | null | undefined | (string | number)[];
     autoFill?: boolean;
+    mode?: string;
   }
   interface Option {
     label: string;
@@ -24,16 +25,17 @@
   const _emits = defineEmits(['update:value']);
 
   const props = withDefaults(defineProps<Props>(), {
-    varient: 'factory',
+    varient: 'TiktokClass',
     gridProps: () => ({
       columns: [
-        { field: 'factoryCode', title: '工厂代码', width: '150px' },
-        { field: 'factoryName', title: '工厂名称' },
+        { field: 'id', title: '代码', visible: false },
+        { field: 'name', title: '标签' },
       ],
     }),
     value: '',
-    autoFill: true,
-    option: () => ({ label: 'factoryCode', value: 'factoryCode' }),
+    autoFill: false,
+    mode: 'multiple',
+    option: () => ({ label: 'id', value: 'name' }),
   });
 
   const modelValue = computed({
@@ -46,7 +48,7 @@
 
 <script lang="ts">
   export default {
-    name: 'Werks',
+    name: 'TiktokClassCombox',
   };
 </script>
 

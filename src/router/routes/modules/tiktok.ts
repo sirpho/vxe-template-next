@@ -34,6 +34,32 @@ const route: AppRouteModule = {
         title: t('routes.tiktok.analysis'),
       },
     },
+    /**
+     * 分类标签
+     */
+    {
+      path: 'tiktok-class',
+      name: 'TiktokClass',
+      component: () => import('/@/views/tiktok/class/index.vue'),
+      meta: {
+        // roles: [Attrs.HAS_20223278],
+        icon: 'tabler:category-2',
+        title: t('routes.tiktok.class'),
+      },
+    },
+    /**
+     * 标签设置
+     */
+    {
+      path: 'tiktok-manage',
+      name: 'TiktokManage',
+      component: () => import('/@/views/tiktok/manage/index.vue'),
+      meta: {
+        // roles: [Attrs.HAS_20223278],
+        icon: 'tabler:category-2',
+        title: t('routes.tiktok.manage'),
+      },
+    },
   ],
 };
 

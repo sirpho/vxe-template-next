@@ -144,8 +144,8 @@ export const SelectCommonContext = function ({
       const [err, res] = await to(getRequest(requestParams));
       gridLoading.value = false;
       if (err) return;
-      const { data: _list, success } = res;
-      if (!success) return;
+      const { data: _list, code } = res;
+      if (code !== 200) return;
       gridData.value = transformData(_list);
     }
     if (!isModal) {
@@ -319,7 +319,7 @@ export const SelectCommonContext = function ({
         }));
         columns.value =
           props.mode === 'multiple'
-            ? [{ type: 'checkbox', width: 40, fixed: 'left' }, ...newColumns]
+            ? [{ type: 'checkbox', width: 60, fixed: 'left' }, ...newColumns]
             : newColumns;
         _columns.forEach((item) => {
           if (item.field) {
