@@ -31,6 +31,22 @@
         <template #name="{ row }">
           <Input v-model:value="row.name" size="small" />
         </template>
+        <!-- 颜色 -->
+        <template #color="{ row }">
+          <Input v-model:value="row.color" size="small" />
+        </template>
+        <template #color_default="{ row }">
+          <div
+            v-if="row.color"
+            :style="{
+              width: '20px',
+              height: '20px',
+              background: row.color || '#FFFFFF',
+              border: '1px solid #D9D9D9',
+              borderRadius: '4px',
+            }"
+          ></div>
+        </template>
       </vxe-grid>
     </VxeContainer>
   </PageContainer>
@@ -74,6 +90,15 @@
         title: '名称',
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'name' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+      },
+      {
+        field: 'color',
+        title: '颜色',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'color', default: 'color_default' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },

@@ -11,6 +11,9 @@
         <FormItem label="文件名" name="name">
           <Input size="small" v-model:value="formState.name" />
         </FormItem>
+        <FormItem label="标签" name="classIdList">
+          <TiktokClassCombox :data="classList" v-model:value="formState.classIdList" />
+        </FormItem>
         <FormItem>
           <Space>
             <Button type="primary" html-type="submit" :loading="tableLoading" size="small">
@@ -34,23 +37,34 @@
             @change="(option) => changeClass(row, option)"
           />
         </template>
+        <template #classIdList_default="{ row }">
+          <Tag v-for="item in row.classList" :key="item.name" :color="item.color">{{
+            item.name
+          }}</Tag>
+        </template>
       </vxe-grid>
     </VxeContainer>
   </PageContainer>
 </template>
 <script lang="ts" setup>
   import { onMounted, reactive, ref } from 'vue';
-  import { Form, FormItem, Space, Button, Input } from 'ant-design-vue';
+  import { Form, FormItem, Space, Button, Input, Tag } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps } from 'vxe-table';
   import { batch, getClassList, list } from './service';
   import { TiktokClassCombox } from '@/features/components/Profession';
 
   interface FormState {
     name: string;
+    category: string;
+    author: string;
+    classIdList: string[];
   }
 
   const formState = reactive<FormState>({
     name: '', // 名称
+    category: '', // 分类
+    author: '', // 作者
+    classIdList: [], // 标签
   });
 
   const xTable = ref({} as VxeTableInstance);
@@ -84,13 +98,10 @@
         field: 'classIdList',
         title: '标签',
         editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'classIdList' },
+        slots: { edit: 'classIdList', default: 'classIdList_default' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        formatter: ({ row }) => {
-          return (row.classNameList || []).join('，');
-        },
       },
     ],
     showHeaderOverflow: 'tooltip',
@@ -153,6 +164,7 @@
   const changeClass = (row, options) => {
     row.classIdList = options.map((item: any) => item.id);
     row.classNameList = options.map((item: any) => item.name);
+    row.classList = options;
   };
 </script>
 <script lang="ts">
