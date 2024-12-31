@@ -15,6 +15,7 @@
     value?: string | number | null | undefined | (string | number)[];
     autoFill?: boolean;
     mode?: string;
+    data?: object[];
   }
   interface Option {
     label: string;
@@ -35,7 +36,7 @@
     value: '',
     autoFill: false,
     mode: 'multiple',
-    option: () => ({ label: 'id', value: 'name' }),
+    option: () => ({ label: 'name', value: 'id' }),
   });
 
   const modelValue = computed({

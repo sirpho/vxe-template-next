@@ -14,10 +14,11 @@
         :mode="props.mode"
         :allowClear="allowClear"
         :open="false"
-        :max-tag-count="1"
+        :max-tag-count="6"
         @clear="onClear"
         @click="selectClick"
         @deselect="deselect"
+        size="small"
       >
         <template #maxTagPlaceholder="omittedValues">
           <span style="color: red">+ {{ omittedValues.length }}</span>
@@ -273,9 +274,9 @@
         line-height: 28px !important;
       }
 
-      .ant-select-selection-item {
-        line-height: 25px !important;
-      }
+      //.ant-select-selection-item {
+      //  line-height: 25px !important;
+      //}
     }
 
     .ant-input-affix-wrapper-sm {

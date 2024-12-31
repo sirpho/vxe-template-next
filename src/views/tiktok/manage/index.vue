@@ -27,8 +27,12 @@
       <vxe-grid v-bind="{ ...gridOptions }" :data="tableList" :loading="tableLoading" ref="xTable">
         <!-- 可编辑列 -->
         <!-- 标签 -->
-        <template #classList="{ row }">
-          <TiktokClassCombox v-model:value="row.classList" />
+        <template #classIdList="{ row }">
+          <TiktokClassCombox
+            :data="classList"
+            v-model:value="row.classIdList"
+            @change="(option) => changeClass(row, option)"
+          />
         </template>
       </vxe-grid>
     </VxeContainer>
@@ -38,7 +42,7 @@
   import { onMounted, reactive, ref } from 'vue';
   import { Form, FormItem, Space, Button, Input } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps } from 'vxe-table';
-  import { batch, list } from './service';
+  import { batch, getClassList, list } from './service';
   import { TiktokClassCombox } from '@/features/components/Profession';
 
   interface FormState {
@@ -51,6 +55,7 @@
 
   const xTable = ref({} as VxeTableInstance);
   const tableList = ref<any[]>([]);
+  const classList = ref<any[]>([]);
   const tableLoading = ref(false);
   const submitLoading = ref(false);
 
@@ -61,6 +66,14 @@
       { type: 'checkbox', width: 60, fixed: 'left', align: 'center' },
       { type: 'seq', title: '序号', width: 120, align: 'center' },
       {
+        field: 'author',
+        title: '作者',
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        width: 140,
+      },
+      {
         field: 'name',
         title: '文件名称',
         sortable: true,
@@ -68,13 +81,16 @@
         filterRender: { name: 'FilterExtend' },
       },
       {
-        field: 'classList',
+        field: 'classIdList',
         title: '标签',
         editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'classList' },
+        slots: { edit: 'classIdList' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        formatter: ({ row }) => {
+          return (row.classNameList || []).join('，');
+        },
       },
     ],
     showHeaderOverflow: 'tooltip',
@@ -82,8 +98,18 @@
   });
 
   onMounted(() => {
+    queryClassList();
     handleQuery();
   });
+
+  /**
+   * 查询分类列表
+   */
+  const queryClassList = () => {
+    getClassList({}).then((res) => {
+      classList.value = res.data || [];
+    });
+  };
 
   /**
    * 查询
@@ -93,7 +119,11 @@
     const res = await list(formState).finally(() => {
       tableLoading.value = false;
     });
-    tableList.value = res.data || [];
+    tableList.value = (res.data || []).map((item: any) => ({
+      ...item,
+      classIdList: (item.classList || []).map((ite: any) => ite.id),
+      classNameList: (item.classList || []).map((ite: any) => ite.name),
+    }));
   };
 
   /**
@@ -101,14 +131,28 @@
    */
   const handleSubmit = async () => {
     const updateItems = xTable.value.getUpdateRecords();
+    const updateList = updateItems.map((item: any) => ({
+      ...item,
+      classList: (item.classIdList || []).map((classId: string) => ({ id: classId })),
+    }));
 
     submitLoading.value = true;
     await batch({
-      updateItems,
+      updateItems: updateList,
     }).finally(() => {
       submitLoading.value = false;
     });
     await handleQuery();
+  };
+
+  /**
+   * 修改标签
+   * @param row
+   * @param options
+   */
+  const changeClass = (row, options) => {
+    row.classIdList = options.map((item: any) => item.id);
+    row.classNameList = options.map((item: any) => item.name);
   };
 </script>
 <script lang="ts">
