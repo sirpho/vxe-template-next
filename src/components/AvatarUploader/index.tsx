@@ -2,6 +2,7 @@ import { computed, defineComponent, reactive } from 'vue';
 import { Props } from './props';
 import { message, Upload, UploadChangeParam, Image } from 'ant-design-vue';
 import { useUserStoreWithOut } from '@/store/modules/user';
+import { useGlobSetting } from '@/hooks/setting';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons-vue';
 
 export default defineComponent({
@@ -9,6 +10,7 @@ export default defineComponent({
   props: Props,
   setup(props, { emit }) {
     const user = useUserStoreWithOut();
+    const { apiUrl = '' } = useGlobSetting();
     const state = reactive({
       loading: false,
     });
@@ -79,7 +81,7 @@ export default defineComponent({
               name={'files'}
               list-type="picture-card"
               show-upload-list={false}
-              action={`${import.meta.env.VITE_BASE_URL}${props.action}`}
+              action={`${apiUrl}${props.action}`}
               onChange={handleChange}
               beforeUpload={beforeUpload}
             >

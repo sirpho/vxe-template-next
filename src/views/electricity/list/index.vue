@@ -2,12 +2,20 @@
   <PageContainer>
     <QueryFilterContainer>
       <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
+        <FormItem label="所属房屋" name="house">
+          <Select v-model:value="formState.house" allow-clear size="small" style="width: 160px">
+            <Select.Option v-for="item in houseList" :key="item.value" :value="item.value">
+              {{ item.label }}
+            </Select.Option>
+          </Select>
+        </FormItem>
         <FormItem label="年份" name="year">
           <DatePicker
             picker="year"
             size="small"
             value-format="YYYY"
             format="YYYY"
+            allow-clear
             v-model:value="formState.year"
           />
         </FormItem>
@@ -99,10 +107,12 @@
   import { useDict } from '@/hooks/web/useDict';
 
   interface FormState {
+    house: string;
     year: string;
   }
 
   const formState = reactive<FormState>({
+    house: '', // 所属房屋
     year: '', // 年份
   });
 

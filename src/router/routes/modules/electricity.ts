@@ -15,7 +15,7 @@ const route: AppRouteModule = {
   component: LAYOUT,
   redirect: '/electricity/list',
   meta: {
-    icon: 'ic:baseline-batch-prediction',
+    icon: 'pepicons-pop:electricity',
     title: t('routes.electricity.electricity'),
     orderNo: 20,
     // roles: [Attrs.HAS_20223268],
@@ -26,12 +26,25 @@ const route: AppRouteModule = {
      */
     {
       path: 'list',
-      name: 'list',
+      name: 'electricity-list',
       component: () => import('/@/views/electricity/list/index.vue'),
       meta: {
         // roles: [Attrs.HAS_20223278],
-        icon: 'codicon:symbol-enum',
+        icon: 'mdi:electricity-to-grid',
         title: t('routes.electricity.list'),
+      },
+    },
+    /**
+     * 统计分析
+     */
+    {
+      path: 'ElectricityAnalysis',
+      name: 'electricity-analysis',
+      component: () => import('/@/views/electricity/analysis/index.vue'),
+      meta: {
+        // roles: [Attrs.HAS_20223278],
+        icon: 'carbon:text-link-analysis',
+        title: t('routes.electricity.analysis'),
       },
     },
   ],

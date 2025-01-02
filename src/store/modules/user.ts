@@ -124,7 +124,7 @@ export const useUserStore = defineStore({
         this.setRoleList(roleList);
       } else {
         userInfo.roles = [];
-        this.setRoleList([]);
+        this.setRoleList([1]);
       }
       this.setUserInfo(userInfo);
       return userInfo;

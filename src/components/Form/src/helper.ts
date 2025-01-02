@@ -11,10 +11,10 @@ const { t } = useI18n();
  */
 export function createPlaceholderMessage(component: ComponentType) {
   if (component.includes('Input') || component.includes('Complete')) {
-    return t('common.inputText');
+    return '请输入';
   }
   if (component.includes('Picker')) {
-    return t('common.chooseText');
+    return '请选择';
   }
   if (
     component.includes('Select') ||

@@ -2,9 +2,9 @@ import type { AppRouteModule } from '@/router/types';
 import { LAYOUT } from '@/router/constant';
 import { t } from '@/hooks/web/useI18n';
 
-// export enum Attrs {
-//   'HAS_20223268' = 20223268, //基础数据
-// }
+export enum Attrs {
+  TIKTOK = 110, //权限
+}
 
 const route: AppRouteModule = {
   /**
@@ -18,7 +18,7 @@ const route: AppRouteModule = {
     icon: 'ri:tiktok-fill',
     title: t('routes.tiktok.tiktok'),
     orderNo: 20,
-    // roles: [Attrs.HAS_20223268],
+    roles: [Attrs.TIKTOK],
   },
   children: [
     /**

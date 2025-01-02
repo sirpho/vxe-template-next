@@ -7,7 +7,7 @@ export const Props = {
   },
   action: {
     type: String as PropType<string>,
-    default: '/file/upload',
+    default: '/api/file/upload',
   },
   onChange: {
     type: Function as PropType<(fileList: any) => void>,
