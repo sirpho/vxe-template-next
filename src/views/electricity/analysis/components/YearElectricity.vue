@@ -50,11 +50,6 @@
     title: {
       type: String as PropType<string>,
     },
-    // 是否年度趋势
-    trend: {
-      type: Boolean as PropType<boolean>,
-      default: false,
-    },
   });
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
@@ -86,16 +81,15 @@
           axisPointer: {
             type: 'shadow',
           },
+          axisTick: false,
         },
       ],
       yAxis: [
         {
-          splitLine: { show: false },
+          splitLine: { show: true },
           type: 'value',
           name: '用电量',
           min: 0,
-          max: props.trend ? 40000 : 5000,
-          interval: props.trend ? 10000 : 1000,
           axisLabel: {
             formatter: '{value} 千瓦时',
           },
@@ -105,8 +99,6 @@
           type: 'value',
           name: '电费',
           min: 0,
-          max: props.trend ? 30000 : 3000,
-          interval: props.trend ? 5000 : 500,
           axisLabel: {
             formatter: '￥{value} 元',
           },
@@ -124,8 +116,8 @@
           itemStyle: {
             normal: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: '#887B70' },
-                { offset: 1, color: '#8B8A86' },
+                { offset: 0, color: '#93B9F8' },
+                { offset: 1, color: '#D9EDF7' },
               ]),
             },
           },
@@ -143,8 +135,8 @@
           itemStyle: {
             normal: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: '#768DD1' },
-                { offset: 1, color: '#2B4396' },
+                { offset: 0, color: '#2B4396' },
+                { offset: 1, color: '#768DD1' },
               ]),
             },
           },

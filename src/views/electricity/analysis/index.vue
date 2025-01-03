@@ -8,14 +8,17 @@
     >
       <YearElectricity
         v-if="Object.keys(chartDataMap).length > 0"
+        :key="`${activeKey}_历年总计`"
         :data="chartTrendList"
         :xAxis="chartTrendX"
-        trend
         title="历年总计"
       />
-      <template v-for="item in Object.keys(chartDataMap).sort().reverse()" :key="item">
-        <YearElectricity :data="chartDataMap[item]" :title="`${item}年`" />
-      </template>
+      <YearElectricity
+        v-for="item in Object.keys(chartDataMap).sort().reverse()"
+        :key="`${activeKey}_${item}`"
+        :data="chartDataMap[item]"
+        :title="`${item}年`"
+      />
     </Card>
   </PageContainer>
 </template>

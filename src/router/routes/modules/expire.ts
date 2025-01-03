@@ -15,7 +15,7 @@ const route: AppRouteModule = {
   component: LAYOUT,
   redirect: '/expire/monitor',
   meta: {
-    icon: 'material-symbols:monitor-heart-outline-rounded',
+    icon: 'icon-park-solid:electrocardiogram',
     title: t('routes.expire.monitor'),
     orderNo: 1,
     // roles: [Attrs.HAS_20223268],
@@ -31,7 +31,7 @@ const route: AppRouteModule = {
       component: () => import('/@/views/expire/monitor/index.tsx'),
       meta: {
         // roles: [Attrs.HAS_20223278],
-        icon: 'icon-park-outline:medicine-bottle',
+        icon: 'ri:medicine-bottle-fill',
         title: t('routes.expire.monitor'),
       },
     },

@@ -15,10 +15,9 @@ const route: AppRouteModule = {
   component: LAYOUT,
   redirect: '/common-data/enum',
   meta: {
-    icon: 'ic:baseline-batch-prediction',
+    icon: 'lets-icons:setting-fill',
     title: t('routes.common-data.common-data'),
     orderNo: 20,
-    // roles: [Attrs.HAS_20223268],
   },
   children: [
     /**
@@ -29,7 +28,6 @@ const route: AppRouteModule = {
       name: 'Enum',
       component: () => import('/@/views/common-data/enum/index.vue'),
       meta: {
-        // roles: [Attrs.HAS_20223278],
         icon: 'codicon:symbol-enum',
         title: t('routes.common-data.enum'),
       },

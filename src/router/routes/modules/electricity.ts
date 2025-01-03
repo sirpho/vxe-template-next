@@ -17,8 +17,7 @@ const route: AppRouteModule = {
   meta: {
     icon: 'pepicons-pop:electricity',
     title: t('routes.electricity.electricity'),
-    orderNo: 20,
-    // roles: [Attrs.HAS_20223268],
+    orderNo: 12,
   },
   children: [
     /**
@@ -29,8 +28,7 @@ const route: AppRouteModule = {
       name: 'electricity-list',
       component: () => import('/@/views/electricity/list/index.vue'),
       meta: {
-        // roles: [Attrs.HAS_20223278],
-        icon: 'mdi:electricity-to-grid',
+        icon: 'ant-design:thunderbolt-filled',
         title: t('routes.electricity.list'),
       },
     },
@@ -42,7 +40,6 @@ const route: AppRouteModule = {
       name: 'electricity-analysis',
       component: () => import('/@/views/electricity/analysis/index.vue'),
       meta: {
-        // roles: [Attrs.HAS_20223278],
         icon: 'carbon:text-link-analysis',
         title: t('routes.electricity.analysis'),
       },

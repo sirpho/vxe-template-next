@@ -65,6 +65,12 @@
             </Select.Option>
           </Select>
         </template>
+        <template #readStatus_default="{ row }">
+          <Badge v-bind="getBadgeStatus(row)" />
+          <span :style="{ textDecoration: row.readStatus === '弃坑' ? 'line-through' : 'unset' }">{{
+            row.readStatus
+          }}</span>
+        </template>
         <!-- 创作状态 -->
         <template #writeStatus="{ row }">
           <Select v-model:value="row.writeStatus" size="small">
@@ -99,7 +105,17 @@
 </template>
 <script lang="ts" setup>
   import { onMounted, reactive, ref } from 'vue';
-  import { Form, FormItem, Space, Button, message, Modal, Input, Select } from 'ant-design-vue';
+  import {
+    Form,
+    FormItem,
+    Space,
+    Button,
+    message,
+    Modal,
+    Input,
+    Select,
+    Badge,
+  } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
   import { useDict } from '@/hooks/web/useDict';
@@ -147,6 +163,7 @@
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 40, fixed: 'left', align: 'center' },
+      { type: 'seq', width: 60, align: 'center' },
       {
         field: 'name',
         title: '小说名称',
@@ -155,6 +172,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 180,
       },
       {
         field: 'author',
@@ -164,6 +182,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 180,
       },
       {
         field: 'type',
@@ -173,6 +192,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 180,
       },
       {
         field: 'protagonist',
@@ -182,6 +202,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 180,
       },
       {
         field: 'memo',
@@ -200,15 +221,17 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 180,
       },
       {
         field: 'readStatus',
         title: '阅读状态',
         editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'readStatus' },
+        slots: { edit: 'readStatus', default: 'readStatus_default' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 180,
       },
     ],
     showHeaderOverflow: 'tooltip',
@@ -280,6 +303,21 @@
         Modal.destroyAll();
       },
     });
+  };
+
+  /**
+   * 徽标样式
+   */
+  const getBadgeStatus = (record) => {
+    if (record.readStatus === '在读') {
+      return { status: 'processing' };
+    }
+    if (record.readStatus === '待读') {
+      return { color: '#722ED1' };
+    }
+    return {
+      status: 'default',
+    };
   };
 </script>
 <script lang="ts">

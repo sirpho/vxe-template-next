@@ -10,7 +10,7 @@ const dashboard: AppRouteModule = {
   redirect: '/dashboard/workbench',
   meta: {
     orderNo: 0,
-    icon: 'ant-design:dashboard-outlined',
+    icon: 'clarity:dashboard-solid',
     title: t('routes.dashboard.dashboard'),
   },
   children: [

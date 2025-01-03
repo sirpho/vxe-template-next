@@ -15,10 +15,9 @@ const route: AppRouteModule = {
   component: LAYOUT,
   redirect: '/novel/list',
   meta: {
-    icon: 'healthicons:register-book-outline',
+    icon: 'material-symbols:book-4-rounded',
     title: t('routes.novel.novel'),
-    orderNo: 20,
-    // roles: [Attrs.HAS_20223268],
+    orderNo: 11,
   },
   children: [
     /**
@@ -29,9 +28,20 @@ const route: AppRouteModule = {
       name: 'novel-list',
       component: () => import('/@/views/novel/list/index.vue'),
       meta: {
-        // roles: [Attrs.HAS_20223278],
         icon: 'lets-icons:book-duotone-line',
         title: t('routes.novel.list'),
+      },
+    },
+    /**
+     * 统计分析
+     */
+    {
+      path: 'analysis',
+      name: 'novel-analysis',
+      component: () => import('/@/views/novel/analysis/index.vue'),
+      meta: {
+        icon: 'lets-icons:book-duotone-line',
+        title: t('routes.novel.analysis'),
       },
     },
   ],

@@ -15,7 +15,7 @@ const route: AppRouteModule = {
   component: LAYOUT,
   redirect: '/tools/obs',
   meta: {
-    icon: 'mynaui:tool',
+    icon: 'mingcute:tool-fill',
     title: t('routes.tools.tools'),
     orderNo: 10,
     // roles: [Attrs.HAS_20223268],
