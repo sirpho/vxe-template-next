@@ -4,8 +4,8 @@
       <div class="h-100% flex flex-col p-2">
         <RadioGroup v-model:value="valueMode" @change="handleChangeMode">
           <RadioButton value="typeMode">按类型</RadioButton>
-          <RadioButton value="authorMode">按作者</RadioButton>
-          <RadioButton value="readMode">按阅读状态</RadioButton>
+          <RadioButton value="nameMode">按商家</RadioButton>
+          <RadioButton value="locationMode">按商圈</RadioButton>
         </RadioGroup>
         <div ref="chartRef" class="h-100% flex-1"></div>
       </div>
@@ -16,26 +16,26 @@
   import { Ref, ref, onMounted } from 'vue';
   import { RadioGroup, RadioButton } from 'ant-design-vue';
   import { useECharts } from '@/hooks/web/useECharts';
-  import { analysis } from './service';
+  import { list } from './service';
   import { groupBy } from 'lodash-es';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
 
-  const valueMode = ref<'typeMode' | 'authorMode' | 'readMode'>('typeMode');
+  const valueMode = ref<'typeMode' | 'nameMode' | 'locationMode'>('typeMode');
 
   const originList = ref<any[]>([]);
   const echartData = ref<any[]>([]);
   const typeGroupBy = ref<any>({});
-  const authorGroupBy = ref<any>({});
-  const readGroupBy = ref<any>({});
+  const nameGroupBy = ref<any>({});
+  const locationGroupBy = ref<any>({});
 
   onMounted(() => {
-    analysis().then((res) => {
+    list().then((res) => {
       originList.value = res.data || [];
       typeGroupBy.value = groupBy(originList.value, 'type');
-      authorGroupBy.value = groupBy(originList.value, 'author');
-      readGroupBy.value = groupBy(originList.value, 'readStatus');
+      nameGroupBy.value = groupBy(originList.value, 'name');
+      locationGroupBy.value = groupBy(originList.value, 'location');
 
       resetOptions();
     });
@@ -45,29 +45,11 @@
     switch (valueMode.value) {
       case 'typeMode':
         return '类型';
-      case 'authorMode':
-        return '作者';
-      case 'readMode':
-        return '阅读状态';
+      case 'nameMode':
+        return '商家';
+      case 'locationMode':
+        return '商圈';
     }
-  };
-
-  const getClass = (record) => {
-    let style = '';
-    let color = '#9FA1A4';
-    if (record.readStatus === '弃坑') {
-      style = `style="text-decoration: line-through; color: #001529"`;
-    }
-    if (record.readStatus === '在读') {
-      color = `#1890ff`;
-    }
-    if (record.readStatus === '已读') {
-      color = `#9FA1A4`;
-    }
-    if (record.readStatus === '待读') {
-      color = `#722ED1`;
-    }
-    return `<span class="echarts-tooltip-dot" style="--echart-dot-color: ${color}"></span><span ${style}>《${record.name}》</span>`;
   };
 
   /**
@@ -76,21 +58,17 @@
   const resetOptions = () => {
     echartData.value = [];
     const result: Record<string, number> = {};
-    const list =
-      valueMode.value === 'readMode'
-        ? originList.value
-        : originList.value.filter((item) => item.readStatus !== '弃坑');
-    list.forEach((item) => {
+    originList.value.forEach((item) => {
       let nameField;
       switch (valueMode.value) {
         case 'typeMode':
           nameField = 'type';
           break;
-        case 'authorMode':
-          nameField = 'author';
+        case 'nameMode':
+          nameField = 'name';
           break;
-        case 'readMode':
-          nameField = 'readStatus';
+        case 'locationMode':
+          nameField = 'location';
           break;
       }
       if (result[item[nameField]]) {
@@ -112,29 +90,37 @@
         trigger: 'item',
         formatter: (info) => {
           const { value, name, percent } = info;
-          let bookList = [];
+          let list = [];
           switch (valueMode.value) {
             case 'typeMode':
-              bookList = (typeGroupBy.value[name] || []).map((item) => getClass(item));
+              list = typeGroupBy.value[name] || [];
               break;
-            case 'authorMode':
-              bookList = (authorGroupBy.value[name] || []).map((item) => getClass(item));
+            case 'nameMode':
+              list = nameGroupBy.value[name] || [];
               break;
-            case 'readMode':
-              bookList = (readGroupBy.value[name] || []).map((item) => getClass(item));
+            case 'locationMode':
+              list = locationGroupBy.value[name] || [];
               break;
           }
+          const resultList = [];
+          const countMap = groupBy(list, 'name');
 
-          let bookList2 = [];
-          for (let i = 0; i < bookList.length; i += 4) {
-            const chunk = bookList.slice(i, i + 4);
-            bookList2.push(chunk.join('  '));
+          for (const field in countMap) {
+            resultList.push(
+              `<span class="echarts-tooltip-dot"></span><span class="echarts-tooltip-name">${field}</span>*${countMap[field].length}次`,
+            );
+          }
+
+          let chunkList = [];
+          for (let i = 0; i < resultList.length; i += 4) {
+            const chunk = resultList.slice(i, i + 4);
+            chunkList.push(chunk.join('  '));
           }
 
           return [
             '<div class="tooltip-title">' + name + '</div>',
-            `<div class="tooltip-title">${value} 本，占比${percent}%</div>`,
-            ...bookList2.map((item) => `<div class="tooltip-title">${item}</div>`),
+            `<div class="tooltip-title">${value} 次，占比${percent}%</div>`,
+            ...chunkList.map((item) => `<div class="tooltip-title">${item}</div>`),
           ].join('');
         },
       },
@@ -166,6 +152,6 @@
 </script>
 <script lang="ts">
   export default {
-    name: 'NovelAnalysis',
+    name: 'DelicacyAnalysis',
   };
 </script>

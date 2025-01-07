@@ -67,9 +67,9 @@
         </template>
         <template #readStatus_default="{ row }">
           <Badge v-bind="getBadgeStatus(row)" />
-          <span :style="{ textDecoration: row.readStatus === '弃坑' ? 'line-through' : 'unset' }">{{
-            row.readStatus
-          }}</span>
+          <span :style="{ textDecoration: row.readStatus === '弃坑' ? 'line-through' : 'unset' }">
+            {{ row.readStatus }}
+          </span>
         </template>
         <!-- 创作状态 -->
         <template #writeStatus="{ row }">

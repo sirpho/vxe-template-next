@@ -2,22 +2,25 @@
   <PageContainer>
     <QueryFilterContainer>
       <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
-        <FormItem label="所属房屋" name="house">
-          <Select v-model:value="formState.house" allow-clear size="small" style="width: 160px">
-            <Select.Option v-for="item in houseList" :key="item.value" :value="item.value">
+        <FormItem label="类型" name="type">
+          <Select v-model:value="formState.type" allow-clear size="small" style="width: 160px">
+            <Select.Option v-for="item in delicacyTypeList" :key="item.value" :value="item.value">
               {{ item.label }}
             </Select.Option>
           </Select>
         </FormItem>
-        <FormItem label="年份" name="year">
+        <FormItem label="日期" name="date">
           <DatePicker
             picker="year"
             size="small"
             value-format="YYYY"
             format="YYYY"
             allow-clear
-            v-model:value="formState.year"
+            v-model:value="formState.date"
           />
+        </FormItem>
+        <FormItem label="地点" name="location">
+          <Input v-model:value="formState.location" size="small" />
         </FormItem>
         <FormItem>
           <Space>
@@ -27,7 +30,6 @@
             <Button type="primary" :loading="submitLoading" @click="handleSubmit" size="small">
               保存
             </Button>
-            <Button type="primary" size="small" @click="handleExport">导出</Button>
           </Space>
         </FormItem>
       </Form>
@@ -42,45 +44,39 @@
           </Space>
         </template>
         <!-- 可编辑列 -->
-        <!-- 所属房屋 -->
-        <template #house="{ row }">
-          <Select v-model:value="row.house" size="small">
-            <Select.Option v-for="item in houseList" :key="item.value" :value="item.value">
+        <!-- 类型 -->
+        <template #type="{ row }">
+          <Select v-model:value="row.type" size="small">
+            <Select.Option v-for="item in delicacyTypeList" :key="item.value" :value="item.value">
               {{ item.label }}
             </Select.Option>
           </Select>
         </template>
-        <!-- 月份 -->
-        <template #month="{ row }">
+        <!-- 日期 -->
+        <template #date="{ row }">
           <DatePicker
             :getPopupContainer="(trigger) => trigger.parentElement as HTMLElement"
-            picker="month"
             size="small"
-            value-format="YYYY-MM"
-            format="YYYY-MM"
-            v-model:value="row.month"
-            @change="() => handleChangeMonth(row)"
+            value-format="YYYY-MM-DD"
+            format="YYYY-MM-DD"
+            v-model:value="row.date"
           />
+        </template>
+        <!-- 店家 -->
+        <template #name="{ row }">
+          <Input v-model:value="row.name" size="small" />
+        </template>
+        <!-- 地点 -->
+        <template #location="{ row }">
+          <Input v-model:value="row.location" size="small" />
         </template>
         <!-- 备注 -->
         <template #memo="{ row }">
           <Input v-model:value="row.memo" size="small" />
         </template>
-        <!-- 电价 -->
+        <!-- 价格 -->
         <template #price="{ row }">
-          <InputNumber v-model:value="row.price" size="small" />
-        </template>
-        <!-- 电费 -->
-        <template #cost="{ row }">
-          <InputNumber v-model:value="row.cost" size="small" @change="() => handleCalcPrice(row)" />
-        </template>
-        <!-- 用电量 -->
-        <template #power="{ row }">
-          <InputNumber
-            v-model:value="row.power"
-            size="small"
-            @change="() => handleCalcPrice(row)"
-          />
+          <InputNumber v-model:value="row.price" addon-before="￥" addon-after="元" size="small" />
         </template>
       </vxe-grid>
     </VxeContainer>
@@ -103,18 +99,19 @@
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
   import dayjs from 'dayjs';
-  import { isNumber } from 'mathjs';
-  import { divide } from '@sirpho/utils';
   import { useDict } from '@/hooks/web/useDict';
+  import { isNumber } from '@/utils/is';
 
   interface FormState {
-    house: string;
-    year: string;
+    date: string;
+    type: string;
+    location: string;
   }
 
   const formState = reactive<FormState>({
-    house: '', // 所属房屋
-    year: '', // 年份
+    date: '', // 日期
+    type: '', // 类型
+    location: '', // 地点
   });
 
   const xTable = ref({} as VxeTableInstance);
@@ -122,19 +119,18 @@
   const tableLoading = ref(false);
   const submitLoading = ref(false);
 
-  const [houseList] = useDict([
-    'ELECTRICITY_HOUSE', // 用电房屋
+  const [delicacyTypeList] = useDict([
+    'DELICACY_TYPE', // 类型
   ]);
 
   /**
    * 校验
    */
   const validRules = ref({
-    house: [{ required: true, message: '必填项' }],
-    month: [{ required: true, message: '必填项' }],
-    power: [{ required: true, message: '必填项' }],
-    cost: [{ required: true, message: '必填项' }],
-    price: [{ required: true, message: '必填项' }],
+    name: [{ required: true, message: '必填项' }],
+    date: [{ required: true, message: '必填项' }],
+    location: [{ required: true, message: '必填项' }],
+    type: [{ required: true, message: '必填项' }],
   } as VxeTablePropTypes.EditRules);
 
   const gridOptions = reactive<VxeGridProps>({
@@ -145,49 +141,52 @@
     columns: [
       { type: 'checkbox', width: 40, fixed: 'left', align: 'center' },
       {
-        field: 'house',
-        title: '所属房屋',
+        field: 'name',
+        title: '店家',
         editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'house' },
+        slots: { edit: 'name' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
       },
       {
-        field: 'month',
-        title: '年月',
+        field: 'date',
+        title: '日期',
         editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'month' },
+        slots: { edit: 'date' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
       },
       {
-        field: 'power',
-        title: '用电量（千瓦时）',
-        editRender: { autofocus: '.ant-input-number-input' },
-        slots: { edit: 'power' },
+        field: 'location',
+        title: '地点',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'location' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
       },
       {
-        field: 'cost',
-        title: '电费（元）',
-        editRender: { autofocus: '.ant-input-number-input' },
-        slots: { edit: 'cost' },
+        field: 'type',
+        title: '类型',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'type' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
       },
       {
         field: 'price',
-        title: '电价/度',
+        title: '价格',
         editRender: { autofocus: '.ant-input-number-input' },
         slots: { edit: 'price' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        formatter: ({ row }) => {
+          return isNumber(row.price) ? `￥${row.price}元` : '';
+        },
       },
       {
         field: 'memo',
@@ -224,8 +223,7 @@
   const handleInsertLine = async () => {
     // 新增行默认值
     const record = {
-      year: dayjs().format('YYYY'),
-      month: dayjs().subtract(1, 'month').format('YYYY-MM'),
+      date: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
     };
     const { row: newRow } = await xTable.value.insertAt(record, null);
     await xTable.value.setEditRow(newRow);
@@ -269,39 +267,10 @@
       },
     });
   };
-
-  /**
-   * 修改月份，同步修改年份
-   */
-  const handleChangeMonth = (row) => {
-    row.year = row.month ? dayjs(new Date(row.month)).format('YYYY') : row.year;
-  };
-
-  /**
-   * 计算电价
-   */
-  const handleCalcPrice = (row) => {
-    if (isNumber(row.cost) && isNumber(row.power)) {
-      row.price = divide(row.cost, row.power).toFixed(3);
-    }
-  };
-
-  /**
-   * 导出
-   */
-  const handleExport = () => {
-    xTable.value.exportData({
-      filename: '电量电费',
-      columnFilterMethod: ({ column }) => {
-        return !!column.field;
-      },
-      type: 'xlsx',
-    });
-  };
 </script>
 <script lang="ts">
   export default {
-    name: 'ElectricityList',
+    name: 'DelicacyList',
   };
 </script>
 <style lang="less" scoped>

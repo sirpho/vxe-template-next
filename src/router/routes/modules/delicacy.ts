@@ -8,16 +8,16 @@ import { t } from '@/hooks/web/useI18n';
 
 const route: AppRouteModule = {
   /**
-   * 小说
+   * 小城食记
    */
-  path: '/novel',
-  name: 'novel',
+  path: '/delicacy',
+  name: 'delicacy',
   component: LAYOUT,
-  redirect: '/novel/list',
+  redirect: '/delicacy/list',
   meta: {
-    icon: 'material-symbols:book-4-rounded',
-    title: t('routes.novel.novel'),
-    orderNo: 11,
+    icon: 'emojione-monotone:pot-of-food',
+    title: t('routes.delicacy.delicacy'),
+    orderNo: 12,
   },
   children: [
     /**
@@ -25,23 +25,23 @@ const route: AppRouteModule = {
      */
     {
       path: 'list',
-      name: 'novel-list',
-      component: () => import('/@/views/novel/list/index.vue'),
+      name: 'delicacy-list',
+      component: () => import('/@/views/delicacy/list/index.vue'),
       meta: {
-        icon: 'lets-icons:book-duotone-line',
-        title: t('routes.novel.list'),
+        icon: 'dashicons:food',
+        title: t('routes.delicacy.list'),
       },
     },
     /**
      * 统计分析
      */
     {
-      path: 'analysis',
-      name: 'novel-analysis',
-      component: () => import('/@/views/novel/analysis/index.vue'),
+      path: 'delicacyAnalysis',
+      name: 'delicacy-analysis',
+      component: () => import('/@/views/delicacy/analysis/index.vue'),
       meta: {
         icon: 'carbon:text-link-analysis',
-        title: t('routes.novel.analysis'),
+        title: t('routes.delicacy.analysis'),
       },
     },
   ],
