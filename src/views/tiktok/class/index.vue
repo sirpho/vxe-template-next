@@ -83,7 +83,7 @@
     toolbarConfig: { slots: { buttons: 'toolbar_buttons' } },
     editRules: validRules.value,
     columns: [
-      { type: 'checkbox', width: 40, fixed: 'left', align: 'center' },
+      { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
       { type: 'seq', title: '序号', width: 120, align: 'center' },
       {
         field: 'name',

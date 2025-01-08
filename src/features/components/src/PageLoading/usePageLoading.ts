@@ -25,7 +25,7 @@ export const usePageLoading = () => {
   watch(
     () => props.count,
     (v, ov) => {
-      if (v >= 0 && props.isOpen === false) {
+      if (v >= 0 && !props.isOpen) {
         open();
         props.isOpen = true;
       }

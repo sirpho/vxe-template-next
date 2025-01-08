@@ -143,7 +143,7 @@
     toolbarConfig: { slots: { buttons: 'toolbar_buttons' } },
     editRules: validRules.value,
     columns: [
-      { type: 'checkbox', width: 40, fixed: 'left', align: 'center' },
+      { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
       {
         field: 'house',
         title: '所属房屋',
