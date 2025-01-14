@@ -1,15 +1,15 @@
 {
-  "name": "@wahaha/songyu",
+  "name": "@sirpho/vxe-template-next",
   "version": "1.0.0",
-  "homepage": "http://gitlab.wahaha.com.cn:8090/erp/whhim-mro-page",
+  "homepage": "https://github.com/sirpho/vxe-template-next",
   "repository": {
     "type": "git",
-    "url": "http://gitlab.wahaha.com.cn:8090/erp/whhim-mro-page"
+    "url": "https://github.com/sirpho/vxe-template-next"
   },
   "license": "ISC",
   "author": {
-    "name": "cheng.xin",
-    "email": "xincheng@wahaha.com.cn"
+    "name": "sirpho",
+    "email": "sirpho@foxmail.com"
   },
   "type": "module",
   "scripts": {
