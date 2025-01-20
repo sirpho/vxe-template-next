@@ -17,7 +17,7 @@ export default defineApplicationConfig({
     server: {
       // proxy: {
       //   '/api': {
-      //     target: 'https://server.perflogs.top/',
+      //     target: 'https://server.sirpho.top/',
       //     changeOrigin: true,
       //     ws: true,
       //   },

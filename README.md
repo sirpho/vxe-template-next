@@ -25,7 +25,7 @@ pnpm build:production
 ```bash
 D:
 
-scp "D:\document\sirpho\vxe-template-next\dist\dist.zip" root@home.perflogs.top:/var/www/html/home
+scp "D:\document\sirpho\vxe-template-next\dist\dist.zip" root@www.sirpho.top:/var/www/html/home
 
 
 ```
@@ -34,7 +34,7 @@ scp "D:\document\sirpho\vxe-template-next\dist\dist.zip" root@home.perflogs.top:
 
 ```bash
 
-ssh root@home.perflogs.top
+ssh root@www.sirpho.top
 
 cd /var/www/html/home
 rm -rf _app.config.js assets index.html logo-primary.svg logo-white.svg resource scripts
