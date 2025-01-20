@@ -83,6 +83,7 @@
     "echarts": "^5.4.3",
     "esdk-obs-browserjs": "^3.24.3",
     "exceljs": "^4.4.0",
+    "flv.js": "^1.6.2",
     "lodash-es": "^4.17.21",
     "mathjs": "10.6.1",
     "mockjs": "^1.1.0",

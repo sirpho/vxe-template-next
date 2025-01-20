@@ -2,5 +2,6 @@
   "tools": "工具集",
   "dns": "dns配置",
   "obs": "obs上传",
+  "rtsp": "视频监控",
   "desktop": "文件夹图标生成"
 }

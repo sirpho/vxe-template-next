@@ -143,6 +143,8 @@ export interface GlobConfig {
   title: string;
   // Service interface url
   apiUrl: string;
+  // websocket interface url
+  wsUrl: string;
   // Upload url
   uploadUrl?: string;
   //  Service interface url prefix
@@ -155,6 +157,8 @@ export interface GlobEnvConfig {
   VITE_GLOB_APP_TITLE: string;
   // Service interface url
   VITE_GLOB_API_URL: string;
+  // websocket interface url
+  VITE_GLOB_WS_URL: string;
   // Service interface url prefix
   VITE_GLOB_API_URL_PREFIX?: string;
   // Upload url
