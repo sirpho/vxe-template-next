@@ -2,6 +2,13 @@
   <PageContainer>
     <VxeContainer>
       <div class="h-100% flex flex-col p-2">
+        <RadioGroup v-model:value="year" @change="handleChangeYear">
+          <RadioButton v-for="item in Object.keys(yearGroupBy).sort()" :key="item" :value="item">
+            {{ item }}
+          </RadioButton>
+          <RadioButton value="">全部</RadioButton>
+        </RadioGroup>
+        <Divider />
         <RadioGroup v-model:value="valueMode" @change="handleChangeMode">
           <RadioButton value="typeMode">按类型</RadioButton>
           <RadioButton value="nameMode">按商家</RadioButton>
@@ -14,15 +21,18 @@
 </template>
 <script lang="ts" setup>
   import { Ref, ref, onMounted } from 'vue';
-  import { RadioGroup, RadioButton } from 'ant-design-vue';
+  import { RadioGroup, RadioButton, Divider } from 'ant-design-vue';
   import { useECharts } from '@/hooks/web/useECharts';
   import { list } from './service';
   import { groupBy } from 'lodash-es';
+  import dayjs from 'dayjs';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
 
   const valueMode = ref<'typeMode' | 'nameMode' | 'locationMode'>('typeMode');
+
+  const year = ref('');
 
   const originList = ref<any[]>([]);
   const echartData = ref<any[]>([]);
@@ -30,12 +40,21 @@
   const nameGroupBy = ref<any>({});
   const locationGroupBy = ref<any>({});
 
+  const yearGroupBy = ref<any>({});
+  const yearFilterList = ref<any[]>([]);
+
   onMounted(() => {
     list().then((res) => {
-      originList.value = res.data || [];
-      typeGroupBy.value = groupBy(originList.value, 'type');
-      nameGroupBy.value = groupBy(originList.value, 'name');
-      locationGroupBy.value = groupBy(originList.value, 'location');
+      originList.value = (res.data || []).map((item) => ({
+        ...item,
+        year: dayjs(item.date).format('YYYY年'),
+      }));
+      yearFilterList.value = originList.value;
+
+      yearGroupBy.value = groupBy(yearFilterList.value, 'year');
+      typeGroupBy.value = groupBy(yearFilterList.value, 'type');
+      nameGroupBy.value = groupBy(yearFilterList.value, 'name');
+      locationGroupBy.value = groupBy(yearFilterList.value, 'location');
 
       resetOptions();
     });
@@ -58,7 +77,7 @@
   const resetOptions = () => {
     echartData.value = [];
     const result: Record<string, number> = {};
-    originList.value.forEach((item) => {
+    yearFilterList.value.forEach((item) => {
       let nameField;
       switch (valueMode.value) {
         case 'typeMode':
@@ -141,6 +160,22 @@
         },
       ],
     });
+  };
+
+  /**
+   * 修改年份
+   */
+  const handleChangeYear = () => {
+    if (!year.value) {
+      yearFilterList.value = originList.value;
+    } else {
+      yearFilterList.value = yearGroupBy.value[year.value] || [];
+    }
+    typeGroupBy.value = groupBy(yearFilterList.value, 'type');
+    nameGroupBy.value = groupBy(yearFilterList.value, 'name');
+    locationGroupBy.value = groupBy(yearFilterList.value, 'location');
+
+    resetOptions();
   };
 
   /**
