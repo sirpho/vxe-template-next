@@ -7,7 +7,7 @@
             <img
               :alt="title"
               src="../../../assets/svg/login-box-bg.svg"
-              class="w-1/2 -mt-16 -enter-x"
+              class="w-1/2 -mt-16 animate-float"
             />
             <div class="mt-10 font-medium text-white -enter-x">
               <span class="inline-block mt-4 text-3xl"> {{ t('sys.login.signInTitle') }}</span>
@@ -20,9 +20,20 @@
         <div class="flex w-full h-full py-5 xl:h-auto xl:py-0 xl:my-0 xl:w-6/12">
           <div
             :class="`${prefixCls}-form`"
-            class="relative w-full px-5 py-8 mx-auto my-auto rounded-md shadow-md xl:ml-16 xl:bg-transparent sm:px-8 xl:p-4 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto enter-x"
+            class="relative w-full px-5 py-8 mx-auto my-auto rounded-md shadow-md xl:ml-16 xl:bg-transparent sm:px-8 xl:p-4 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-128 enter-x"
           >
             <LoginForm />
+          </div>
+          <div
+            class="record-report w-full sm:w-3/4 lg:w-2/4 xl:w-128 xl:ml-16 text-center -enter-x"
+          >
+            <a
+              href="https://record-report.miit.gov.cn/"
+              target="_blank"
+              class="ds-a ds-a--link text-sm !text-slate-600"
+            >
+              浙ICP备2025148169号
+            </a>
           </div>
         </div>
       </div>
@@ -72,6 +83,7 @@
       left: 0;
       width: 100%;
       height: 100%;
+      z-index: 2;
       margin-left: -48%;
       background-image: url('@/assets/svg/login-bg.svg');
       background-repeat: no-repeat;
@@ -99,6 +111,8 @@
     }
 
     .container {
+      position: relative;
+      z-index: 9;
       .@{logo-prefix-cls} {
         display: flex;
         width: 60%;
@@ -145,6 +159,27 @@
       @media (max-width: @screen-sm) {
         min-width: 160px;
       }
+    }
+  }
+
+  .record-report {
+    position: absolute;
+    bottom: 10px;
+  }
+
+  .animate-float {
+    animation: float 5s linear 0s infinite;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(25px);
+    }
+    100% {
+      transform: translateY(0);
     }
   }
 </style>

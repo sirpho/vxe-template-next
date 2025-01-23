@@ -152,7 +152,7 @@ export default defineComponent({
     const handleQueryNamesilo = (domainItem) => {
       state.queryLoading = true;
       fetch(
-        `https://server.sirpho.top/namesiloProxy/api/dnsListRecords?version=1&type=xml&key=${domainItem!.key}&domain=${domainItem!.value}`,
+        `https://www.sirpho.top/namesiloProxy/api/dnsListRecords?version=1&type=xml&key=${domainItem!.key}&domain=${domainItem!.value}`,
       )
         .then((response) => {
           if (!response.ok) {
