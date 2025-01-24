@@ -24,7 +24,7 @@
   import { RadioGroup, RadioButton, Divider } from 'ant-design-vue';
   import { useECharts } from '@/hooks/web/useECharts';
   import { list } from './service';
-  import { groupBy } from 'lodash-es';
+  import { groupBy, sortBy } from 'lodash-es';
   import dayjs from 'dayjs';
 
   const chartRef = ref<HTMLDivElement | null>(null);
@@ -32,7 +32,7 @@
 
   const valueMode = ref<'typeMode' | 'nameMode' | 'locationMode'>('typeMode');
 
-  const year = ref('');
+  const year = ref(dayjs().format('YYYY年'));
 
   const originList = ref<any[]>([]);
   const echartData = ref<any[]>([]);
@@ -56,6 +56,7 @@
       nameGroupBy.value = groupBy(yearFilterList.value, 'name');
       locationGroupBy.value = groupBy(yearFilterList.value, 'location');
 
+      handleChangeYear();
       resetOptions();
     });
   });
@@ -96,13 +97,14 @@
         result[item[nameField]] = 1;
       }
     });
-
+    const resultList = [];
     for (const field of Object.keys(result)) {
-      echartData.value.push({
+      resultList.push({
         name: field,
         value: result[field],
       });
     }
+    echartData.value = sortBy(resultList, 'value').reverse();
 
     setOptions({
       tooltip: {

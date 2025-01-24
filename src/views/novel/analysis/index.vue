@@ -16,8 +16,8 @@
   import { Ref, ref, onMounted } from 'vue';
   import { RadioGroup, RadioButton } from 'ant-design-vue';
   import { useECharts } from '@/hooks/web/useECharts';
-  import { analysis } from './service';
-  import { groupBy } from 'lodash-es';
+  import { analysis, getLinearColorList } from './service';
+  import { groupBy, sortBy } from 'lodash-es';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
@@ -100,12 +100,15 @@
       }
     });
 
+    const resultList = [];
+
     for (const field of Object.keys(result)) {
-      echartData.value.push({
+      resultList.push({
         name: field,
         value: result[field],
       });
     }
+    echartData.value = sortBy(resultList, 'value').reverse();
 
     setOptions({
       tooltip: {
@@ -140,18 +143,12 @@
       },
       series: [
         {
+          color: getLinearColorList(),
           name: getModeName(),
           type: 'pie',
           radius: '55%',
           center: ['50%', '50%'],
           data: echartData.value,
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
         },
       ],
     });

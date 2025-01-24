@@ -49,6 +49,30 @@ export function hexToRGB(hex: string) {
   return sHex;
 }
 
+/**
+ * 16进制颜色转为rgba格式
+ * @param hex
+ * @param alpha
+ */
+export function hexToRGBA(hex: string, alpha: number) {
+  let sHex = hex.toLowerCase();
+  if (isHexColor(hex)) {
+    if (sHex.length === 4) {
+      let sColorNew = '#';
+      for (let i = 1; i < 4; i += 1) {
+        sColorNew += sHex.slice(i, i + 1).concat(sHex.slice(i, i + 1));
+      }
+      sHex = sColorNew;
+    }
+    const sColorChange: number[] = [];
+    for (let i = 1; i < 7; i += 2) {
+      sColorChange.push(parseInt('0x' + sHex.slice(i, i + 2)));
+    }
+    return `RGBA(${sColorChange.join(',')}, ${alpha})`;
+  }
+  return sHex;
+}
+
 export function colorIsDark(color: string) {
   if (!isHexColor(color)) return;
   const [r, g, b] = hexToRGB(color)
