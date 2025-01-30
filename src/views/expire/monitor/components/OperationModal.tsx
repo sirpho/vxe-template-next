@@ -49,12 +49,12 @@ export default defineComponent({
       location: undefined,
       name: undefined,
       memo: undefined,
-      quantity: undefined,
+      quantity: 1,
       productionDate: undefined,
       expireDate: undefined,
       tags: [],
       type: undefined,
-      unit: '份',
+      unit: '盒',
     });
     const [tagList, unitList, typeList] = useDict([
       'TAG', // 标签列表

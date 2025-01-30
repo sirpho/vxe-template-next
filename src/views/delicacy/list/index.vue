@@ -223,7 +223,7 @@
   const handleInsertLine = async () => {
     // 新增行默认值
     const record = {
-      date: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+      date: dayjs().format('YYYY-MM-DD'),
     };
     const { row: newRow } = await xTable.value.insertAt(record, null);
     await xTable.value.setEditRow(newRow);
