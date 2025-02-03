@@ -53,7 +53,7 @@ export default defineComponent({
       productionDate: undefined,
       expireDate: undefined,
       tags: [],
-      type: undefined,
+      type: '药品',
       unit: '盒',
     });
     const [tagList, unitList, typeList] = useDict([
