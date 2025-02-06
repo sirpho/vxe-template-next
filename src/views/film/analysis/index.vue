@@ -3,9 +3,9 @@
     <VxeContainer>
       <div class="h-100% flex flex-col p-2">
         <RadioGroup v-model:value="valueMode" @change="handleChangeMode">
-          <RadioButton value="categoryMode">按大类</RadioButton>
-          <RadioButton value="locationMode">按制片地区</RadioButton>
           <RadioButton value="typeMode">按类型</RadioButton>
+          <RadioButton value="categoryMode">按大类</RadioButton>
+          <RadioButton value="locationMode">按地区</RadioButton>
         </RadioGroup>
         <div ref="chartRef" class="h-100% flex-1"></div>
       </div>
@@ -16,13 +16,14 @@
   import { Ref, ref, onMounted } from 'vue';
   import { RadioGroup, RadioButton } from 'ant-design-vue';
   import { useECharts } from '@/hooks/web/useECharts';
-  import { analysis, getLinearColorList } from './service';
+  import { analysis } from './service';
   import { groupBy, orderBy, sortBy } from 'lodash-es';
+  import { getLinearColorList } from '@/utils/color';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
 
-  const valueMode = ref<'typeMode' | 'locationMode' | 'categoryMode'>('categoryMode');
+  const valueMode = ref<'typeMode' | 'locationMode' | 'categoryMode'>('typeMode');
 
   const originList = ref<any[]>([]);
   const echartData = ref<any[]>([]);
@@ -108,37 +109,37 @@
         trigger: 'item',
         formatter: (info) => {
           const { value, name, percent } = info;
-          let filmList = [];
+          let list = [];
           switch (valueMode.value) {
             case 'typeMode':
-              filmList = typeGroupBy.value[name] || [];
+              list = typeGroupBy.value[name] || [];
               break;
             case 'locationMode':
-              filmList = locationGroupBy.value[name] || [];
+              list = locationGroupBy.value[name] || [];
               break;
             case 'categoryMode':
-              filmList = categoryGroupBy.value[name] || [];
+              list = categoryGroupBy.value[name] || [];
               break;
           }
 
-          filmList = orderBy(filmList, ['name'], ['asc']).map((item) => getClass(item));
+          list = orderBy(list, ['name'], ['asc']).map((item) => getClass(item));
 
-          let filmList2 = [];
-          for (let i = 0; i < filmList.length; i += 4) {
-            const chunk = filmList.slice(i, i + 4);
-            filmList2.push(chunk.join('  '));
+          let chunkList = [];
+          for (let i = 0; i < list.length; i += 4) {
+            const chunk = list.slice(i, i + 4);
+            chunkList.push(chunk.join('  '));
           }
 
           return [
-            '<div class="tooltip-title">' + name + '</div>',
-            `<div class="tooltip-title">${value} 部，占比${percent}%</div>`,
-            ...filmList2.map((item) => `<div class="tooltip-title">${item}</div>`),
+            '<div class="echarts-tooltip-title">' + name + '</div>',
+            `<div class="echarts-tooltip-title">${value} 部，占比${percent}%</div>`,
+            ...chunkList.map((item) => `<div>${item}</div>`),
           ].join('');
         },
       },
       series: [
         {
-          color: getLinearColorList(),
+          color: getLinearColorList('#629412'),
           name: getModeName(),
           type: 'pie',
           radius: '55%',

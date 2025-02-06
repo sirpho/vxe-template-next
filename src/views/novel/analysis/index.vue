@@ -16,8 +16,9 @@
   import { Ref, ref, onMounted } from 'vue';
   import { RadioGroup, RadioButton } from 'ant-design-vue';
   import { useECharts } from '@/hooks/web/useECharts';
-  import { analysis, getLinearColorList } from './service';
+  import { analysis } from './service';
   import { groupBy, sortBy } from 'lodash-es';
+  import { getLinearColorList } from '@/utils/color';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
@@ -76,11 +77,11 @@
   const resetOptions = () => {
     echartData.value = [];
     const result: Record<string, number> = {};
-    const list =
+    const array =
       valueMode.value === 'readMode'
         ? originList.value
         : originList.value.filter((item) => item.readStatus !== '弃坑');
-    list.forEach((item) => {
+    array.forEach((item) => {
       let nameField;
       switch (valueMode.value) {
         case 'typeMode':
@@ -115,35 +116,35 @@
         trigger: 'item',
         formatter: (info) => {
           const { value, name, percent } = info;
-          let bookList = [];
+          let list = [];
           switch (valueMode.value) {
             case 'typeMode':
-              bookList = (typeGroupBy.value[name] || []).map((item) => getClass(item));
+              list = (typeGroupBy.value[name] || []).map((item) => getClass(item));
               break;
             case 'authorMode':
-              bookList = (authorGroupBy.value[name] || []).map((item) => getClass(item));
+              list = (authorGroupBy.value[name] || []).map((item) => getClass(item));
               break;
             case 'readMode':
-              bookList = (readGroupBy.value[name] || []).map((item) => getClass(item));
+              list = (readGroupBy.value[name] || []).map((item) => getClass(item));
               break;
           }
 
-          let bookList2 = [];
-          for (let i = 0; i < bookList.length; i += 4) {
-            const chunk = bookList.slice(i, i + 4);
-            bookList2.push(chunk.join('  '));
+          let chunkList = [];
+          for (let i = 0; i < list.length; i += 4) {
+            const chunk = list.slice(i, i + 4);
+            chunkList.push(chunk.join('  '));
           }
 
           return [
-            '<div class="tooltip-title">' + name + '</div>',
-            `<div class="tooltip-title">${value} 本，占比${percent}%</div>`,
-            ...bookList2.map((item) => `<div class="tooltip-title">${item}</div>`),
+            '<div class="echarts-tooltip-title">' + name + '</div>',
+            `<div class="echarts-tooltip-title">${value} 本，占比${percent}%</div>`,
+            ...chunkList.map((item) => `<div>${item}</div>`),
           ].join('');
         },
       },
       series: [
         {
-          color: getLinearColorList(),
+          color: getLinearColorList('#D26913'),
           name: getModeName(),
           type: 'pie',
           radius: '55%',

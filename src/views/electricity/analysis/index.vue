@@ -60,10 +60,12 @@
       result[field] = groupBy(result[field] || [], 'year');
     }
 
-    tabListTitle.value = Object.keys(result).map((item) => ({
-      key: item,
-      tab: item,
-    }));
+    tabListTitle.value = Object.keys(result)
+      .map((item) => ({
+        key: item,
+        tab: item,
+      }))
+      .reverse();
     activeKey.value = tabListTitle.value.length > 0 ? tabListTitle.value[0].key : '';
     houseMap.value = result;
 

@@ -52,6 +52,7 @@
         <!-- 表格操作 -->
         <template #toolbar_buttons>
           <Space>
+            合计：{{ tableList.length }}本
             <Button size="small" type="link" @click="handleInsertLine">新增行</Button>
             <Button size="small" type="link" @click="handleRemoveLine">删除行</Button>
           </Space>

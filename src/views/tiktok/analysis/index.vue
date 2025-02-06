@@ -78,20 +78,20 @@
               return add(previousValue, currentValue.totalDuration);
             }, 0);
             return [
-              `<div class="tooltip-title">合计人数: ${children.length}</div>`,
-              `<div class="tooltip-title">存储容量: ${formatSize(totalSize)}</div>`,
-              `<div class="tooltip-title">视频数量: ${echarts.format.addCommas(videoCount)}</div>`,
-              `<div class="tooltip-title">播放时长: ${formatDuration(totalDuration)}</div>`,
+              `<div class="echarts-tooltip-title">合计人数: ${children.length}</div>`,
+              `<div class="echarts-tooltip-title">存储容量: ${formatSize(totalSize)}</div>`,
+              `<div class="echarts-tooltip-title">视频数量: ${echarts.format.addCommas(videoCount)}</div>`,
+              `<div class="echarts-tooltip-title">播放时长: ${formatDuration(totalDuration)}</div>`,
             ].join('');
           }
           const totalSize = data.totalSize;
           const videoCount = data.videoCount;
           const totalDuration = data.totalDuration;
           return [
-            '<div class="tooltip-title">' + data.name + '</div>',
-            `<div class="tooltip-title">存储容量: ${formatSize(totalSize)}</div>`,
-            `<div class="tooltip-title">视频数量: ${echarts.format.addCommas(videoCount)}</div>`,
-            `<div class="tooltip-title">播放时长: ${formatDuration(totalDuration)}</div>`,
+            '<div class="echarts-tooltip-title">' + data.name + '</div>',
+            `<div class="echarts-tooltip-title">存储容量: ${formatSize(totalSize)}</div>`,
+            `<div class="echarts-tooltip-title">视频数量: ${echarts.format.addCommas(videoCount)}</div>`,
+            `<div class="echarts-tooltip-title">播放时长: ${formatDuration(totalDuration)}</div>`,
           ].join('');
         },
       },

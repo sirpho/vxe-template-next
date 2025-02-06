@@ -24,6 +24,7 @@
   import { RadioGroup, RadioButton, Divider } from 'ant-design-vue';
   import { useECharts } from '@/hooks/web/useECharts';
   import { list } from './service';
+  import { getLinearColorList } from '@/utils/color';
   import { groupBy, sortBy } from 'lodash-es';
   import dayjs from 'dayjs';
 
@@ -139,26 +140,20 @@
           }
 
           return [
-            '<div class="tooltip-title">' + name + '</div>',
-            `<div class="tooltip-title">${value} 次，占比${percent}%</div>`,
-            ...chunkList.map((item) => `<div class="tooltip-title">${item}</div>`),
+            '<div class="echarts-tooltip-title">' + name + '</div>',
+            `<div class="echarts-tooltip-title">${value} 次，占比${percent}%</div>`,
+            ...chunkList.map((item) => `<div>${item}</div>`),
           ].join('');
         },
       },
       series: [
         {
+          color: getLinearColorList('#CC5729'),
           name: getModeName(),
           type: 'pie',
           radius: '55%',
           center: ['50%', '50%'],
           data: echartData.value,
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
         },
       ],
     });

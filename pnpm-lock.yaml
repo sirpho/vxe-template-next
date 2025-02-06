@@ -119,6 +119,9 @@ importers:
       splitpanes:
         specifier: ^3.1.5
         version: 3.1.5
+      tinycolor2:
+        specifier: ^1.6.0
+        version: 1.6.0
       tinymce:
         specifier: ^5.10.9
         version: 5.10.9
@@ -201,6 +204,9 @@ importers:
       '@types/splitpanes':
         specifier: ^2.2.1
         version: 2.2.6
+      '@types/tinycolor2':
+        specifier: ^1.4.6
+        version: 1.4.6
       '@vben/eslint-config':
         specifier: workspace:*
         version: link:internal/eslint-config
@@ -3125,6 +3131,10 @@ packages:
     resolution: {integrity: sha512-ypzHFE/wBzh+BlH6rrBgS5I/Z7RD21pGhZ2rltb/+ZrVM1awdZwjx7hE5XfuYgHWk9uvV5HLZN3SloevCAp3Bw==}
     dependencies:
       '@types/estree': 1.0.6
+    dev: true
+
+  /@types/tinycolor2@1.4.6:
+    resolution: {integrity: sha512-iEN8J0BoMnsWBqjVbWH/c0G0Hh7O21lpR2/+PrvAVgWdzL7eexIFm4JN/Wn10PTcmNdtS6U67r499mlWMXOxNw==}
     dev: true
 
   /@types/web-bluetooth@0.0.20:
@@ -12034,6 +12044,10 @@ packages:
 
   /tiny-emitter@2.1.0:
     resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
+    dev: false
+
+  /tinycolor2@1.6.0:
+    resolution: {integrity: sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==}
     dev: false
 
   /tinyexec@0.3.1:

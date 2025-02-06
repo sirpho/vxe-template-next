@@ -5,7 +5,7 @@
         <FormItem label="名称" name="name">
           <Input v-model:value="formState.name" allow-clear size="small" />
         </FormItem>
-        <FormItem label="制片地区" name="location">
+        <FormItem label="地区" name="location">
           <Input v-model:value="formState.location" allow-clear size="small" />
         </FormItem>
         <FormItem label="大类" name="category">
@@ -31,6 +31,7 @@
         <!-- 表格操作 -->
         <template #toolbar_buttons>
           <Space>
+            合计：{{ tableList.length }}部
             <Button size="small" type="link" @click="handleInsertLine">新增行</Button>
             <Button size="small" type="link" @click="handleRemoveLine">删除行</Button>
           </Space>
@@ -48,7 +49,7 @@
         <template #type="{ row }">
           <Input v-model:value="row.type" size="small" />
         </template>
-        <!-- 制片地区 -->
+        <!-- 地区 -->
         <template #location="{ row }">
           <Select v-model:value="row.location" size="small">
             <Select.Option v-for="item in locationList" :key="item.value" :value="item.value">
@@ -86,7 +87,7 @@
     name: '', // 名字
     category: '', // 大类
     type: '', // 类型
-    location: '', // 制片地区
+    location: '', // 地区
   });
 
   const xTable = ref({} as VxeTableInstance);
@@ -95,7 +96,7 @@
   const submitLoading = ref(false);
 
   const [locationList, categoryList] = useDict([
-    'FILM_LOCATION', // 影视制片地区
+    'FILM_LOCATION', // 影视地区
     'FILM_CATEGORY', // 影视大类
   ]);
 
@@ -129,7 +130,7 @@
       },
       {
         field: 'location',
-        title: '制片地区',
+        title: '地区',
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'location' },
         sortable: true,
