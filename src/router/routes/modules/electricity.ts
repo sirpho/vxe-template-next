@@ -17,7 +17,7 @@ const route: AppRouteModule = {
   meta: {
     icon: 'pepicons-pop:electricity',
     title: t('routes.electricity.electricity'),
-    orderNo: 12,
+    orderNo: 14,
   },
   children: [
     /**

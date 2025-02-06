@@ -8,16 +8,16 @@ import { t } from '@/hooks/web/useI18n';
 
 const route: AppRouteModule = {
   /**
-   * 小城食记
+   * 影视
    */
-  path: '/delicacy',
-  name: 'delicacy',
+  path: '/film',
+  name: 'film',
   component: LAYOUT,
-  redirect: '/delicacy/list',
+  redirect: '/film/list',
   meta: {
-    icon: 'emojione-monotone:pot-of-food',
-    title: t('routes.delicacy.delicacy'),
-    orderNo: 13,
+    icon: 'mdi:film-open-play',
+    title: t('routes.film.film'),
+    orderNo: 12,
   },
   children: [
     /**
@@ -25,23 +25,23 @@ const route: AppRouteModule = {
      */
     {
       path: 'list',
-      name: 'delicacy-list',
-      component: () => import('/@/views/delicacy/list/index.vue'),
+      name: 'film-list',
+      component: () => import('/@/views/film/list/index.vue'),
       meta: {
-        icon: 'dashicons:food',
-        title: t('routes.delicacy.list'),
+        icon: 'lets-icons:book-duotone-line',
+        title: t('routes.film.list'),
       },
     },
     /**
      * 统计分析
      */
     {
-      path: 'delicacyAnalysis',
-      name: 'delicacy-analysis',
-      component: () => import('/@/views/delicacy/analysis/index.vue'),
+      path: 'analysis',
+      name: 'film-analysis',
+      component: () => import('/@/views/film/analysis/index.vue'),
       meta: {
         icon: 'carbon:text-link-analysis',
-        title: t('routes.delicacy.analysis'),
+        title: t('routes.film.analysis'),
       },
     },
   ],
