@@ -1,7 +1,7 @@
-import { Button, Input, message, Switch, Image } from 'ant-design-vue';
+import { Button, Input, message, Switch, Image, Popconfirm } from 'ant-design-vue';
 import ObsClient from 'esdk-obs-browserjs';
 import './index.less';
-import { list, save } from './service';
+import { list, remove, save } from './service';
 import { defineComponent, onMounted, reactive, ref } from 'vue';
 import { nanoid } from 'nanoid';
 import { PageContainer, VxeContainer } from '@/components/Layout';
@@ -76,6 +76,13 @@ export default defineComponent({
           filters: [{}],
           filterRender: { name: 'FilterExtend' },
           slots: { default: 'url' },
+        },
+        {
+          field: 'operation',
+          title: '操作',
+          width: 100,
+          showOverflow: false,
+          slots: { default: 'operation' },
         },
       ],
       showHeaderOverflow: 'tooltip',
@@ -181,6 +188,14 @@ export default defineComponent({
     };
 
     /**
+     * 删除
+     */
+    const handleRemove = async (record: any) => {
+      await remove(record.id);
+      query();
+    };
+
+    /**
      * 判断是否是图片文件
      * @param record
      */
@@ -267,6 +282,20 @@ export default defineComponent({
                     <Button type={'link'} onClick={() => handleCopy(row)}>
                       {row.url}
                     </Button>
+                  );
+                },
+                operation: ({ row }) => {
+                  return (
+                    <Popconfirm
+                      title="确定要删除该项记录吗？"
+                      ok-text="删除"
+                      cancel-text="取消"
+                      onConfirm={() => handleRemove(row)}
+                    >
+                      <Button type={'link'} danger>
+                        删除记录
+                      </Button>
+                    </Popconfirm>
                   );
                 },
               }}

@@ -65,6 +65,19 @@ const route: AppRouteModule = {
         title: t('routes.tools.obs'),
       },
     },
+
+    /**
+     * 网络拓扑
+     */
+    {
+      path: 'network',
+      name: 'network',
+      component: () => import('/@/views/tools/network/index.vue'),
+      meta: {
+        icon: 'carbon:network-3',
+        title: t('routes.tools.network'),
+      },
+    },
   ],
 };
 
