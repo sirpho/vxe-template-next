@@ -4,33 +4,35 @@
 
 ### 依赖安装
 
-```
+```bash
 pnpm install
 ```
 
 ### 测试环境打包命令
 
-```
+```bash
 pnpm run build
 ```
 
 ### 正式环境打包命令
 
-```
+```bash
 pnpm build:production
 ```
 
-## 1. 打包上传到服务器
+## 1. 打包dist目录并上传到服务器，上传完毕后删除dist目录
 
 ```bash
-D:
+
+tar -a -c -f D:\document\sirpho\vxe-template-next\dist\dist.zip -C D:\document\sirpho\vxe-template-next\dist .
 
 scp "D:\document\sirpho\vxe-template-next\dist\dist.zip" root@www.sirpho.top:/var/www/html/home
 
+Remove-Item -Path "D:\document\sirpho\vxe-template-next\dist" -Recurse -Force
 
 ```
 
-## 2. 登录服务器解压
+## 3. 登录服务器解压
 
 ```bash
 
