@@ -26,7 +26,7 @@ const route: AppRouteModule = {
     {
       path: 'enum',
       name: 'Enum',
-      component: () => import('/@/views/common-data/enum/index.vue'),
+      component: () => import('@/views/common-data/enum/index.vue'),
       meta: {
         icon: 'codicon:symbol-enum',
         title: t('routes.common-data.enum'),

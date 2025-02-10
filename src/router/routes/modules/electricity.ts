@@ -26,7 +26,7 @@ const route: AppRouteModule = {
     {
       path: 'list',
       name: 'electricity-list',
-      component: () => import('/@/views/electricity/list/index.vue'),
+      component: () => import('@/views/electricity/list/index.vue'),
       meta: {
         icon: 'ant-design:thunderbolt-filled',
         title: t('routes.electricity.list'),
@@ -38,7 +38,7 @@ const route: AppRouteModule = {
     {
       path: 'ElectricityAnalysis',
       name: 'electricity-analysis',
-      component: () => import('/@/views/electricity/analysis/index.vue'),
+      component: () => import('@/views/electricity/analysis/index.vue'),
       meta: {
         icon: 'carbon:text-link-analysis',
         title: t('routes.electricity.analysis'),

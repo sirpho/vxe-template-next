@@ -28,7 +28,7 @@ const route: AppRouteModule = {
       path: 'desktop',
       name: 'desktop',
       // @ts-ignore
-      component: () => import('/@/views/tools/desktop/index.tsx'),
+      component: () => import('@/views/tools/desktop/index.tsx'),
       meta: {
         // roles: [Attrs.HAS_20223278],
         icon: 'ph:desktop-duotone',
@@ -43,7 +43,7 @@ const route: AppRouteModule = {
       path: 'dns',
       name: 'dns',
       // @ts-ignore
-      component: () => import('/@/views/tools/dns/index.tsx'),
+      component: () => import('@/views/tools/dns/index.tsx'),
       meta: {
         // roles: [Attrs.HAS_20223278],
         icon: 'eos-icons:dns',
@@ -58,7 +58,7 @@ const route: AppRouteModule = {
       path: 'obs',
       name: 'obs',
       // @ts-ignore
-      component: () => import('/@/views/tools/obs/index.tsx'),
+      component: () => import('@/views/tools/obs/index.tsx'),
       meta: {
         // roles: [Attrs.HAS_20223278],
         icon: 'line-md:cloud-up',
@@ -72,7 +72,7 @@ const route: AppRouteModule = {
     {
       path: 'network',
       name: 'network',
-      component: () => import('/@/views/tools/network/index.vue'),
+      component: () => import('@/views/tools/network/index.vue'),
       meta: {
         icon: 'carbon:network-3',
         title: t('routes.tools.network'),

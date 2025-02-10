@@ -28,7 +28,7 @@ const route: AppRouteModule = {
       path: 'monitor',
       name: 'monitor',
       // @ts-ignore
-      component: () => import('/@/views/expire/monitor/index.tsx'),
+      component: () => import('@/views/expire/monitor/index.tsx'),
       meta: {
         // roles: [Attrs.HAS_20223278],
         icon: 'ri:medicine-bottle-fill',

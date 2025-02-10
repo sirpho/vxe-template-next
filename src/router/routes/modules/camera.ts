@@ -23,8 +23,7 @@ const route: AppRouteModule = {
     {
       path: 'camera/parking',
       name: 'parking',
-      // @ts-ignore
-      component: () => import('/@/views/camera/rtsp/index.vue'),
+      component: () => import('@/views/camera/rtsp/index.vue'),
       meta: {
         icon: 'cbi:camera-car',
         title: t('routes.camera.parking'),
@@ -38,7 +37,7 @@ const route: AppRouteModule = {
       path: 'camera/balcony',
       name: 'balcony',
       // @ts-ignore
-      component: () => import('/@/views/camera/rtsp/index.vue'),
+      component: () => import('@/views/camera/rtsp/index.vue'),
       meta: {
         icon: 'material-symbols:outdoor-garden',
         title: t('routes.camera.balcony'),
@@ -52,7 +51,7 @@ const route: AppRouteModule = {
       path: 'camera/gate',
       name: 'gate',
       // @ts-ignore
-      component: () => import('/@/views/camera/rtsp/index.vue'),
+      component: () => import('@/views/camera/rtsp/index.vue'),
       meta: {
         icon: 'bi:house-door-fill',
         title: t('routes.camera.gate'),
@@ -66,7 +65,7 @@ const route: AppRouteModule = {
       path: 'camera/aisle',
       name: 'aisle',
       // @ts-ignore
-      component: () => import('/@/views/camera/rtsp/index.vue'),
+      component: () => import('@/views/camera/rtsp/index.vue'),
       meta: {
         icon: 'mingcute:hotel-fill',
         title: t('routes.camera.aisle'),
@@ -80,7 +79,7 @@ const route: AppRouteModule = {
       path: 'camera/back',
       name: 'back',
       // @ts-ignore
-      component: () => import('/@/views/camera/rtsp/index.vue'),
+      component: () => import('@/views/camera/rtsp/index.vue'),
       meta: {
         icon: 'fluent:door-28-filled',
         title: t('routes.camera.back'),
@@ -94,7 +93,7 @@ const route: AppRouteModule = {
       path: 'camera/staircase',
       name: 'staircase',
       // @ts-ignore
-      component: () => import('/@/views/camera/rtsp/index.vue'),
+      component: () => import('@/views/camera/rtsp/index.vue'),
       meta: {
         icon: 'cbi:roomsstaircase',
         title: t('routes.camera.staircase'),

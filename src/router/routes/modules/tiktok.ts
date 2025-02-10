@@ -27,7 +27,7 @@ const route: AppRouteModule = {
     {
       path: 'analysis',
       name: 'Analysis',
-      component: () => import('/@/views/tiktok/analysis/index.vue'),
+      component: () => import('@/views/tiktok/analysis/index.vue'),
       meta: {
         // roles: [Attrs.HAS_20223278],
         icon: 'icon-park-twotone:analysis',
@@ -40,7 +40,7 @@ const route: AppRouteModule = {
     {
       path: 'tiktok-class',
       name: 'TiktokClass',
-      component: () => import('/@/views/tiktok/class/index.vue'),
+      component: () => import('@/views/tiktok/class/index.vue'),
       meta: {
         // roles: [Attrs.HAS_20223278],
         icon: 'tabler:category-2',
@@ -53,7 +53,7 @@ const route: AppRouteModule = {
     {
       path: 'tiktok-manage',
       name: 'TiktokManage',
-      component: () => import('/@/views/tiktok/manage/index.vue'),
+      component: () => import('@/views/tiktok/manage/index.vue'),
       meta: {
         // roles: [Attrs.HAS_20223278],
         icon: 'tabler:category-2',

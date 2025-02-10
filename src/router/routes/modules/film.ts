@@ -26,7 +26,7 @@ const route: AppRouteModule = {
     {
       path: 'list',
       name: 'film-list',
-      component: () => import('/@/views/film/list/index.vue'),
+      component: () => import('@/views/film/list/index.vue'),
       meta: {
         icon: 'lets-icons:book-duotone-line',
         title: t('routes.film.list'),
@@ -38,7 +38,7 @@ const route: AppRouteModule = {
     {
       path: 'analysis',
       name: 'film-analysis',
-      component: () => import('/@/views/film/analysis/index.vue'),
+      component: () => import('@/views/film/analysis/index.vue'),
       meta: {
         icon: 'carbon:text-link-analysis',
         title: t('routes.film.analysis'),

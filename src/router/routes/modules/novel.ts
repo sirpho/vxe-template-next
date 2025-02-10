@@ -26,7 +26,7 @@ const route: AppRouteModule = {
     {
       path: 'list',
       name: 'novel-list',
-      component: () => import('/@/views/novel/list/index.vue'),
+      component: () => import('@/views/novel/list/index.vue'),
       meta: {
         icon: 'lets-icons:book-duotone-line',
         title: t('routes.novel.list'),
@@ -38,7 +38,7 @@ const route: AppRouteModule = {
     {
       path: 'analysis',
       name: 'novel-analysis',
-      component: () => import('/@/views/novel/analysis/index.vue'),
+      component: () => import('@/views/novel/analysis/index.vue'),
       meta: {
         icon: 'carbon:text-link-analysis',
         title: t('routes.novel.analysis'),

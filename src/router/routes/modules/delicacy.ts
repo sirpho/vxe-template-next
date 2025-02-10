@@ -26,7 +26,7 @@ const route: AppRouteModule = {
     {
       path: 'list',
       name: 'delicacy-list',
-      component: () => import('/@/views/delicacy/list/index.vue'),
+      component: () => import('@/views/delicacy/list/index.vue'),
       meta: {
         icon: 'dashicons:food',
         title: t('routes.delicacy.list'),
@@ -38,7 +38,7 @@ const route: AppRouteModule = {
     {
       path: 'delicacyAnalysis',
       name: 'delicacy-analysis',
-      component: () => import('/@/views/delicacy/analysis/index.vue'),
+      component: () => import('@/views/delicacy/analysis/index.vue'),
       meta: {
         icon: 'carbon:text-link-analysis',
         title: t('routes.delicacy.analysis'),
