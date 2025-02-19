@@ -256,13 +256,9 @@
     closeModal();
   };
 
-  const MultipleModalVisible = reactive({
-    value: false,
-  });
+  const MultipleModalVisible = ref<boolean>(false);
 
-  const modalVisible = reactive({
-    value: false,
-  });
+  const modalVisible = ref<boolean>(false);
 
   const openModal = () => {
     if (props.beforeModalOpen && !props.beforeModalOpen()) {
