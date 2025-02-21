@@ -6,7 +6,7 @@
       :active-tab-key="activeKey"
       @tab-change="onTabChange"
     >
-      <YearElectricity
+      <YearWater
         v-if="Object.keys(chartDataMap).length > 0"
         :key="`${activeKey}_历年总计`"
         :data="chartTrendList"
@@ -14,7 +14,7 @@
         :title="`${chartTrendX[0]}~${chartTrendX[chartTrendX.length - 1]}年  共${chartTrendX.length}年总计`"
         total
       />
-      <YearElectricity
+      <YearWater
         v-for="item in Object.keys(chartDataMap).sort().reverse()"
         :key="`${activeKey}_${item}`"
         :data="chartDataMap[item]"
@@ -27,7 +27,7 @@
   import { onMounted, ref } from 'vue';
   import { Card } from 'ant-design-vue';
   import { list } from './service';
-  import YearElectricity from './components/YearElectricity.vue';
+  import YearWater from './components/YearWater.vue';
   import { groupBy } from 'lodash-es';
   import { add } from '@sirpho/utils';
 
@@ -106,6 +106,6 @@
 </script>
 <script lang="ts">
   export default {
-    name: 'ElectricityAnalysis',
+    name: 'WaterAnalysis',
   };
 </script>

@@ -2,11 +2,11 @@
   <Divider> {{ title }} </Divider>
   <div class="flex">
     <div class="flex flex-col justify-center">
-      <Statistic title="合计电量" :value="calcTotalPower" suffix="度" />
-      <Statistic title="合计电费" :value="calcTotalCost" prefix="￥" suffix="元" />
-      <Statistic title="平均电价" :value="calcAvgPrice" prefix="￥" suffix="元" />
-      <Statistic v-if="props.total" title="年均电量" :value="calcAvgPower" suffix="度" />
-      <Statistic v-if="props.total" title="年均电费" :value="calcAvgCost" prefix="￥" suffix="元" />
+      <Statistic title="合计用水量" :value="calcTotalPower" suffix="吨" />
+      <Statistic title="合计水费" :value="calcTotalCost" prefix="￥" suffix="元" />
+      <Statistic title="平均水价" :value="calcAvgPrice" prefix="￥" suffix="元" />
+      <Statistic v-if="props.total" title="年均用水量" :value="calcAvgPower" suffix="吨" />
+      <Statistic v-if="props.total" title="年均水费" :value="calcAvgCost" prefix="￥" suffix="元" />
     </div>
     <div class="flex-1" ref="chartRef" :style="{ height, width }"></div>
   </div>
@@ -14,7 +14,7 @@
 <script lang="ts" setup>
   import { computed, onMounted, PropType, ref, Ref } from 'vue';
   import { useECharts } from '@/hooks/web/useECharts';
-  import { type ElectricityRecord } from '@/views/electricity/analysis/service';
+  import { type WaterRecord } from '@/views/water/analysis/service';
   import echarts from '@/utils/lib/echarts';
   import { Divider, Statistic } from 'ant-design-vue';
   import { add, divide } from '@sirpho/utils';
@@ -75,7 +75,7 @@
         },
       },
       legend: {
-        data: ['用电量', '电费'],
+        data: ['用水量', '水费'],
         textStyle: {
           color: '#B4B4B4',
         },
@@ -95,16 +95,16 @@
         {
           splitLine: { show: true },
           type: 'value',
-          name: '用电量',
+          name: '用水量',
           min: 0,
           axisLabel: {
-            formatter: '{value} 千瓦时',
+            formatter: '{value} 吨',
           },
         },
         {
           splitLine: { show: false },
           type: 'value',
-          name: '电费',
+          name: '水费',
           min: 0,
           axisLabel: {
             formatter: '￥{value} 元',
@@ -113,26 +113,26 @@
       ],
       series: [
         {
-          name: '用电量',
+          name: '用水量',
           type: 'bar',
           tooltip: {
             valueFormatter: function (value) {
-              return echarts.format.addCommas(value) + ' 千瓦时';
+              return echarts.format.addCommas(value) + ' 吨';
             },
           },
           itemStyle: {
             normal: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: '#93B9F8' },
+                { offset: 0, color: '#ADD8E6' },
                 { offset: 1, color: '#D9EDF7' },
               ]),
             },
           },
           yAxisIndex: 0,
-          data: (props.data || []).map((item: ElectricityRecord) => item.power),
+          data: fillData.value.map((item: WaterRecord | null) => item?.power || undefined),
         },
         {
-          name: '电费',
+          name: '水费',
           type: 'bar',
           tooltip: {
             valueFormatter: function (value) {
@@ -148,11 +148,33 @@
             },
           },
           yAxisIndex: 1,
-          data: (props.data || []).map((item: ElectricityRecord) => item.cost),
+          data: fillData.value.map((item: WaterRecord | null) => item?.cost || undefined),
         },
       ],
     };
     setOptions(options);
+  });
+
+  /**
+   * 因为水费是隔一段时间统计一下，所以会有一些月份没有数据，需要填充为0
+   */
+  const fillData = computed(() => {
+    const data = props.data || [];
+    const xAxis = props.xAxis || [];
+    if (props.total || data.length === xAxis.length) {
+      return data;
+    }
+    const result = [];
+
+    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+      const dataItem = data.find((item) => new Date(item.month).getMonth() === monthIndex);
+      if (dataItem) {
+        result.push(dataItem);
+      } else {
+        result.push(null);
+      }
+    }
+    return result;
   });
 
   /**

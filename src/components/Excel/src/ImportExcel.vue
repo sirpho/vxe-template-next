@@ -152,7 +152,7 @@
           // console.log(workbook);
           /* DO SOMETHING WITH workbook HERE */
           const excelData = getExcelData(workbook);
-          emit('success', excelData);
+          emit('success', excelData, rawFile.name);
           resolve('');
         } catch (error) {
           reject(error);
@@ -188,7 +188,7 @@
 
     cancelRef.value = false;
     if (props.isReturnFile) {
-      emit('success', rawFile);
+      emit('success', rawFile, rawFile.name);
       return;
     }
     upload(rawFile);
