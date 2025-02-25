@@ -4,6 +4,7 @@ enum Api {
   list = '/api/cloudFile/list',
   save = '/api/cloudFile/save',
   remove = '/api/cloudFile/remove/',
+  upload = '/api/cloudFile/upload',
 }
 
 /**
@@ -25,4 +26,17 @@ export const save = (data: any) => {
  */
 export const remove = (id: string) => {
   return defHttp.get({ url: `${Api.remove}${id}` });
+};
+
+/**
+ * @description: 上传
+ */
+export const upload = (data: FormData) => {
+  return defHttp.defaultPost({
+    url: Api.upload,
+    data: data,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };

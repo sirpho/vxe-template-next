@@ -1,9 +1,7 @@
 import { Button, Input, message, Switch, Image, Popconfirm } from 'ant-design-vue';
-import ObsClient from 'esdk-obs-browserjs';
 import './index.less';
-import { list, remove, save } from './service';
+import { list, remove, upload } from './service';
 import { defineComponent, onMounted, reactive, ref } from 'vue';
-import { nanoid } from 'nanoid';
 import { PageContainer, VxeContainer } from '@/components/Layout';
 import { VxeGrid, VxeGridProps } from 'vxe-table';
 
@@ -19,17 +17,6 @@ export default defineComponent({
       previewSrc: '',
       rename: false,
       tableData: [],
-    });
-
-    const { VITE_OBS_AK, VITE_OBS_SK } = import.meta.env;
-    const BUCKET = 'fe-static';
-    const ENDPOINT = 'obs.cn-hz1.ctyun.cn';
-    const ACCESS_DOMAIN = 'fe-static.obs.cn-hz1.ctyun.cn';
-
-    const obsClient = new ObsClient({
-      access_key_id: VITE_OBS_AK,
-      secret_access_key: VITE_OBS_SK,
-      server: `https://${ENDPOINT}`,
     });
 
     const gridOptions = reactive<VxeGridProps>({
@@ -129,61 +116,19 @@ export default defineComponent({
       query();
     };
 
-    const handleUploadSingle = (file) => {
-      return new Promise((resolve, reject) => {
-        const { folder, rename } = state;
-        const originalName = file.name;
-        let suffix = '';
-        if (originalName.indexOf('.') !== -1) {
-          suffix = originalName.split('.').pop();
-        }
-
-        let nextName = nanoid().replaceAll('-', '');
-        if (suffix) {
-          nextName += `.${suffix}`;
-        }
-
-        const name = rename ? nextName : file.name;
-
-        let key = '';
-        if (folder) {
-          key = `${folder}/${name}`;
-        } else {
-          key = name;
-        }
-
-        obsClient.putObject(
-          {
-            Bucket: BUCKET,
-            Key: key,
-            SourceFile: file,
-          },
-          (err, _result) => {
-            if (err) {
-              message.error('上传失败，请稍后重试');
-              reject(err);
-            } else {
-              const objectUrl = `https://${ACCESS_DOMAIN}/${key}`;
-              save({
-                suffix: suffix,
-                name: name,
-                originalName: originalName,
-                size: file.size,
-                url: objectUrl,
-              }).then(() => {
-                resolve(objectUrl);
-              });
-            }
-          },
-        );
-      });
+    const handleUploadSingle = async (file) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('keepName', state.rename ? 'N' : 'Y');
+      formData.append('folder', state.folder);
+      await upload(formData);
     };
 
     /**
      * 复制下载链接
      */
-    const handleCopy = (record: any) => {
-      navigator.clipboard.writeText(record.url);
+    const handleCopy = async (record: any) => {
+      await navigator.clipboard.writeText(record.url);
       message.success('复制成功');
     };
 

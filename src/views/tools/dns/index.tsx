@@ -209,14 +209,14 @@ export default defineComponent({
         if (!recordId) {
           state.submitLoading = true;
           await fetch(
-            `https://server.sirpho.top/namesiloProxy/api/dnsAddRecord?version=1&type=xml&key=${domainItem!.key}&domain=${domainItem!.value}&rrtype=A&rrhost=${rrhost}&rrvalue=${rrvalue}&rrttl=7207`,
+            `https://www.sirpho.top/namesiloProxy/api/dnsAddRecord?version=1&type=xml&key=${domainItem!.key}&domain=${domainItem!.value}&rrtype=A&rrhost=${rrhost}&rrvalue=${rrvalue}&rrttl=7207`,
           ).finally(() => {
             state.submitLoading = false;
           });
         } else {
           state.submitLoading = true;
           await fetch(
-            `https://server.sirpho.top/namesiloProxy/api/dnsUpdateRecord?version=1&type=xml&key=${domainItem!.key}&domain=${domainItem!.value}&rrtype=A&rrhost=${rrhost}&rrid=${recordId}&rrvalue=${rrvalue}&rrttl=7207`,
+            `https://www.sirpho.top/namesiloProxy/api/dnsUpdateRecord?version=1&type=xml&key=${domainItem!.key}&domain=${domainItem!.value}&rrtype=A&rrhost=${rrhost}&rrid=${recordId}&rrvalue=${rrvalue}&rrttl=7207`,
           ).finally(() => {
             state.submitLoading = false;
           });
@@ -275,7 +275,7 @@ export default defineComponent({
         onOk: async () => {
           state.deleteLoading = true;
           await fetch(
-            `https://server.sirpho.top/namesiloProxy/api/dnsDeleteRecord?version=1&type=xml&key=${domainItem!.key}&domain=${domainItem!.value}&rrid=${recordId}`,
+            `https://www.sirpho.top/namesiloProxy/api/dnsDeleteRecord?version=1&type=xml&key=${domainItem!.key}&domain=${domainItem!.value}&rrid=${recordId}`,
           ).finally(() => {
             state.deleteLoading = false;
           });

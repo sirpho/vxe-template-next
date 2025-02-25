@@ -198,7 +198,6 @@ export class VAxios {
     return this.request({ ...config, method: 'POST' }, options);
   }
   defaultPost<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
-    config.url = '/sy-manager' + config.url;
     return this.request({ ...config, method: 'POST' }, options);
   }
   put<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
