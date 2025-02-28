@@ -42,8 +42,7 @@ const route: AppRouteModule = {
       name: 'TiktokClass',
       component: () => import('@/views/tiktok/class/index.vue'),
       meta: {
-        // roles: [Attrs.HAS_20223278],
-        icon: 'tabler:category-2',
+        icon: 'fluent:tag-24-filled',
         title: t('routes.tiktok.class'),
       },
     },
@@ -55,9 +54,20 @@ const route: AppRouteModule = {
       name: 'TiktokManage',
       component: () => import('@/views/tiktok/manage/index.vue'),
       meta: {
-        // roles: [Attrs.HAS_20223278],
-        icon: 'tabler:category-2',
+        icon: 'fluent:person-tag-48-filled',
         title: t('routes.tiktok.manage'),
+      },
+    },
+    /**
+     * 博主一览
+     */
+    {
+      path: 'tiktok-author',
+      name: 'TiktokAuthor',
+      component: () => import('@/views/tiktok/author/index.vue'),
+      meta: {
+        icon: 'solar:user-id-bold',
+        title: t('routes.tiktok.author'),
       },
     },
   ],
