@@ -3,7 +3,7 @@
     <QueryFilterContainer>
       <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
         <FormItem label="作者" name="author">
-          <Input size="small" v-model:value="formState.author" />
+          <TiktokAuthorCombox v-model:value="formState.author" />
         </FormItem>
         <FormItem label="类别" name="category">
           <Input size="small" v-model:value="formState.category" />
@@ -28,6 +28,13 @@
     </QueryFilterContainer>
     <VxeContainer>
       <vxe-grid v-bind="{ ...gridOptions }" :data="tableList" :loading="tableLoading" ref="xTable">
+        <!-- 表格操作 -->
+        <template #toolbar_buttons>
+          <Button size="small" type="primary" @click="handleBatch">批量设置标签</Button>
+        </template>
+        <template #toolbar_tools>
+          <Space> 合计：{{ tableList.length }}部 </Space>
+        </template>
         <!-- 可编辑列 -->
         <template #size="{ row }">
           {{ formatSize(row.size || 0) }}
@@ -54,21 +61,21 @@
 </template>
 <script lang="ts" setup>
   import { onMounted, reactive, ref } from 'vue';
-  import { Form, FormItem, Space, Button, Input, Tag } from 'ant-design-vue';
+  import { Form, FormItem, Space, Button, Input, Tag, message } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps } from 'vxe-table';
   import { batch, getClassList, list } from './service';
-  import { TiktokClassCombox } from '@/features/components/Profession';
+  import { TiktokClassCombox, TiktokAuthorCombox } from '@/features/components/Profession';
   import { formatSize } from '@/utils/formatter';
-  import { formatDuration } from '@sirpho/utils';
+  import { arrayFieldRepeat, formatDuration } from '@sirpho/utils';
 
-  interface FormState {
-    name: string;
-    category: string;
-    author: string;
-    classIdList: string[];
-  }
+  // interface FormState {
+  //   name: string;
+  //   category: string;
+  //   author: string;
+  //   classIdList: string[];
+  // }
 
-  const formState = reactive<FormState>({
+  const formState = reactive({
     name: '', // 名称
     category: '', // 分类
     author: '', // 作者
@@ -84,6 +91,7 @@
   const gridOptions = reactive<VxeGridProps>({
     editConfig: {},
     keepSource: true,
+    toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toolbar_tools' } },
     columns: [
       { type: 'checkbox', width: 60, fixed: 'left', align: 'center' },
       { type: 'seq', title: '序号', width: 120, align: 'center' },
@@ -141,7 +149,7 @@
 
   onMounted(() => {
     queryClassList();
-    handleQuery();
+    // handleQuery();
   });
 
   /**
@@ -196,6 +204,31 @@
     row.classIdList = options.map((item: any) => item.id);
     row.classNameList = options.map((item: any) => item.name);
     row.classList = options;
+  };
+
+  /**
+   * 批量设置标签
+   */
+  const handleBatch = () => {
+    const checkRecord = xTable.value.getCheckboxRecords();
+    if (!checkRecord.length) {
+      message.warning('请先选择行项目！');
+      return;
+    }
+
+    if (formState.classIdList?.length <= 0) {
+      message.warning('请先选择标签！');
+      return;
+    }
+
+    const checkClassList = classList.value.find((item) => formState.classIdList.includes(item.id));
+    checkRecord.forEach((item) => {
+      item.classList = arrayFieldRepeat((item.classList || []).concat(checkClassList), 'id');
+      item.classIdList = item.classList.map((item: any) => item.id);
+      item.classNameList = item.classList.map((item: any) => item.name);
+    });
+
+    xTable.value.clearCheckboxRow();
   };
 </script>
 <script lang="ts">

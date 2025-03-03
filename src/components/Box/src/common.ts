@@ -84,7 +84,13 @@ export const SelectCommonContext = function ({
       return Promise.reject(true);
     }
     const config = props.remoteConfig || globalConfig.varients[props.varient!];
-    const { url } = config;
+    const { url, method } = config;
+    if (method && method.toUpperCase() === 'GET') {
+      return globalConfig.http.get({
+        url: url,
+        params: { ...props.params, ...requestParams },
+      });
+    }
     return globalConfig.http.post({
       url: url,
       data: { ...props.params, ...requestParams },
