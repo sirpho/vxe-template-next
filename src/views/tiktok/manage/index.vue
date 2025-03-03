@@ -29,6 +29,12 @@
     <VxeContainer>
       <vxe-grid v-bind="{ ...gridOptions }" :data="tableList" :loading="tableLoading" ref="xTable">
         <!-- 可编辑列 -->
+        <template #size="{ row }">
+          {{ formatSize(row.size || 0) }}
+        </template>
+        <template #duration="{ row }">
+          {{ formatDuration(row.duration || 0) }}
+        </template>
         <!-- 标签 -->
         <template #classIdList="{ row }">
           <TiktokClassCombox
@@ -38,9 +44,9 @@
           />
         </template>
         <template #classIdList_default="{ row }">
-          <Tag v-for="item in row.classList" :key="item.name" :color="item.color">{{
-            item.name
-          }}</Tag>
+          <Tag v-for="item in row.classList" :key="item.name" :color="item.color">
+            {{ item.name }}
+          </Tag>
         </template>
       </vxe-grid>
     </VxeContainer>
@@ -52,6 +58,8 @@
   import { VxeTableInstance, VxeGridProps } from 'vxe-table';
   import { batch, getClassList, list } from './service';
   import { TiktokClassCombox } from '@/features/components/Profession';
+  import { formatSize } from '@/utils/formatter';
+  import { formatDuration } from '@sirpho/utils';
 
   interface FormState {
     name: string;
@@ -95,10 +103,33 @@
         filterRender: { name: 'FilterExtend' },
       },
       {
+        field: 'duration',
+        title: '播放时长',
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        slots: { default: 'duration' },
+      },
+      {
+        field: 'size',
+        title: '存储容量',
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        slots: { default: 'size' },
+      },
+      {
         field: 'classIdList',
         title: '标签',
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'classIdList', default: 'classIdList_default' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+      },
+      {
+        field: 'category',
+        title: '类别',
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
