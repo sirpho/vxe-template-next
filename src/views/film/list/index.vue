@@ -31,10 +31,12 @@
         <!-- 表格操作 -->
         <template #toolbar_buttons>
           <Space>
-            合计：{{ tableList.length }}部
             <Button size="small" type="link" @click="handleInsertLine">新增行</Button>
             <Button size="small" type="link" @click="handleRemoveLine">删除行</Button>
           </Space>
+        </template>
+        <template #toolbar_tools>
+          <Space>合计：{{ tableList.length }}部</Space>
         </template>
         <!-- 可编辑列 -->
         <!-- 大类 -->
@@ -76,14 +78,14 @@
   import { batch, list } from './service';
   import { useDict } from '@/hooks/web/useDict';
 
-  interface FormState {
-    name: string;
-    category: string;
-    type: string;
-    location: string;
-  }
+  // interface FormState {
+  //   name: string;
+  //   category: string;
+  //   type: string;
+  //   location: string;
+  // }
 
-  const formState = reactive<FormState>({
+  const formState = reactive({
     name: '', // 名字
     category: '', // 大类
     type: '', // 类型
@@ -113,7 +115,7 @@
   const gridOptions = reactive<VxeGridProps>({
     editConfig: {},
     keepSource: true,
-    toolbarConfig: { slots: { buttons: 'toolbar_buttons' } },
+    toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toolbar_tools' } },
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },

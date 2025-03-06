@@ -39,10 +39,12 @@
         <!-- 表格操作 -->
         <template #toolbar_buttons>
           <Space>
-            合计：{{ tableList.length }}次
             <Button size="small" type="link" @click="handleInsertLine">新增行</Button>
             <Button size="small" type="link" @click="handleRemoveLine">删除行</Button>
           </Space>
+        </template>
+        <template #toolbar_tools>
+          <Space>合计：{{ tableList.length }}次</Space>
         </template>
         <!-- 可编辑列 -->
         <!-- 类型 -->
@@ -103,13 +105,13 @@
   import { useDict } from '@/hooks/web/useDict';
   import { isNumber } from '@/utils/is';
 
-  interface FormState {
-    date: string;
-    type: string;
-    location: string;
-  }
+  // interface FormState {
+  //   date: string;
+  //   type: string;
+  //   location: string;
+  // }
 
-  const formState = reactive<FormState>({
+  const formState = reactive({
     date: '', // 日期
     type: '', // 类型
     location: '', // 地点
@@ -137,7 +139,7 @@
   const gridOptions = reactive<VxeGridProps>({
     editConfig: {},
     keepSource: true,
-    toolbarConfig: { slots: { buttons: 'toolbar_buttons' } },
+    toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toolbar_tools' } },
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },

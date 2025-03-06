@@ -136,7 +136,7 @@
 
   const formState = reactive<FormState>({
     house: '', // 所属房屋
-    year: '', // 年份
+    year: dayjs().format('YYYY'), // 年份
   });
 
   const xTable = ref({} as VxeTableInstance);
