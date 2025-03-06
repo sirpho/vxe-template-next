@@ -52,10 +52,12 @@
         <!-- 表格操作 -->
         <template #toolbar_buttons>
           <Space>
-            合计：{{ tableList.length }}本
             <Button size="small" type="link" @click="handleInsertLine">新增行</Button>
             <Button size="small" type="link" @click="handleRemoveLine">删除行</Button>
           </Space>
+        </template>
+        <template #toolbar_tools>
+          <Space>合计：{{ tableList.length }}本</Space>
         </template>
         <!-- 可编辑列 -->
         <!-- 阅读状态 -->
@@ -121,16 +123,16 @@
   import { batch, list } from './service';
   import { useDict } from '@/hooks/web/useDict';
 
-  interface FormState {
-    name: string;
-    author: string;
-    type: string;
-    protagonist: string;
-    writeStatus: string;
-    readStatus: string;
-  }
+  // interface FormState {
+  //   name: string;
+  //   author: string;
+  //   type: string;
+  //   protagonist: string;
+  //   writeStatus: string;
+  //   readStatus: string;
+  // }
 
-  const formState = reactive<FormState>({
+  const formState = reactive({
     name: '', // 名字
     author: '', // 作者
     type: '', // 类型
@@ -160,7 +162,7 @@
   const gridOptions = reactive<VxeGridProps>({
     editConfig: {},
     keepSource: true,
-    toolbarConfig: { slots: { buttons: 'toolbar_buttons' } },
+    toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toolbar_tools' } },
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },

@@ -107,14 +107,14 @@
   import { divide } from '@sirpho/utils';
   import { useDict } from '@/hooks/web/useDict';
 
-  interface FormState {
-    house: string;
-    year: string;
-  }
+  // interface FormState {
+  //   house: string;
+  //   year: string;
+  // }
 
-  const formState = reactive<FormState>({
+  const formState = reactive({
     house: '', // 所属房屋
-    year: '', // 年份
+    year: dayjs().format('YYYY'), // 年份
   });
 
   const xTable = ref({} as VxeTableInstance);
