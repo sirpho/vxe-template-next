@@ -10,6 +10,11 @@ export const varients: Record<string, SelectTableRemoteConfig> = {
     url: '/api/tiktok/class/list',
     method: 'post',
   },
+  // 抖音博主
+  TiktokAuthor: {
+    url: '/api/tiktok/analysis',
+    method: 'get',
+  },
 };
 
 export type Varient = keyof typeof varients;

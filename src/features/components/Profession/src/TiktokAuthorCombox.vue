@@ -1,4 +1,4 @@
-<!-- 标签选择器 -->
+<!-- 博主选择器 -->
 <template>
   <ComboBox v-bind="{ ...props, ..._attrs }" v-model:value="modelValue" />
 </template>
@@ -7,6 +7,8 @@
   import { useAttrs, computed } from 'vue';
   import { VxeGridProps } from 'vxe-table';
   import ComboBox from '@/components/Box/src/ComboBox.vue';
+  import { formatDuration } from '@sirpho/utils';
+  import { formatSize } from '@/utils/formatter';
 
   interface Props {
     varient?: string;
@@ -16,6 +18,7 @@
     autoFill?: boolean;
     mode?: string;
     data?: object[];
+    transformData?: (raw: unknown) => Record<string, unknown>[];
   }
   interface Option {
     label: string;
@@ -26,17 +29,25 @@
   const _emits = defineEmits(['update:value']);
 
   const props = withDefaults(defineProps<Props>(), {
-    varient: 'TiktokClass',
+    varient: 'TiktokAuthor',
     gridProps: () => ({
       columns: [
-        { field: 'id', title: '代码', visible: false },
-        { field: 'name', title: '标签' },
+        { field: 'author', title: '作者' },
+        { field: 'duration', title: '播放时长' },
+        { field: 'size', title: '存储容量' },
+        { field: 'videoCount', title: '视频数量' },
       ],
     }),
     value: '',
     autoFill: false,
-    mode: 'multiple',
-    option: () => ({ label: 'name', value: 'id' }),
+    option: () => ({ label: 'author', value: 'author' }),
+    transformData: (list) => {
+      return list.map((item) => ({
+        ...item,
+        duration: formatDuration(item.totalDuration || 0),
+        size: formatSize(item.totalSize || 0),
+      }));
+    },
   });
 
   const modelValue = computed({
@@ -49,8 +60,6 @@
 
 <script lang="ts">
   export default {
-    name: 'TiktokClassCombox',
+    name: 'TiktokAuthorCombox',
   };
 </script>
-
-<style lang="scss" scoped></style>
