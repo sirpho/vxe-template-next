@@ -36,6 +36,9 @@
           </Space>
         </template>
         <template #toolbar_tools>
+          <Button type="link" size="small">
+            <a href="https://movie.douban.com/mine?status=collect" target="_blank"> 豆瓣 </a>
+          </Button>
           <Space>合计：{{ tableList.length }}部</Space>
         </template>
         <!-- 可编辑列 -->
