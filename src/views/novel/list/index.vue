@@ -215,6 +215,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 180,
       },
       {
         field: 'writeStatus',
