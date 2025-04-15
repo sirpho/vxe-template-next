@@ -22,7 +22,7 @@
         <FormItem label="地点" name="location">
           <Input v-model:value="formState.location" size="small" />
         </FormItem>
-        <FormItem>
+        <FormItem class="sticky">
           <Space>
             <Button type="primary" html-type="submit" :loading="tableLoading" size="small">
               查询

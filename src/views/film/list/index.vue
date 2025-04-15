@@ -14,7 +14,7 @@
         <FormItem label="类型" name="type">
           <Input v-model:value="formState.type" allow-clear size="small" />
         </FormItem>
-        <FormItem>
+        <FormItem class="sticky">
           <Space>
             <Button type="primary" html-type="submit" :loading="tableLoading" size="small">
               查询

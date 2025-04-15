@@ -19,7 +19,7 @@
             v-model:value="formState.year"
           />
         </FormItem>
-        <FormItem>
+        <FormItem class="sticky">
           <Space>
             <Button type="primary" html-type="submit" :loading="tableLoading" size="small">
               查询

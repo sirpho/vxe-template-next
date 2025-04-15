@@ -1,0 +1,21 @@
+// 手机访问的情况下,上下表布局的页面搜索栏占的空间太大,表格没位置了,让搜索栏变成滚动,给表格留出空间
+@media only screen and (max-width: 575px) {
+  .wui-query-filter-container,
+  .vxe-grid--toolbar-wrapper {
+    max-height: 15vh;
+    overflow: auto;
+  }
+
+  .wui-query-filter-container {
+    .ant-form {
+      // 按钮不滚动
+      .ant-form-item.sticky {
+        position: sticky;
+        bottom: 0; /* 粘性定位的起始位置 */
+        margin-bottom: 0 !important;
+        padding: 8px 0;
+        background: #fff;
+      }
+    }
+  }
+}
