@@ -3,3 +3,14 @@
     background: var(--vxe-font-disabled-color);
   }
 }
+
+.vxe-cell {
+  .ant-input-number,
+  .ant-input-number-group-wrapper {
+    min-width: unset;
+  }
+
+  .ant-input-number-group-addon {
+    background: #fff;
+  }
+}

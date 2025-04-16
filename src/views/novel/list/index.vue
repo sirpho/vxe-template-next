@@ -57,7 +57,7 @@
           </Space>
         </template>
         <template #toolbar_tools>
-          <Space>合计：{{ tableList.length }}本</Space>
+          <Space>合计： {{ tableList.length }}本，{{ totalWordCount }}万字</Space>
         </template>
         <!-- 可编辑列 -->
         <!-- 阅读状态 -->
@@ -85,6 +85,16 @@
         <!-- 备注 -->
         <template #memo="{ row }">
           <Input v-model:value="row.memo" size="small" />
+        </template>
+        <!-- 字数 -->
+        <template #wordCount="{ row }">
+          <InputNumber
+            v-model:value="row.wordCount"
+            :precision="0"
+            size="small"
+            :controls="false"
+            addon-after="万字"
+          />
         </template>
         <!-- 名字 -->
         <template #name="{ row }">
@@ -118,21 +128,23 @@
     Input,
     Select,
     Badge,
+    InputNumber,
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
   import { useDict } from '@/hooks/web/useDict';
+  import { adds } from '@sirpho/utils';
 
-  // interface FormState {
-  //   name: string;
-  //   author: string;
-  //   type: string;
-  //   protagonist: string;
-  //   writeStatus: string;
-  //   readStatus: string;
-  // }
+  interface FormState {
+    name: string;
+    author: string;
+    type: string;
+    protagonist: string;
+    writeStatus: string;
+    readStatus: string;
+  }
 
-  const formState = reactive({
+  const formState = reactive<FormState>({
     name: '', // 名字
     author: '', // 作者
     type: '', // 类型
@@ -145,6 +157,7 @@
   const tableList = ref<any[]>([]);
   const tableLoading = ref(false);
   const submitLoading = ref(false);
+  const totalWordCount = ref<number>(0);
 
   const [readStatusList, writeStatusList] = useDict([
     'NOVEL_READ_STATUS', // 小说阅读状态
@@ -218,14 +231,23 @@
         minWidth: 180,
       },
       {
+        field: 'wordCount',
+        title: '字数',
+        editRender: { autofocus: '.ant-input-number-input' },
+        slots: { edit: 'wordCount' },
+        formatter: ({ row }) => {
+          return row.wordCount ? `${row.wordCount}万字` : '';
+        },
+        sortable: true,
+        width: 140,
+      },
+      {
         field: 'writeStatus',
         title: '创作状态',
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'writeStatus' },
         sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-        width: 180,
+        width: 140,
       },
       {
         field: 'readStatus',
@@ -233,13 +255,14 @@
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'readStatus', default: 'readStatus_default' },
         sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-        width: 180,
+        width: 140,
       },
     ],
     showHeaderOverflow: 'tooltip',
     height: 'auto',
+    rowClassName: ({ row }) => {
+      return row.readStatus === '弃坑' ? 'grey-row' : '';
+    },
   });
 
   onMounted(() => {
@@ -255,6 +278,7 @@
       tableLoading.value = false;
     });
     tableList.value = res.data || [];
+    totalWordCount.value = adds(...tableList.value.map((item) => item.wordCount));
   };
 
   /**
@@ -312,7 +336,7 @@
   /**
    * 徽标样式
    */
-  const getBadgeStatus = (record) => {
+  const getBadgeStatus = (record: any) => {
     if (record.readStatus === '在读') {
       return { status: 'processing' };
     }
@@ -329,3 +353,9 @@
     name: 'NovelList',
   };
 </script>
+
+<style lang="less" scoped>
+  :deep(.grey-row.vxe-body--row) {
+    background: rgb(200 200 200 /50%) !important;
+  }
+</style>
