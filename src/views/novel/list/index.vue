@@ -235,6 +235,7 @@
         title: '字数',
         editRender: { autofocus: '.ant-input-number-input' },
         slots: { edit: 'wordCount' },
+        sortBy: 'wordCount',
         formatter: ({ row }) => {
           return row.wordCount ? `${row.wordCount}万字` : '';
         },
