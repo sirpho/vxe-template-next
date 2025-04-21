@@ -94,7 +94,7 @@
       }
     });
 
-    const resultList = [];
+    const resultList: any[] = [];
 
     for (const field of Object.keys(result)) {
       resultList.push({
@@ -109,7 +109,7 @@
         trigger: 'item',
         formatter: (info) => {
           const { value, name, percent } = info;
-          let list = [];
+          let list: any[] = [];
           switch (valueMode.value) {
             case 'typeMode':
               list = typeGroupBy.value[name] || [];
@@ -123,10 +123,10 @@
           }
 
           list = orderBy(list, ['name'], ['asc']).map((item) => getClass(item));
-
-          let chunkList = [];
-          for (let i = 0; i < list.length; i += 4) {
-            const chunk = list.slice(i, i + 4);
+          const batchQty = list.length > 50 ? 5 : 4;
+          let chunkList: any[] = [];
+          for (let i = 0; i < list.length; i += batchQty) {
+            const chunk = list.slice(i, i + batchQty);
             chunkList.push(chunk.join('  '));
           }
 

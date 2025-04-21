@@ -179,7 +179,6 @@
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
-      { type: 'seq', width: 60, align: 'center' },
       {
         field: 'name',
         title: '小说名称',
@@ -188,7 +187,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 160,
       },
       {
         field: 'author',
@@ -198,7 +197,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 100,
       },
       {
         field: 'type',
@@ -208,7 +207,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 100,
       },
       {
         field: 'protagonist',
@@ -218,7 +217,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 100,
       },
       {
         field: 'memo',
@@ -240,7 +239,7 @@
           return row.wordCount ? `${row.wordCount}万字` : '';
         },
         sortable: true,
-        width: 140,
+        minWidth: 120,
       },
       {
         field: 'writeStatus',
@@ -248,7 +247,7 @@
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'writeStatus' },
         sortable: true,
-        width: 140,
+        minWidth: 130,
       },
       {
         field: 'readStatus',
@@ -256,7 +255,7 @@
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'readStatus', default: 'readStatus_default' },
         sortable: true,
-        width: 140,
+        minWidth: 120,
       },
     ],
     showHeaderOverflow: 'tooltip',
