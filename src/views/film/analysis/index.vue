@@ -19,6 +19,8 @@
   import { analysis } from './service';
   import { groupBy, orderBy, sortBy } from 'lodash-es';
   import { getLinearColorList } from '@/utils/color';
+  import { adds, thousandsSeparator } from '@sirpho/utils';
+  import { divide } from '@sirpho/utils/math';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
@@ -122,6 +124,9 @@
               break;
           }
 
+          const totalDuration = divide(adds(...list.map((item: any) => item.duration)), 60).toFixed(
+            2,
+          );
           list = orderBy(list, ['name'], ['asc']).map((item) => getClass(item));
           const batchQty = list.length > 50 ? 5 : 4;
           let chunkList: any[] = [];
@@ -131,7 +136,7 @@
           }
 
           return [
-            '<div class="echarts-tooltip-title">' + name + '</div>',
+            `<div class="echarts-tooltip-title">${name}  ${totalDuration ? thousandsSeparator(totalDuration) + '小时' : ''}</div>`,
             `<div class="echarts-tooltip-title">${value} 部，占比${percent}%</div>`,
             ...chunkList.map((item) => `<div>${item}</div>`),
           ].join('');

@@ -19,7 +19,7 @@
   import { analysis } from './service';
   import { groupBy, sortBy } from 'lodash-es';
   import { getLinearColorList } from '@/utils/color';
-  import { adds } from '@sirpho/utils';
+  import { adds, thousandsSeparator } from '@sirpho/utils';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
@@ -140,7 +140,7 @@
           }
 
           return [
-            `<div class="echarts-tooltip-title">${name}  ${totalWordCount ? totalWordCount + '万字' : ''}</div>`,
+            `<div class="echarts-tooltip-title">${name}  ${totalWordCount ? thousandsSeparator(totalWordCount) + '万字' : ''}</div>`,
             `<div class="echarts-tooltip-title">${value} 本，占比${percent}%</div>`,
             ...chunkList.map((item) => `<div>${item}</div>`),
           ].join('');
