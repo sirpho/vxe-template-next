@@ -57,7 +57,9 @@
           </Space>
         </template>
         <template #toolbar_tools>
-          <Space>合计： {{ tableList.length }}本，{{ totalWordCount }}万字</Space>
+          <Space
+            >合计： {{ tableList.length }}本，{{ thousandsSeparator(totalWordCount) }}万字</Space
+          >
         </template>
         <!-- 可编辑列 -->
         <!-- 阅读状态 -->
@@ -133,7 +135,7 @@
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
   import { useDict } from '@/hooks/web/useDict';
-  import { adds } from '@sirpho/utils';
+  import { adds, thousandsSeparator } from '@sirpho/utils';
 
   interface FormState {
     name: string;
