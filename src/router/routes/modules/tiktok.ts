@@ -70,6 +70,18 @@ const route: AppRouteModule = {
         title: t('routes.tiktok.author'),
       },
     },
+    /**
+     * api
+     */
+    {
+      path: 'tiktok-fetch',
+      name: 'Fetch',
+      component: () => import('@/views/tiktok/fetch/index.vue'),
+      meta: {
+        icon: 'eos-icons:api',
+        title: t('routes.tiktok.fetch'),
+      },
+    },
   ],
 };
 
