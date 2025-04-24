@@ -3,5 +3,6 @@
   "analysis": "统计分析",
   "class": "分类标签",
   "manage": "标签设置",
-  "author": "博主一览"
+  "author": "博主一览",
+  "fetch": "api请求"
 }
