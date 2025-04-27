@@ -18,7 +18,7 @@ const route: AppRouteModule = {
     icon: 'ri:tiktok-fill',
     title: t('routes.tiktok.tiktok'),
     orderNo: 30,
-    roles: [Attrs.TIKTOK],
+    // roles: [Attrs.TIKTOK],
   },
   children: [
     /**
