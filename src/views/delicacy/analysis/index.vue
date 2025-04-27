@@ -9,11 +9,15 @@
           <RadioButton value="">全部</RadioButton>
         </RadioGroup>
         <Divider />
-        <RadioGroup v-model:value="valueMode" @change="handleChangeMode">
-          <RadioButton value="typeMode">按类型</RadioButton>
-          <RadioButton value="nameMode">按商家</RadioButton>
-          <RadioButton value="locationMode">按商圈</RadioButton>
-        </RadioGroup>
+        <Space>
+          <RadioGroup v-model:value="valueMode" @change="handleChangeMode">
+            <RadioButton value="typeMode">按类型</RadioButton>
+            <RadioButton value="nameMode">按商家</RadioButton>
+            <RadioButton value="locationMode">按商圈</RadioButton>
+          </RadioGroup>
+          <Checkbox v-model:checked="ignoreBanquet" @change="handleChangeMode">忽略酒席</Checkbox>
+        </Space>
+
         <div ref="chartRef" class="h-100% flex-1"></div>
       </div>
     </VxeContainer>
@@ -21,7 +25,7 @@
 </template>
 <script lang="ts" setup>
   import { Ref, ref, onMounted } from 'vue';
-  import { RadioGroup, RadioButton, Divider } from 'ant-design-vue';
+  import { Checkbox, RadioGroup, RadioButton, Divider, Space } from 'ant-design-vue';
   import { useECharts } from '@/hooks/web/useECharts';
   import { list } from './service';
   import { getLinearColorList } from '@/utils/color';
@@ -35,6 +39,8 @@
 
   const year = ref(dayjs().format('YYYY年'));
 
+  // 忽略酒席
+  const ignoreBanquet = ref<boolean>(false);
   const originList = ref<any[]>([]);
   const echartData = ref<any[]>([]);
   const typeGroupBy = ref<any>({});
@@ -79,7 +85,12 @@
   const resetOptions = () => {
     echartData.value = [];
     const result: Record<string, number> = {};
-    yearFilterList.value.forEach((item) => {
+
+    const list = ignoreBanquet.value
+      ? yearFilterList.value.filter((item) => item.type !== '酒席')
+      : yearFilterList.value;
+
+    list.forEach((item) => {
       let nameField;
       switch (valueMode.value) {
         case 'typeMode':
@@ -98,7 +109,7 @@
         result[item[nameField]] = 1;
       }
     });
-    const resultList = [];
+    const resultList: any[] = [];
     for (const field of Object.keys(result)) {
       resultList.push({
         name: field,
@@ -124,7 +135,7 @@
               list = locationGroupBy.value[name] || [];
               break;
           }
-          const resultList = [];
+          const resultList: string[] = [];
           const countMap = groupBy(list, 'name');
 
           for (const field in countMap) {
@@ -133,9 +144,11 @@
             );
           }
 
-          let chunkList = [];
-          for (let i = 0; i < resultList.length; i += 4) {
-            const chunk = resultList.slice(i, i + 4);
+          const batchQty = resultList.length > 50 ? 5 : 4;
+
+          let chunkList: string[] = [];
+          for (let i = 0; i < resultList.length; i += batchQty) {
+            const chunk = resultList.slice(i, i + batchQty);
             chunkList.push(chunk.join('  '));
           }
 

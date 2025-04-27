@@ -8,7 +8,7 @@
         <FormItem label="所属模块" name="module">
           <Input size="small" v-model:value="formState.module" />
         </FormItem>
-        <FormItem>
+        <FormItem class="sticky">
           <Space>
             <Button type="primary" html-type="submit" :loading="tableLoading" size="small">
               查询

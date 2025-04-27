@@ -19,6 +19,7 @@
   import { analysis } from './service';
   import { groupBy, sortBy } from 'lodash-es';
   import { getLinearColorList } from '@/utils/color';
+  import { adds, thousandsSeparator } from '@sirpho/utils';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
@@ -101,7 +102,7 @@
       }
     });
 
-    const resultList = [];
+    const resultList: any[] = [];
 
     for (const field of Object.keys(result)) {
       resultList.push({
@@ -116,27 +117,30 @@
         trigger: 'item',
         formatter: (info) => {
           const { value, name, percent } = info;
-          let list = [];
+          let list: any[] = [];
           switch (valueMode.value) {
             case 'typeMode':
-              list = (typeGroupBy.value[name] || []).map((item) => getClass(item));
+              list = typeGroupBy.value[name] || [];
               break;
             case 'authorMode':
-              list = (authorGroupBy.value[name] || []).map((item) => getClass(item));
+              list = authorGroupBy.value[name] || [];
               break;
             case 'readMode':
-              list = (readGroupBy.value[name] || []).map((item) => getClass(item));
+              list = readGroupBy.value[name] || [];
               break;
           }
 
-          let chunkList = [];
-          for (let i = 0; i < list.length; i += 4) {
-            const chunk = list.slice(i, i + 4);
+          const classList = list.map((item) => getClass(item));
+          const totalWordCount = adds(...list.map((item: any) => item.wordCount));
+
+          let chunkList: any[] = [];
+          for (let i = 0; i < classList.length; i += 4) {
+            const chunk = classList.slice(i, i + 4);
             chunkList.push(chunk.join('  '));
           }
 
           return [
-            '<div class="echarts-tooltip-title">' + name + '</div>',
+            `<div class="echarts-tooltip-title">${name}  ${totalWordCount ? thousandsSeparator(totalWordCount) + '万字' : ''}</div>`,
             `<div class="echarts-tooltip-title">${value} 本，占比${percent}%</div>`,
             ...chunkList.map((item) => `<div>${item}</div>`),
           ].join('');

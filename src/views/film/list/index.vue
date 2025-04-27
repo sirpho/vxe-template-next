@@ -14,7 +14,7 @@
         <FormItem label="类型" name="type">
           <Input v-model:value="formState.type" allow-clear size="small" />
         </FormItem>
-        <FormItem>
+        <FormItem class="sticky">
           <Space>
             <Button type="primary" html-type="submit" :loading="tableLoading" size="small">
               查询
@@ -31,10 +31,15 @@
         <!-- 表格操作 -->
         <template #toolbar_buttons>
           <Space>
-            合计：{{ tableList.length }}部
             <Button size="small" type="link" @click="handleInsertLine">新增行</Button>
             <Button size="small" type="link" @click="handleRemoveLine">删除行</Button>
           </Space>
+        </template>
+        <template #toolbar_tools>
+          <Button type="link" size="small">
+            <a href="https://movie.douban.com/mine?status=collect" target="_blank"> 豆瓣 </a>
+          </Button>
+          <Space>合计：{{ tableList.length }}部，{{ thousandsSeparator(totalDuration) }}小时</Space>
         </template>
         <!-- 可编辑列 -->
         <!-- 大类 -->
@@ -57,6 +62,16 @@
             </Select.Option>
           </Select>
         </template>
+        <!-- 时长 -->
+        <template #duration="{ row }">
+          <InputNumber
+            v-model:value="row.duration"
+            :precision="0"
+            size="small"
+            :controls="false"
+            addon-after="分钟"
+          />
+        </template>
         <!-- 备注 -->
         <template #memo="{ row }">
           <Input v-model:value="row.memo" size="small" />
@@ -71,10 +86,22 @@
 </template>
 <script lang="ts" setup>
   import { onMounted, reactive, ref } from 'vue';
-  import { Form, FormItem, Space, Button, message, Modal, Input, Select } from 'ant-design-vue';
+  import {
+    Form,
+    FormItem,
+    Space,
+    Button,
+    message,
+    Modal,
+    Input,
+    Select,
+    InputNumber,
+  } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
   import { useDict } from '@/hooks/web/useDict';
+  import { adds, thousandsSeparator } from '@sirpho/utils';
+  import { divide } from '@sirpho/utils/math';
 
   interface FormState {
     name: string;
@@ -94,6 +121,7 @@
   const tableList = ref<any[]>([]);
   const tableLoading = ref(false);
   const submitLoading = ref(false);
+  const totalDuration = ref<string>('0');
 
   const [locationList, categoryList] = useDict([
     'FILM_LOCATION', // 影视地区
@@ -113,7 +141,7 @@
   const gridOptions = reactive<VxeGridProps>({
     editConfig: {},
     keepSource: true,
-    toolbarConfig: { slots: { buttons: 'toolbar_buttons' } },
+    toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toolbar_tools' } },
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
@@ -136,7 +164,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 130,
       },
       {
         field: 'category',
@@ -146,7 +174,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 130,
       },
       {
         field: 'type',
@@ -156,7 +184,19 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 130,
+      },
+      {
+        field: 'duration',
+        title: '时长',
+        editRender: { autofocus: '.ant-input-number-input' },
+        slots: { edit: 'duration' },
+        sortBy: 'duration',
+        formatter: ({ row }) => {
+          return row.duration ? `${thousandsSeparator(row.duration)}分钟` : '';
+        },
+        sortable: true,
+        minWidth: 120,
       },
       {
         field: 'memo',
@@ -185,6 +225,9 @@
       tableLoading.value = false;
     });
     tableList.value = res.data || [];
+    totalDuration.value = divide(adds(...tableList.value.map((item) => item.duration)), 60).toFixed(
+      2,
+    );
   };
 
   /**

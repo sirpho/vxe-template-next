@@ -35,7 +35,7 @@
             </Select.Option>
           </Select>
         </FormItem>
-        <FormItem>
+        <FormItem class="sticky">
           <Space>
             <Button type="primary" html-type="submit" :loading="tableLoading" size="small">
               查询
@@ -52,10 +52,14 @@
         <!-- 表格操作 -->
         <template #toolbar_buttons>
           <Space>
-            合计：{{ tableList.length }}本
             <Button size="small" type="link" @click="handleInsertLine">新增行</Button>
             <Button size="small" type="link" @click="handleRemoveLine">删除行</Button>
           </Space>
+        </template>
+        <template #toolbar_tools>
+          <Space
+            >合计： {{ tableList.length }}本，{{ thousandsSeparator(totalWordCount) }}万字</Space
+          >
         </template>
         <!-- 可编辑列 -->
         <!-- 阅读状态 -->
@@ -83,6 +87,16 @@
         <!-- 备注 -->
         <template #memo="{ row }">
           <Input v-model:value="row.memo" size="small" />
+        </template>
+        <!-- 字数 -->
+        <template #wordCount="{ row }">
+          <InputNumber
+            v-model:value="row.wordCount"
+            :precision="0"
+            size="small"
+            :controls="false"
+            addon-after="万字"
+          />
         </template>
         <!-- 名字 -->
         <template #name="{ row }">
@@ -116,10 +130,12 @@
     Input,
     Select,
     Badge,
+    InputNumber,
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
   import { useDict } from '@/hooks/web/useDict';
+  import { adds, thousandsSeparator } from '@sirpho/utils';
 
   interface FormState {
     name: string;
@@ -143,6 +159,7 @@
   const tableList = ref<any[]>([]);
   const tableLoading = ref(false);
   const submitLoading = ref(false);
+  const totalWordCount = ref<number>(0);
 
   const [readStatusList, writeStatusList] = useDict([
     'NOVEL_READ_STATUS', // 小说阅读状态
@@ -160,11 +177,10 @@
   const gridOptions = reactive<VxeGridProps>({
     editConfig: {},
     keepSource: true,
-    toolbarConfig: { slots: { buttons: 'toolbar_buttons' } },
+    toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toolbar_tools' } },
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
-      { type: 'seq', width: 60, align: 'center' },
       {
         field: 'name',
         title: '小说名称',
@@ -173,7 +189,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 160,
       },
       {
         field: 'author',
@@ -183,7 +199,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 100,
       },
       {
         field: 'type',
@@ -193,7 +209,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 100,
       },
       {
         field: 'protagonist',
@@ -203,7 +219,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 100,
       },
       {
         field: 'memo',
@@ -213,6 +229,19 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 180,
+      },
+      {
+        field: 'wordCount',
+        title: '字数',
+        editRender: { autofocus: '.ant-input-number-input' },
+        slots: { edit: 'wordCount' },
+        sortBy: 'wordCount',
+        formatter: ({ row }) => {
+          return row.wordCount ? `${row.wordCount}万字` : '';
+        },
+        sortable: true,
+        minWidth: 120,
       },
       {
         field: 'writeStatus',
@@ -220,9 +249,7 @@
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'writeStatus' },
         sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 130,
       },
       {
         field: 'readStatus',
@@ -230,13 +257,14 @@
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'readStatus', default: 'readStatus_default' },
         sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-        width: 180,
+        minWidth: 120,
       },
     ],
     showHeaderOverflow: 'tooltip',
     height: 'auto',
+    rowClassName: ({ row }) => {
+      return row.readStatus === '弃坑' ? 'grey-row' : '';
+    },
   });
 
   onMounted(() => {
@@ -252,6 +280,7 @@
       tableLoading.value = false;
     });
     tableList.value = res.data || [];
+    totalWordCount.value = adds(...tableList.value.map((item) => item.wordCount));
   };
 
   /**
@@ -309,7 +338,7 @@
   /**
    * 徽标样式
    */
-  const getBadgeStatus = (record) => {
+  const getBadgeStatus = (record: any) => {
     if (record.readStatus === '在读') {
       return { status: 'processing' };
     }
@@ -326,3 +355,9 @@
     name: 'NovelList',
   };
 </script>
+
+<style lang="less" scoped>
+  :deep(.grey-row.vxe-body--row) {
+    background: rgb(200 200 200 /50%) !important;
+  }
+</style>

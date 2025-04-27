@@ -24,7 +24,7 @@ pnpm build:production
 
 ```bash
 
-tar -a -c -f D:\document\sirpho\vxe-template-next\dist\dist.zip -C D:\document\sirpho\vxe-template-next\dist .
+tar -a -c -f D:\document\sirpho\vxe-template-next\dist\dist.zip --exclude=dist.zip -C D:\document\sirpho\vxe-template-next\dist .
 
 scp "D:\document\sirpho\vxe-template-next\dist\dist.zip" root@www.sirpho.top:/var/www/html/home
 
