@@ -154,6 +154,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 180,
         width: 180,
       },
       {
@@ -165,6 +166,7 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 130,
+        width: 130,
       },
       {
         field: 'category',
@@ -175,6 +177,7 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 130,
+        width: 130,
       },
       {
         field: 'type',
@@ -185,6 +188,7 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 130,
+        width: 130,
       },
       {
         field: 'duration',
@@ -196,7 +200,8 @@
           return row.duration ? `${thousandsSeparator(row.duration)}分钟` : '';
         },
         sortable: true,
-        minWidth: 120,
+        minWidth: 130,
+        width: 130,
       },
       {
         field: 'memo',

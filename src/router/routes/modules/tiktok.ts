@@ -19,7 +19,7 @@ const route: AppRouteModule = {
     icon: 'ri:tiktok-fill',
     title: t('routes.tiktok.tiktok'),
     orderNo: 30,
-    roles: envVersion === 'release' ? [Attrs.TIKTOK] : undefined,
+    roles: envVersion !== 'release' ? [Attrs.TIKTOK] : undefined,
   },
   children: [
     /**

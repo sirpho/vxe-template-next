@@ -105,14 +105,14 @@
   import { useDict } from '@/hooks/web/useDict';
   import { isNumber } from '@/utils/is';
 
-  // interface FormState {
-  //   date: string;
-  //   type: string;
-  //   location: string;
-  // }
+  interface FormState {
+    date: string;
+    type: string;
+    location: string;
+  }
 
-  const formState = reactive({
-    date: '', // 日期
+  const formState = reactive<FormState>({
+    date: dayjs().format('YYYY'), // 日期
     type: '', // 类型
     location: '', // 地点
   });

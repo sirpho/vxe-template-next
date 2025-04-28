@@ -47,6 +47,10 @@
         <template #memo="{ row }">
           <Input v-model:value="row.memo" size="small" />
         </template>
+        <!-- 路径 -->
+        <template #path="{ row }">
+          <Input v-model:value="row.path" size="small" />
+        </template>
         <!-- 名称 -->
         <template #name="{ row }">
           <Input v-model:value="row.name" size="small" />
@@ -86,6 +90,7 @@
   import { batch, list } from './service';
   import { adds, thousandsSeparator } from '@sirpho/utils';
   import { divide } from '@sirpho/utils/math';
+  import { formatSize } from '@/utils/formatter';
 
   interface FormState {
     name: string;
@@ -117,17 +122,6 @@
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
-      { type: 'seq', width: 60, align: 'center' },
-      {
-        field: 'name',
-        title: '名称',
-        editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'name' },
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-        width: 180,
-      },
       {
         field: 'singer',
         title: '歌手',
@@ -139,6 +133,16 @@
         minWidth: 130,
       },
       {
+        field: 'name',
+        title: '名称',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'name' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        minWidth: 160,
+      },
+      {
         field: 'language',
         title: '语言',
         editRender: { autofocus: '.ant-input' },
@@ -147,6 +151,7 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 130,
+        width: 130,
       },
       {
         field: 'lyric',
@@ -157,6 +162,10 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 130,
+        width: 130,
+        formatter: ({ row }) => {
+          return row.lyric === 'Y' ? '是' : '否';
+        },
       },
       {
         field: 'size',
@@ -165,6 +174,11 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 130,
+        width: 130,
+        sortBy: 'size',
+        formatter: ({ row }) => {
+          return formatSize(row.size || 0);
+        },
       },
       {
         field: 'suffix',
@@ -173,6 +187,7 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 130,
+        width: 130,
       },
       {
         field: 'duration',
@@ -181,7 +196,13 @@
         slots: { edit: 'duration' },
         sortBy: 'duration',
         formatter: ({ row }) => {
-          return row.duration ? `${thousandsSeparator(row.duration)}秒` : '';
+          const duration = row.duration || 0;
+          const minute = Math.floor(duration / 60);
+          const second = duration % 60;
+
+          return duration
+            ? `${(minute ? minute + '分钟' : '') + (second ? second + '秒' : '')}`
+            : '';
         },
         sortable: true,
         minWidth: 120,
@@ -191,6 +212,15 @@
         title: '备注',
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'memo' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+      },
+      {
+        field: 'path',
+        title: '路径',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'path' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },

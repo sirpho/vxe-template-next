@@ -40,7 +40,7 @@
   const year = ref(dayjs().format('YYYY年'));
 
   // 忽略酒席
-  const ignoreBanquet = ref<boolean>(false);
+  const ignoreBanquet = ref<boolean>(true);
   const originList = ref<any[]>([]);
   const echartData = ref<any[]>([]);
   const typeGroupBy = ref<any>({});

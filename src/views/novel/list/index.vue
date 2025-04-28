@@ -189,7 +189,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        minWidth: 160,
+        width: 180,
       },
       {
         field: 'author',
@@ -200,6 +200,7 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 100,
+        width: 100,
       },
       {
         field: 'type',
@@ -210,6 +211,7 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 100,
+        width: 100,
       },
       {
         field: 'protagonist',
@@ -220,6 +222,7 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 100,
+        width: 100,
       },
       {
         field: 'memo',
@@ -242,6 +245,7 @@
         },
         sortable: true,
         minWidth: 120,
+        width: 120,
       },
       {
         field: 'writeStatus',
@@ -250,6 +254,7 @@
         slots: { edit: 'writeStatus' },
         sortable: true,
         minWidth: 130,
+        width: 130,
       },
       {
         field: 'readStatus',
@@ -258,6 +263,7 @@
         slots: { edit: 'readStatus', default: 'readStatus_default' },
         sortable: true,
         minWidth: 120,
+        width: 120,
       },
     ],
     showHeaderOverflow: 'tooltip',

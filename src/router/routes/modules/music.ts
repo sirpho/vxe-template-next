@@ -11,7 +11,7 @@ const route: AppRouteModule = {
   component: LAYOUT,
   redirect: '/music/list',
   meta: {
-    icon: 'material-symbols-light:music-cast',
+    icon: 'line-md:folder-music-filled',
     title: t('routes.music.music'),
     orderNo: 12,
   },
