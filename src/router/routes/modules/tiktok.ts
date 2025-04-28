@@ -1,6 +1,7 @@
 import type { AppRouteModule } from '@/router/types';
 import { LAYOUT } from '@/router/constant';
 import { t } from '@/hooks/web/useI18n';
+import { envVersion } from '@/features/utils';
 
 export enum Attrs {
   TIKTOK = 110, //权限
@@ -18,7 +19,7 @@ const route: AppRouteModule = {
     icon: 'ri:tiktok-fill',
     title: t('routes.tiktok.tiktok'),
     orderNo: 30,
-    roles: [Attrs.TIKTOK],
+    roles: envVersion === 'release' ? [Attrs.TIKTOK] : undefined,
   },
   children: [
     /**
@@ -42,8 +43,7 @@ const route: AppRouteModule = {
       name: 'TiktokClass',
       component: () => import('@/views/tiktok/class/index.vue'),
       meta: {
-        // roles: [Attrs.HAS_20223278],
-        icon: 'tabler:category-2',
+        icon: 'fluent:tag-24-filled',
         title: t('routes.tiktok.class'),
       },
     },
@@ -55,9 +55,32 @@ const route: AppRouteModule = {
       name: 'TiktokManage',
       component: () => import('@/views/tiktok/manage/index.vue'),
       meta: {
-        // roles: [Attrs.HAS_20223278],
-        icon: 'tabler:category-2',
+        icon: 'fluent:person-tag-48-filled',
         title: t('routes.tiktok.manage'),
+      },
+    },
+    /**
+     * 博主一览
+     */
+    {
+      path: 'tiktok-author',
+      name: 'TiktokAuthor',
+      component: () => import('@/views/tiktok/author/index.vue'),
+      meta: {
+        icon: 'solar:user-id-bold',
+        title: t('routes.tiktok.author'),
+      },
+    },
+    /**
+     * api
+     */
+    {
+      path: 'tiktok-fetch',
+      name: 'Fetch',
+      component: () => import('@/views/tiktok/fetch/index.vue'),
+      meta: {
+        icon: 'eos-icons:api',
+        title: t('routes.tiktok.fetch'),
       },
     },
   ],

@@ -18,7 +18,8 @@
   import { useECharts } from '@/hooks/web/useECharts';
   import { analysis } from './service';
   import echarts from '@/utils/lib/echarts';
-  import { divide, formatDuration, add } from '@sirpho/utils';
+  import { formatDuration, add } from '@sirpho/utils';
+  import { formatSize } from '@/utils/formatter';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
@@ -26,21 +27,6 @@
   const valueMode = ref<string>('totalSize');
 
   const echartData = ref<any[]>([]);
-
-  /**
-   * 存储大小格式化
-   */
-  const formatSize = (value) => {
-    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-    for (let i = 0, result = value; i < units.length; i++, result = divide(result, 1024)) {
-      if (result < 1024) {
-        return Number(result.toFixed(2)) + units[i];
-      }
-      if (i === units.length - 1) {
-        return Number(result.toFixed(2)) + units[i];
-      }
-    }
-  };
 
   onMounted(() => {
     analysis().then((res) => {
