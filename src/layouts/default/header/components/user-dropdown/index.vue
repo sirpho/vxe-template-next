@@ -30,7 +30,7 @@
 <script lang="ts" setup>
   import { Dropdown, Menu } from 'ant-design-vue';
   import type { MenuInfo } from 'ant-design-vue/lib/menu/src/interface';
-  import { computed } from 'vue';
+  import { computed, nextTick } from 'vue';
   import { useUserStore } from '@/store/modules/user';
   import { useHeaderSetting } from '@/hooks/setting/useHeaderSetting';
   import { useI18n } from '@/hooks/web/useI18n';
@@ -68,6 +68,9 @@
    */
   function handleAuthorize() {
     openModal(true);
+    nextTick(() => {
+      document.querySelector('.ant-modal .ant-input-number input')?.focus();
+    });
   }
 
   //  login out

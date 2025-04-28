@@ -124,13 +124,16 @@ const transform: AxiosTransform = {
 
     isUsePageLoading && increase();
 
-    if (joinPrefix) {
-      config.url = `${urlPrefix}${config.url}`;
+    if (!config.url?.startsWith('http')) {
+      if (joinPrefix) {
+        config.url = `${urlPrefix}${config.url}`;
+      }
+
+      if (apiUrl && isString(apiUrl)) {
+        config.url = `${apiUrl}${config.url}`;
+      }
     }
 
-    if (apiUrl && isString(apiUrl)) {
-      config.url = `${apiUrl}${config.url}`;
-    }
     const params = config.params || {};
     const data = config.data || false;
     formatDate && data && !isString(data) && formatRequestDate(data);
@@ -245,13 +248,16 @@ const transform: AxiosTransform = {
 
     checkStatus(error?.response?.status, msg, errorMessageMode);
 
-    // 添加自动重试机制 保险起见 只针对GET请求
-    const retryRequest = new AxiosRetry();
-    const { isOpenRetry } = config.requestOptions.retryRequest;
-    config.method?.toUpperCase() === RequestEnum.GET &&
-      isOpenRetry &&
-      // @ts-ignore
-      retryRequest.retry(axiosInstance, error);
+    if (config?.requestOptions?.retryRequest) {
+      // 添加自动重试机制 保险起见 只针对GET请求
+      const retryRequest = new AxiosRetry();
+      const { isOpenRetry } = config.requestOptions.retryRequest;
+      config.method?.toUpperCase() === RequestEnum.GET &&
+        isOpenRetry &&
+        // @ts-ignore
+        retryRequest.retry(axiosInstance, error);
+    }
+
     return Promise.reject(error);
   },
 };
