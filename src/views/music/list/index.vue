@@ -2,25 +2,11 @@
   <PageContainer>
     <QueryFilterContainer>
       <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
-        <FormItem label="类型" name="type">
-          <Select v-model:value="formState.type" allow-clear size="small" style="width: 160px">
-            <Select.Option v-for="item in delicacyTypeList" :key="item.value" :value="item.value">
-              {{ item.label }}
-            </Select.Option>
-          </Select>
+        <FormItem label="名称" name="name">
+          <Input v-model:value="formState.name" allow-clear size="small" />
         </FormItem>
-        <FormItem label="日期" name="date">
-          <DatePicker
-            picker="year"
-            size="small"
-            value-format="YYYY"
-            format="YYYY"
-            allow-clear
-            v-model:value="formState.date"
-          />
-        </FormItem>
-        <FormItem label="地点" name="location">
-          <Input v-model:value="formState.location" size="small" />
+        <FormItem label="歌手" name="singer">
+          <Input v-model:value="formState.singer" allow-clear size="small" />
         </FormItem>
         <FormItem class="sticky">
           <Space>
@@ -39,47 +25,49 @@
         <!-- 表格操作 -->
         <template #toolbar_buttons>
           <Space>
-            <Button size="small" type="link" @click="handleInsertLine">新增行</Button>
             <Button size="small" type="link" @click="handleRemoveLine">删除行</Button>
           </Space>
         </template>
         <template #toolbar_tools>
-          <Space>合计：{{ tableList.length }}次</Space>
+          <Space>合计：{{ tableList.length }}首，{{ thousandsSeparator(totalDuration) }}小时</Space>
         </template>
         <!-- 可编辑列 -->
-        <!-- 类型 -->
-        <template #type="{ row }">
-          <Select v-model:value="row.type" size="small">
-            <Select.Option v-for="item in delicacyTypeList" :key="item.value" :value="item.value">
-              {{ item.label }}
-            </Select.Option>
+        <!-- 有歌词 -->
+        <template #lyric="{ row }">
+          <Select v-model:value="row.lyric" size="small">
+            <Select.Option value="Y">是</Select.Option>
+            <Select.Option value="N">否</Select.Option>
           </Select>
         </template>
-        <!-- 日期 -->
-        <template #date="{ row }">
-          <DatePicker
-            :getPopupContainer="(trigger) => trigger.parentElement as HTMLElement"
-            size="small"
-            value-format="YYYY-MM-DD"
-            format="YYYY-MM-DD"
-            v-model:value="row.date"
-          />
-        </template>
-        <!-- 店家 -->
-        <template #name="{ row }">
-          <Input v-model:value="row.name" size="small" />
-        </template>
-        <!-- 地点 -->
-        <template #location="{ row }">
-          <Input v-model:value="row.location" size="small" />
+        <!-- 语言 -->
+        <template #language="{ row }">
+          <Input v-model:value="row.language" size="small" />
         </template>
         <!-- 备注 -->
         <template #memo="{ row }">
           <Input v-model:value="row.memo" size="small" />
         </template>
-        <!-- 价格 -->
-        <template #price="{ row }">
-          <InputNumber v-model:value="row.price" addon-before="￥" addon-after="元" size="small" />
+        <!-- 路径 -->
+        <template #path="{ row }">
+          <Input v-model:value="row.path" size="small" />
+        </template>
+        <!-- 名称 -->
+        <template #name="{ row }">
+          <Input v-model:value="row.name" size="small" />
+        </template>
+        <!-- 歌手 -->
+        <template #singer="{ row }">
+          <Input v-model:value="row.singer" size="small" />
+        </template>
+        <!-- 时长 -->
+        <template #duration="{ row }">
+          <InputNumber
+            v-model:value="row.duration"
+            :precision="0"
+            size="small"
+            :controls="false"
+            addon-after="秒"
+          />
         </template>
       </vxe-grid>
     </VxeContainer>
@@ -97,43 +85,34 @@
     Input,
     Select,
     InputNumber,
-    DatePicker,
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
-  import dayjs from 'dayjs';
-  import { useDict } from '@/hooks/web/useDict';
-  import { isNumber } from '@/utils/is';
+  import { adds, thousandsSeparator } from '@sirpho/utils';
+  import { divide } from '@sirpho/utils/math';
+  import { formatSize } from '@/utils/formatter';
 
   interface FormState {
-    date: string;
-    type: string;
-    location: string;
+    name: string;
+    singer: string;
   }
 
   const formState = reactive<FormState>({
-    date: dayjs().format('YYYY'), // 日期
-    type: '', // 类型
-    location: '', // 地点
+    name: '', // 名字
+    singer: '', // 歌手
   });
 
   const xTable = ref({} as VxeTableInstance);
   const tableList = ref<any[]>([]);
   const tableLoading = ref(false);
   const submitLoading = ref(false);
-
-  const [delicacyTypeList] = useDict([
-    'DELICACY_TYPE', // 类型
-  ]);
+  const totalDuration = ref<string>('0');
 
   /**
    * 校验
    */
   const validRules = ref({
     name: [{ required: true, message: '必填项' }],
-    date: [{ required: true, message: '必填项' }],
-    location: [{ required: true, message: '必填项' }],
-    type: [{ required: true, message: '必填项' }],
   } as VxeTablePropTypes.EditRules);
 
   const gridOptions = reactive<VxeGridProps>({
@@ -144,58 +123,104 @@
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
       {
+        field: 'singer',
+        title: '歌手',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'singer' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        minWidth: 130,
+      },
+      {
         field: 'name',
-        title: '店家',
+        title: '名称',
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'name' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 160,
       },
       {
-        field: 'date',
-        title: '日期',
+        field: 'language',
+        title: '语言',
         editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'date' },
+        slots: { edit: 'language' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 130,
+        width: 130,
       },
       {
-        field: 'location',
-        title: '地点',
+        field: 'lyric',
+        title: '有歌词',
         editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'location' },
+        slots: { edit: 'lyric' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-      },
-      {
-        field: 'type',
-        title: '类型',
-        editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'type' },
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-      },
-      {
-        field: 'price',
-        title: '价格',
-        editRender: { autofocus: '.ant-input-number-input' },
-        slots: { edit: 'price' },
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
+        minWidth: 130,
+        width: 130,
         formatter: ({ row }) => {
-          return isNumber(row.price) ? `￥${row.price}元` : '';
+          return row.lyric === 'Y' ? '是' : '否';
         },
+      },
+      {
+        field: 'size',
+        title: '文件大小',
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        minWidth: 130,
+        width: 130,
+        sortBy: 'size',
+        formatter: ({ row }) => {
+          return formatSize(row.size || 0);
+        },
+      },
+      {
+        field: 'suffix',
+        title: '后缀',
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        minWidth: 130,
+        width: 130,
+      },
+      {
+        field: 'duration',
+        title: '时长',
+        editRender: { autofocus: '.ant-input-number-input' },
+        slots: { edit: 'duration' },
+        sortBy: 'duration',
+        formatter: ({ row }) => {
+          const duration = row.duration || 0;
+          const minute = Math.floor(duration / 60);
+          const second = duration % 60;
+
+          return duration
+            ? `${(minute ? minute + '分钟' : '') + (second ? second + '秒' : '')}`
+            : '';
+        },
+        sortable: true,
+        minWidth: 120,
       },
       {
         field: 'memo',
         title: '备注',
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'memo' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+      },
+      {
+        field: 'path',
+        title: '路径',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'path' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
@@ -218,31 +243,21 @@
       tableLoading.value = false;
     });
     tableList.value = res.data || [];
-  };
-
-  /**
-   * 新增
-   */
-  const handleInsertLine = async () => {
-    // 新增行默认值
-    const record = {
-      date: dayjs().format('YYYY-MM-DD'),
-    };
-    const { row: newRow } = await xTable.value.insertAt(record, null);
-    await xTable.value.setEditRow(newRow);
+    totalDuration.value = divide(
+      adds(...tableList.value.map((item) => item.duration)),
+      60 * 60,
+    ).toFixed(2);
   };
 
   /**
    * 将增删改提交
    */
   const handleSubmit = async () => {
-    const insertItems = xTable.value.getInsertRecords();
     const deleteItems = xTable.value.getRemoveRecords();
     const updateItems = xTable.value.getUpdateRecords();
 
     submitLoading.value = true;
     await batch({
-      insertItems,
       updateItems,
       deleteItems,
     }).finally(() => {
@@ -273,11 +288,6 @@
 </script>
 <script lang="ts">
   export default {
-    name: 'DelicacyList',
+    name: 'MusicList',
   };
 </script>
-<style lang="less" scoped>
-  .my-card :deep(.ant-card-body) {
-    padding: 2px 0 2px 8px;
-  }
-</style>

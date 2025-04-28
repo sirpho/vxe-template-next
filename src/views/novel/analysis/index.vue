@@ -20,6 +20,7 @@
   import { groupBy, sortBy } from 'lodash-es';
   import { getLinearColorList } from '@/utils/color';
   import { adds, thousandsSeparator } from '@sirpho/utils';
+  import { percentage } from '@sirpho/utils/math';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
@@ -31,6 +32,7 @@
   const typeGroupBy = ref<any>({});
   const authorGroupBy = ref<any>({});
   const readGroupBy = ref<any>({});
+  const sumWordCount = ref<number>(0);
 
   onMounted(() => {
     analysis().then((res) => {
@@ -38,7 +40,11 @@
       typeGroupBy.value = groupBy(originList.value, 'type');
       authorGroupBy.value = groupBy(originList.value, 'author');
       readGroupBy.value = groupBy(originList.value, 'readStatus');
-
+      sumWordCount.value = adds(
+        ...originList.value
+          .filter((item) => item.readStatus !== '弃坑')
+          .map((item) => item.wordCount),
+      );
       resetOptions();
     });
   });
@@ -130,18 +136,23 @@
               break;
           }
 
+          const effectiveList = list.filter((item) => item.readStatus !== '弃坑');
           const classList = list.map((item) => getClass(item));
-          const totalWordCount = adds(...list.map((item: any) => item.wordCount));
+          const totalWordCount = adds(...effectiveList.map((item: any) => item.wordCount));
 
           let chunkList: any[] = [];
           for (let i = 0; i < classList.length; i += 4) {
             const chunk = classList.slice(i, i + 4);
             chunkList.push(chunk.join('  '));
           }
+          const wordCountText = totalWordCount
+            ? `，占比${percentage(totalWordCount / sumWordCount.value || 1)}`
+            : '';
 
           return [
-            `<div class="echarts-tooltip-title">${name}  ${totalWordCount ? thousandsSeparator(totalWordCount) + '万字' : ''}</div>`,
-            `<div class="echarts-tooltip-title">${value} 本，占比${percent}%</div>`,
+            `<div class="echarts-tooltip-title">${name}</div>`,
+            `<div class="echarts-tooltip-title">数量：${value} 本，占比${percent}%</div>`,
+            `<div class="echarts-tooltip-title">字数：${totalWordCount ? thousandsSeparator(totalWordCount) + '万字' : '0'}${wordCountText}</div>`,
             ...chunkList.map((item) => `<div>${item}</div>`),
           ].join('');
         },

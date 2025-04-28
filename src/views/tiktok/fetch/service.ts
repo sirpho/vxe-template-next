@@ -4,6 +4,7 @@ enum Api {
   increment = 'http://localhost.sirpho.top:23456/api/tiktok/increment/generate',
   stock = 'http://localhost.sirpho.top:23456/api/tiktok/stock/generate',
   rename = 'http://localhost.sirpho.top:23456/api/file/rename',
+  generateMusic = 'http://localhost.sirpho.top:23456/api/music/generate',
 }
 
 /**
@@ -18,6 +19,13 @@ export const increment = () => {
  */
 export const stock = () => {
   return defHttp.get({ url: Api.stock });
+};
+
+/**
+ * @description: 音乐生成
+ */
+export const generateMusic = () => {
+  return defHttp.get({ url: Api.generateMusic });
 };
 
 /**
