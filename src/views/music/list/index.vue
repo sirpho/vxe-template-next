@@ -158,9 +158,6 @@
         filterRender: { name: 'FilterExtend' },
         minWidth: 130,
         width: 130,
-        formatter: ({ row }) => {
-          return row.lyric === 'Y' ? '是' : '否';
-        },
       },
       {
         field: 'size',
