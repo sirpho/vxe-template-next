@@ -50,7 +50,12 @@
         <br />
         <br />
         <Divider>文件处理结果</Divider>
-        <vxe-grid v-bind="{ ...gridOptions }" :data="tableList" ref="xTable" />
+        <vxe-grid
+          v-bind="{ ...gridOptions }"
+          :columns="tableColumns"
+          :data="tableList"
+          ref="xTable"
+        />
       </template>
     </PageContainer>
   </VxeContainer>
@@ -85,7 +90,6 @@
   const tableList = ref<any[]>([]);
   const tableColumns = ref<any[]>(tiktokColumns);
   const gridOptions = reactive<VxeGridProps>({
-    columns: [],
     showHeaderOverflow: 'tooltip',
     height: '400px',
     rowStyle: ({ row }) => {
