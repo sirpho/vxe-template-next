@@ -32,8 +32,8 @@
         <!-- 有歌词 -->
         <template #lyric="{ row }">
           <Select v-model:value="row.lyric" size="small">
-            <Select.Option value="Y">是</Select.Option>
-            <Select.Option value="N">否</Select.Option>
+            <Select.Option value="是">是</Select.Option>
+            <Select.Option value="否">否</Select.Option>
           </Select>
         </template>
         <!-- 语言 -->
