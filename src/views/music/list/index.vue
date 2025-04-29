@@ -2,11 +2,8 @@
   <PageContainer>
     <QueryFilterContainer>
       <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
-        <FormItem label="名称" name="name">
-          <Input v-model:value="formState.name" allow-clear size="small" />
-        </FormItem>
-        <FormItem label="歌手" name="singer">
-          <Input v-model:value="formState.singer" allow-clear size="small" />
+        <FormItem label="关键词" name="path">
+          <Input v-model:value="formState.path" allow-clear size="small" />
         </FormItem>
         <FormItem class="sticky">
           <Space>
@@ -93,13 +90,11 @@
   import { formatSize } from '@/utils/formatter';
 
   interface FormState {
-    name: string;
-    singer: string;
+    path: string;
   }
 
   const formState = reactive<FormState>({
-    name: '', // 名字
-    singer: '', // 歌手
+    path: '', // 关键词
   });
 
   const xTable = ref({} as VxeTableInstance);
@@ -123,16 +118,6 @@
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
       {
-        field: 'singer',
-        title: '歌手',
-        editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'singer' },
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-        minWidth: 130,
-      },
-      {
         field: 'name',
         title: '名称',
         editRender: { autofocus: '.ant-input' },
@@ -141,6 +126,16 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 160,
+      },
+      {
+        field: 'singer',
+        title: '歌手',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'singer' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        minWidth: 130,
       },
       {
         field: 'language',
