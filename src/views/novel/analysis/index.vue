@@ -2,11 +2,18 @@
   <PageContainer>
     <VxeContainer>
       <div class="h-100% flex flex-col p-2">
-        <RadioGroup v-model:value="valueMode" @change="handleChangeMode">
-          <RadioButton value="typeMode">按类型</RadioButton>
-          <RadioButton value="authorMode">按作者</RadioButton>
-          <RadioButton value="readMode">按阅读状态</RadioButton>
-        </RadioGroup>
+        <Space>
+          <RadioGroup v-model:value="valueMode" @change="handleChangeMode">
+            <RadioButton value="typeMode">按类型</RadioButton>
+            <RadioButton value="authorMode">按作者</RadioButton>
+            <RadioButton value="readMode">按阅读状态</RadioButton>
+          </RadioGroup>
+
+          <Checkbox v-model:checked="ignoreDiscarded" @change="handleChangeMode">
+            忽略已弃的
+          </Checkbox>
+        </Space>
+
         <div ref="chartRef" class="h-100% flex-1"></div>
       </div>
     </VxeContainer>
@@ -14,7 +21,7 @@
 </template>
 <script lang="ts" setup>
   import { Ref, ref, onMounted } from 'vue';
-  import { RadioGroup, RadioButton } from 'ant-design-vue';
+  import { RadioGroup, Space, RadioButton, Checkbox } from 'ant-design-vue';
   import { useECharts } from '@/hooks/web/useECharts';
   import { analysis } from './service';
   import { groupBy, sortBy } from 'lodash-es';
@@ -26,7 +33,8 @@
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
 
   const valueMode = ref<'typeMode' | 'authorMode' | 'readMode'>('typeMode');
-
+  // 忽略已弃的
+  const ignoreDiscarded = ref<boolean>(true);
   const originList = ref<any[]>([]);
   const echartData = ref<any[]>([]);
   const typeGroupBy = ref<any>({});
@@ -84,10 +92,9 @@
   const resetOptions = () => {
     echartData.value = [];
     const result: Record<string, number> = {};
-    const array =
-      valueMode.value === 'readMode'
-        ? originList.value
-        : originList.value.filter((item) => item.readStatus !== '弃坑');
+    const array = ignoreDiscarded.value
+      ? originList.value.filter((item) => item.readStatus !== '弃坑')
+      : originList.value;
     array.forEach((item) => {
       let nameField;
       switch (valueMode.value) {
