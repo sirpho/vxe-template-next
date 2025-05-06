@@ -78,6 +78,18 @@ const route: AppRouteModule = {
         title: t('routes.tools.network'),
       },
     },
+    /**
+     * api
+     */
+    {
+      path: 'fetch',
+      name: 'Fetch',
+      component: () => import('@/views/tools/fetch/index.vue'),
+      meta: {
+        icon: 'eos-icons:api',
+        title: t('routes.tools.fetch'),
+      },
+    },
   ],
 };
 

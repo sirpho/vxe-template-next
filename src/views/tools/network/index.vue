@@ -10,7 +10,7 @@
       <VxeContainer :extraHeight="24">
         <img
           style="max-width: 100%; max-height: 100%"
-          src="https://fe-static.obs.cn-hz1.ctyun.cn/202502/网络拓扑.png"
+          src="https://fe-static.obs.cn-hz1.ctyun.cn/sirpho/网络拓扑.png"
           alt="桥南沈网络拓扑结构"
         />
       </VxeContainer>
