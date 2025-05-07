@@ -76,7 +76,7 @@ const route: AppRouteModule = {
      */
     {
       path: 'tiktok-fetch',
-      name: 'Fetch',
+      name: 'TiktokFetch',
       component: () => import('@/views/tiktok/fetch/index.vue'),
       meta: {
         icon: 'eos-icons:api',
