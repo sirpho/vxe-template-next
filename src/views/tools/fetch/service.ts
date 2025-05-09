@@ -33,7 +33,7 @@ export const browseArticle = (id: string) => {
  * @description: 音乐生成
  */
 export const generateMusic = () => {
-  return defHttp.get({ url: Api.generateMusic, timeout: 60 * 60 * 1000 });
+  return defHttp.post({ url: Api.generateMusic, timeout: 60 * 60 * 1000 });
 };
 
 export const musicColumns = [

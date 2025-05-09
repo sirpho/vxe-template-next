@@ -13,7 +13,7 @@ export const varients: Record<string, SelectTableRemoteConfig> = {
   // 抖音博主
   TiktokAuthor: {
     url: '/api/tiktok/analysis',
-    method: 'get',
+    method: 'post',
   },
 };
 

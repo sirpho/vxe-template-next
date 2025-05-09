@@ -148,7 +148,7 @@
     toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toolbar_tools' } },
     editRules: validRules.value,
     columns: [
-      { type: 'seq', title: '序号', width: 120, align: 'center' },
+      { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
       {
         field: 'identification',
         title: '唯一标识',

@@ -6,20 +6,21 @@ enum Api {
   stock = 'https://localhost.sirpho.top:23456/api/tiktok/stock/generate',
   rename = 'https://localhost.sirpho.top:23456/api/file/rename',
   generateDancer = '/api/dancer/generate',
+  repeat = '/api/tiktok/repeat',
 }
 
 /**
  * @description: 增量文件重命名
  */
 export const increment = () => {
-  return defHttp.get({ url: Api.increment, timeout: 60 * 60 * 1000 });
+  return defHttp.post({ url: Api.increment, timeout: 60 * 60 * 1000 });
 };
 
 /**
  * @description: 全量重新生成
  */
 export const stock = () => {
-  return defHttp.get({ url: Api.stock, timeout: 60 * 60 * 1000 });
+  return defHttp.post({ url: Api.stock, timeout: 60 * 60 * 1000 });
 };
 
 /**
@@ -30,10 +31,17 @@ export const generateDancer = () => {
 };
 
 /**
+ * @description: 重复文件查询
+ */
+export const repeat = () => {
+  return defHttp.post({ url: Api.repeat, timeout: 60 * 60 * 1000 });
+};
+
+/**
  * @description: 文件夹内文件md5重命名
  */
 export const rename = (params: any) => {
-  return defHttp.get({ url: Api.rename, params, timeout: 60 * 60 * 1000 });
+  return defHttp.post({ url: Api.rename, params, timeout: 60 * 60 * 1000 });
 };
 
 export const tiktokColumns = [
@@ -62,64 +70,6 @@ export const tiktokColumns = [
   {
     field: 'suffix',
     title: '后缀名',
-    sortable: true,
-    filters: [{}],
-    filterRender: { name: 'FilterExtend' },
-  },
-];
-
-export const musicColumns = [
-  { type: 'seq', title: '序号', width: 120, align: 'center' },
-  {
-    field: 'name',
-    title: '名称',
-    sortable: true,
-  },
-  {
-    field: 'singer',
-    title: '歌手',
-    sortable: true,
-  },
-  {
-    field: 'language',
-    title: '语言',
-    sortable: true,
-  },
-  {
-    field: 'lyric',
-    title: '有歌词',
-    sortable: true,
-  },
-  {
-    field: 'size',
-    title: '文件大小',
-    sortable: true,
-    sortBy: 'size',
-    formatter: ({ row }) => {
-      return formatSize(row.size || 0);
-    },
-  },
-  {
-    field: 'suffix',
-    title: '后缀',
-    sortable: true,
-  },
-  {
-    field: 'duration',
-    title: '时长',
-    sortBy: 'duration',
-    formatter: ({ row }) => {
-      const duration = row.duration || 0;
-      const minute = Math.floor(duration / 60);
-      const second = duration % 60;
-
-      return duration ? `${(minute ? minute + '分钟' : '') + (second ? second + '秒' : '')}` : '';
-    },
-    sortable: true,
-  },
-  {
-    field: 'path',
-    title: '路径',
     sortable: true,
     filters: [{}],
     filterRender: { name: 'FilterExtend' },

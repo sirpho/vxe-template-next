@@ -7,15 +7,17 @@
           增量文件重命名
         </Button>
         <Button @click="handleStock" :loading="loadingStock">全量重新生成</Button>
+        <Button @click="handleRepeat" :loading="loadingRepeat">重复文件查询</Button>
       </div>
       <br />
       <br />
       <br />
-      <Divider>博主整理</Divider>
+      <Divider>数据整理</Divider>
       <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
         <Button @click="handleGenerateDancer" :loading="loadingGenerateDancer" type="primary">
           博主整理
         </Button>
+        <Button @click="handleRepeat" :loading="loadingRepeat">重复文件查询</Button>
       </div>
       <br />
       <br />
@@ -68,6 +70,7 @@
     increment,
     rename,
     stock,
+    repeat,
     generateDancer,
     tiktokColumns,
     renameColumns,
@@ -78,6 +81,7 @@
   const loadingGenerateDancer = ref(false);
   const loadingIncrement = ref(false);
   const loadingStock = ref(false);
+  const loadingRepeat = ref(false);
   const loadingRename = ref(false);
 
   const formState = reactive({
@@ -142,6 +146,19 @@
 
     tableList.value = [...exceptionList, ...resultList];
     message.success(`新增文件记录${res.data.increaseCount}条，新增标签记录${res.data.tagCount}条`);
+  };
+
+  /**
+   * 重复文件查询
+   */
+  const handleRepeat = async () => {
+    loadingRepeat.value = true;
+    const res = await repeat().finally(() => {
+      loadingRepeat.value = false;
+    });
+    tableColumns.value = tiktokColumns;
+
+    tableList.value = res.data || [];
   };
 
   /**

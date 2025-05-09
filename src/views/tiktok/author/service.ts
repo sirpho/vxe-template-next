@@ -8,5 +8,5 @@ enum Api {
  * @description: 列表
  */
 export const list = (data: any) => {
-  return defHttp.get({ url: Api.list, data });
+  return defHttp.post({ url: Api.list, data });
 };
