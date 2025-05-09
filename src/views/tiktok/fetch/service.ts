@@ -5,7 +5,7 @@ enum Api {
   increment = 'https://localhost.sirpho.top:23456/api/tiktok/increment/generate',
   stock = 'https://localhost.sirpho.top:23456/api/tiktok/stock/generate',
   rename = 'https://localhost.sirpho.top:23456/api/file/rename',
-  generateMusic = 'https://localhost.sirpho.top:23456/api/music/generate',
+  generateDancer = '/api/dancer/generate',
 }
 
 /**
@@ -23,10 +23,10 @@ export const stock = () => {
 };
 
 /**
- * @description: 音乐生成
+ * @description: 博主整理
  */
-export const generateMusic = () => {
-  return defHttp.get({ url: Api.generateMusic, timeout: 60 * 60 * 1000 });
+export const generateDancer = () => {
+  return defHttp.post({ url: Api.generateDancer, timeout: 60 * 60 * 1000 });
 };
 
 /**

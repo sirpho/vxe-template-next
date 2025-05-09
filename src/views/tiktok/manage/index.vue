@@ -2,7 +2,7 @@
   <PageContainer>
     <QueryFilterContainer>
       <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
-        <FormItem label="作者" name="author">
+        <FormItem label="作者" name="author" :rules="[{ required: true, message: '必填项' }]">
           <TiktokAuthorCombox v-model:value="formState.author" />
         </FormItem>
         <FormItem label="类别" name="category">

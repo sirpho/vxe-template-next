@@ -90,6 +90,6 @@
 </script>
 <script lang="ts">
   export default {
-    name: 'TiktokAuthor',
+    name: 'Author',
   };
 </script>

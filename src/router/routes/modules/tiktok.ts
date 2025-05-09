@@ -60,15 +60,27 @@ const route: AppRouteModule = {
       },
     },
     /**
-     * 博主一览
+     * 马甲统计
      */
     {
-      path: 'tiktok-author',
-      name: 'TiktokAuthor',
+      path: 'author',
+      name: 'Author',
       component: () => import('@/views/tiktok/author/index.vue'),
       meta: {
-        icon: 'solar:user-id-bold',
+        icon: 'tabler:woman-filled',
         title: t('routes.tiktok.author'),
+      },
+    },
+    /**
+     * 博主管理
+     */
+    {
+      path: 'dancer',
+      name: 'Dancer',
+      component: () => import('@/views/tiktok/dancer/index.vue'),
+      meta: {
+        icon: 'mdi:human-female-dance',
+        title: t('routes.tiktok.dancer'),
       },
     },
     /**

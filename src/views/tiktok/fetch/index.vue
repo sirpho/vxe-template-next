@@ -11,10 +11,10 @@
       <br />
       <br />
       <br />
-      <Divider>音乐文件处理</Divider>
+      <Divider>博主整理</Divider>
       <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
-        <Button @click="handleGenerateMusic" :loading="loadingGenerateMusic" type="primary">
-          音乐文件处理
+        <Button @click="handleGenerateDancer" :loading="loadingGenerateDancer" type="primary">
+          博主整理
         </Button>
       </div>
       <br />
@@ -68,15 +68,14 @@
     increment,
     rename,
     stock,
-    generateMusic,
-    musicColumns,
+    generateDancer,
     tiktokColumns,
     renameColumns,
   } from './service';
   import { VxeContainer, PageContainer } from '@/components/Layout';
   import { VxeGridProps } from 'vxe-table';
 
-  const loadingGenerateMusic = ref(false);
+  const loadingGenerateDancer = ref(false);
   const loadingIncrement = ref(false);
   const loadingStock = ref(false);
   const loadingRename = ref(false);
@@ -146,19 +145,15 @@
   };
 
   /**
-   * 音乐文件处理
+   * 博主整理
    */
-  const handleGenerateMusic = async () => {
-    loadingGenerateMusic.value = true;
-    const res = await generateMusic().finally(() => {
-      loadingGenerateMusic.value = false;
+  const handleGenerateDancer = async () => {
+    loadingGenerateDancer.value = true;
+    await generateDancer().finally(() => {
+      loadingGenerateDancer.value = false;
     });
-    tableColumns.value = musicColumns;
-    tableList.value = (res.data.resultList || []).map((item) => ({
-      ...item,
-      exception: item.duration === 0,
-    }));
-    message.success(`新增文件记录${res.data.increaseCount}条`);
+
+    message.success(`整理完成`);
   };
 
   /**
