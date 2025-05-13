@@ -181,6 +181,7 @@
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
+      { type: 'seq', title: '序号', width: 50, align: 'center' },
       {
         field: 'name',
         title: '小说名称',
@@ -232,7 +233,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        minWidth: 180,
+        minWidth: 250,
       },
       {
         field: 'wordCount',

@@ -52,6 +52,7 @@ export const tiktokColumns = [
     sortable: true,
     filters: [{}],
     filterRender: { name: 'FilterExtend' },
+    width: 120,
   },
   {
     field: 'path',
@@ -97,4 +98,66 @@ export const renameColumns = [
       return formatSize(row.size || 0);
     },
   },
+];
+
+export const repeatColumns = [
+  {
+    field: 'md5',
+    title: 'md5',
+    sortable: true,
+  },
+  {
+    field: 'author',
+    title: '作者',
+    sortable: true,
+    width: 120,
+  },
+  {
+    field: 'path',
+    title: '路径',
+    sortable: true,
+    filters: [{}],
+    filterRender: { name: 'FilterExtend' },
+  },
+  {
+    field: 'name',
+    title: '文件名',
+    sortable: true,
+    filters: [{}],
+    filterRender: { name: 'FilterExtend' },
+  },
+  {
+    field: 'size',
+    title: '文件大小',
+    sortable: true,
+    width: 100,
+    sortBy: 'size',
+    formatter: ({ row }) => {
+      return formatSize(row.size || 0);
+    },
+  },
+];
+
+export const colors: string[] = [
+  '#fc8452',
+  '#DDBEF6',
+  '#73c0de',
+  '#fac858',
+  '#91cc75',
+  '#C3E7FE',
+  '#5470c6',
+  '#F3D9E4',
+  '#AFF0B5',
+  '#F7BAEF',
+  '#BEDAFF',
+  '#B7F4EC',
+  '#FFE4BA',
+  '#ee6666',
+  '#FEFEBE',
+  '#D4E4F8',
+  '#FDDDC3',
+  '#3ba272',
+  '#FDCDC5',
+  '#BCC3FC',
+  '#EDF8BB',
 ];

@@ -13,4 +13,13 @@
   .ant-input-number-group-addon {
     background: #fff;
   }
+
+  .ant-tag-default {
+    background: #fff;
+    cursor: pointer;
+
+    &:hover {
+      color: #1677ff;
+    }
+  }
 }

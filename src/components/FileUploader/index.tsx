@@ -36,7 +36,7 @@ export default defineComponent({
         if (file.response && file.response.code === 200) {
           // Component will show file.url as link
           if (file.response.data && file.response.data.length > 0) {
-            file.url = file.response.data[0].url;
+            file.url = file.response.data[0].url || file.response.data[0].localUrl;
           }
         }
         return file;
@@ -78,15 +78,16 @@ export default defineComponent({
         disabled={props.disabled}
         headers={{ token: accessToken }}
         name={'files'}
-        action={`${import.meta.env.VITE_BASE_URL}${props.action}`}
+        action={`${import.meta.env.VITE_GLOB_API_URL}${props.action}`}
         fileList={list}
         onRemove={removeFile}
         onChange={handleChange}
         beforeUpload={props.beforeUpload}
+        showUploadList={props.showUploadList}
       >
         {!props.disabled && (
           <a-button size="small" icon={<UploadOutlined />}>
-            上传文件
+            {props.text}
           </a-button>
         )}
         {props.disabled && list.length <= 0 && <span style="color: rgba(0,0,0,.25)">暂无附件</span>}

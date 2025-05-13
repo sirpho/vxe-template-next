@@ -12,9 +12,13 @@ export const FileUploaderProps = {
     type: Boolean as PropType<boolean>,
     default: false,
   },
+  showUploadList: {
+    type: Boolean as PropType<boolean>,
+    default: false,
+  },
   action: {
     type: String as PropType<string>,
-    default: '/file/upload',
+    default: '/api/file/upload',
   },
   onChange: {
     type: Function as PropType<(fileList: any) => void>,
@@ -22,5 +26,11 @@ export const FileUploaderProps = {
   fileList: {
     type: Array as PropType<RawFileItem[]>,
     default: () => [],
+  },
+  beforeUpload: {
+    type: Function as PropType<(fileList: any) => void>,
+  },
+  text: {
+    type: String as PropType<string>,
   },
 };

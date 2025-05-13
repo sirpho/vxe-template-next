@@ -79,10 +79,38 @@
         </template>
         <!-- 价格 -->
         <template #price="{ row }">
-          <InputNumber v-model:value="row.price" addon-before="￥" addon-after="元" size="small" />
+          <InputNumber v-model:value="row.price" addon-after="元" size="small" />
+        </template>
+        <!-- 附件 -->
+        <template #files="{ row }">
+          <div class="file-name-wrapper">
+            <FileUploader
+              :fileList="row.fileList"
+              :showUploadList="false"
+              @change="(files: any[]) => handleChangeFile(row, files)"
+            />
+            <Tag
+              v-for="(item, index) in row.fileList"
+              :key="item.url"
+              closable
+              color="default"
+              @click="() => handlePreview(item.url)"
+              @close="() => handleRemoveFile(row, index)"
+            >
+              {{ filterFileName(item.url) }}
+            </Tag>
+          </div>
         </template>
       </vxe-grid>
     </VxeContainer>
+    <Image
+      style="display: none"
+      :preview="{
+        visible: previewVisible,
+        onVisibleChange: (value) => (previewVisible = value),
+      }"
+      :src="previewSrc"
+    />
   </PageContainer>
 </template>
 <script lang="ts" setup>
@@ -98,12 +126,16 @@
     Select,
     InputNumber,
     DatePicker,
+    Image,
+    Tag,
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
   import dayjs from 'dayjs';
   import { useDict } from '@/hooks/web/useDict';
   import { isNumber } from '@/utils/is';
+  import FileUploader from '@/components/FileUploader';
+  import PageContainer from '@/components/Layout/src/PageContainer/index.vue';
 
   interface FormState {
     date: string;
@@ -116,6 +148,9 @@
     type: '', // 类型
     location: '', // 地点
   });
+
+  const previewSrc = ref('');
+  const previewVisible = ref(false);
 
   const xTable = ref({} as VxeTableInstance);
   const tableList = ref<any[]>([]);
@@ -151,6 +186,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 200,
       },
       {
         field: 'date',
@@ -160,6 +196,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 120,
       },
       {
         field: 'location',
@@ -169,6 +206,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 120,
       },
       {
         field: 'type',
@@ -178,6 +216,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 120,
       },
       {
         field: 'price',
@@ -190,6 +229,7 @@
         formatter: ({ row }) => {
           return isNumber(row.price) ? `￥${row.price}元` : '';
         },
+        width: 120,
       },
       {
         field: 'memo',
@@ -199,6 +239,17 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 250,
+      },
+      {
+        field: 'files',
+        title: '附件',
+        editRender: { autofocus: '.ant-input' },
+        slots: { default: 'files', edit: 'files' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        minWidth: 300,
       },
     ],
     showHeaderOverflow: 'tooltip',
@@ -217,7 +268,14 @@
     const res = await list(formState).finally(() => {
       tableLoading.value = false;
     });
-    tableList.value = res.data || [];
+    tableList.value = (res.data || []).map((item) => ({
+      ...item,
+      fileList:
+        item.files?.split(',').map((url: string) => ({
+          url: url,
+          name: url,
+        })) || [],
+    }));
   };
 
   /**
@@ -227,6 +285,7 @@
     // 新增行默认值
     const record = {
       date: dayjs().format('YYYY-MM-DD'),
+      fileList: [],
     };
     const { row: newRow } = await xTable.value.insertAt(record, null);
     await xTable.value.setEditRow(newRow);
@@ -270,6 +329,39 @@
       },
     });
   };
+
+  /**
+   * 上传文件回调
+   */
+  const handleChangeFile = (row: any, fileList: any[]) => {
+    row.fileList = fileList;
+    row.files = fileList.map((item) => item.url).join(',');
+  };
+
+  /**
+   * 删除文件
+   */
+  const handleRemoveFile = (row: any, index: number) => {
+    row.fileList.splice(index, 1);
+    row.files = row.fileList.map((item) => item.url)?.join(',');
+  };
+
+  /**
+   * 展示文件名字
+   */
+  const filterFileName = (url: string) => {
+    return url?.split('/')?.pop();
+  };
+
+  /**
+   * 预览
+   * @param record
+   */
+  const handlePreview = (record) => {
+    console.log(record);
+    previewSrc.value = record;
+    previewVisible.value = true;
+  };
 </script>
 <script lang="ts">
   export default {
@@ -277,7 +369,10 @@
   };
 </script>
 <style lang="less" scoped>
-  .my-card :deep(.ant-card-body) {
-    padding: 2px 0 2px 8px;
+  .file-name-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
   }
 </style>

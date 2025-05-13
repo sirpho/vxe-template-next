@@ -7,7 +7,6 @@
           增量文件重命名
         </Button>
         <Button @click="handleStock" :loading="loadingStock">全量重新生成</Button>
-        <Button @click="handleRepeat" :loading="loadingRepeat">重复文件查询</Button>
       </div>
       <br />
       <br />
@@ -73,10 +72,13 @@
     repeat,
     generateDancer,
     tiktokColumns,
+    repeatColumns,
     renameColumns,
+    colors,
   } from './service';
   import { VxeContainer, PageContainer } from '@/components/Layout';
   import { VxeGridProps } from 'vxe-table';
+  import { hexToRGBA } from '@/utils/color';
 
   const loadingGenerateDancer = ref(false);
   const loadingIncrement = ref(false);
@@ -96,8 +98,10 @@
     showHeaderOverflow: 'tooltip',
     height: '400px',
     rowStyle: ({ row }) => {
+      const color = row.color || 'unset';
+      const exceptionColor = row.exception ? 'rgb(252 86 51 / 20%)' : 'unset';
       return {
-        background: row.exception ? 'rgb(252 86 51 / 20%)' : 'unset',
+        background: color || exceptionColor,
       };
     },
   });
@@ -153,12 +157,18 @@
    */
   const handleRepeat = async () => {
     loadingRepeat.value = true;
+    const colorMap = {};
     const res = await repeat().finally(() => {
       loadingRepeat.value = false;
     });
-    tableColumns.value = tiktokColumns;
-
+    tableColumns.value = repeatColumns;
     tableList.value = res.data || [];
+
+    let i = 0;
+    tableList.value.forEach((item) => {
+      colorMap[item.md5] = colorMap[item.md5] || hexToRGBA(colors[i++ % colors.length], 0.2);
+      item.color = colorMap[item.md5];
+    });
   };
 
   /**
