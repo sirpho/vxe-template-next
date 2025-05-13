@@ -200,17 +200,15 @@
       loadingRemove.value = false;
     });
     tableList.value = res.data || [];
-
-    await handleRepeat();
   };
 
   /**
    * 删除文件和记录
    */
   const handleRemovePathRecords = async () => {
-    const checkRecords = xTable.value.getCheckRecords();
+    const checkRecords = xTable.value.getCheckboxRecords();
     if (checkRecords.length <= 0) {
-      message.error('选择行项目');
+      message.error('请先选择行项目');
       return;
     }
     loadingRemovePath.value = true;
@@ -218,6 +216,8 @@
       loadingRemovePath.value = false;
     });
     tableList.value = res.data || [];
+
+    await handleRepeat();
   };
 
   /**
