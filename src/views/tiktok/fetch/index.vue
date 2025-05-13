@@ -17,6 +17,7 @@
           博主整理
         </Button>
         <Button @click="handleRepeat" :loading="loadingRepeat">重复文件查询</Button>
+        <Button @click="handleRemoveStaleRecords" :loading="loadingRemove">删除无效记录</Button>
       </div>
       <br />
       <br />
@@ -46,11 +47,13 @@
           </Button>
         </div>
       </Form>
+
       <template v-if="tableList.length > 0">
         <br />
         <br />
         <br />
         <Divider>文件处理结果</Divider>
+        <Divider v-if="resultMessage">{{ resultMessage }}</Divider>
         <vxe-grid
           v-bind="{ ...gridOptions }"
           :columns="tableColumns"
@@ -75,6 +78,7 @@
     repeatColumns,
     renameColumns,
     colors,
+    removeStaleRecords,
   } from './service';
   import { VxeContainer, PageContainer } from '@/components/Layout';
   import { VxeGridProps } from 'vxe-table';
@@ -84,7 +88,9 @@
   const loadingIncrement = ref(false);
   const loadingStock = ref(false);
   const loadingRepeat = ref(false);
+  const loadingRemove = ref(false);
   const loadingRename = ref(false);
+  const resultMessage = ref('');
 
   const formState = reactive({
     prefix: '',
@@ -126,7 +132,8 @@
     }));
 
     tableList.value = [...exceptionList, ...resultList];
-    message.success(`新增文件记录${res.data.increaseCount}条，新增标签记录${res.data.tagCount}条`);
+    resultMessage.value = `新增文件记录${res.data.increaseCount}条，新增标签记录${res.data.tagCount}条`;
+    message.success(resultMessage.value);
   };
 
   /**
@@ -149,7 +156,8 @@
     }));
 
     tableList.value = [...exceptionList, ...resultList];
-    message.success(`新增文件记录${res.data.increaseCount}条，新增标签记录${res.data.tagCount}条`);
+    resultMessage.value = `新增文件记录${res.data.increaseCount}条，新增标签记录${res.data.tagCount}条`;
+    message.success(resultMessage.value);
   };
 
   /**
@@ -169,6 +177,17 @@
       colorMap[item.md5] = colorMap[item.md5] || hexToRGBA(colors[i++ % colors.length], 0.2);
       item.color = colorMap[item.md5];
     });
+  };
+
+  /**
+   * 删除无效记录
+   */
+  const handleRemoveStaleRecords = async () => {
+    loadingRemove.value = true;
+    const res = await removeStaleRecords().finally(() => {
+      loadingRemove.value = false;
+    });
+    tableList.value = res.data || [];
   };
 
   /**
@@ -193,8 +212,7 @@
     });
     tableColumns.value = renameColumns;
     tableList.value = res.data.list || [];
-    message.success(
-      `重命名数量${res.data.renameCount}条，删除已收录的重复文件${res.data.removeCount}条`,
-    );
+    resultMessage.value = `重命名数量${res.data.renameCount}条，删除已收录的重复文件${res.data.removeCount}条`;
+    message.success(resultMessage.value);
   };
 </script>
