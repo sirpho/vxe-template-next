@@ -6,6 +6,7 @@ enum Api {
   stock = 'https://localhost.sirpho.top:23456/api/tiktok/stock/generate',
   rename = 'https://localhost.sirpho.top:23456/api/file/rename',
   removeStaleRecords = 'https://localhost.sirpho.top:23456/api/tiktok/remove/stale/records',
+  removePathRecords = 'https://localhost.sirpho.top:23456/api/tiktok/remove/path/records',
   generateDancer = '/api/dancer/generate',
   repeat = '/api/tiktok/repeat',
 }
@@ -50,6 +51,13 @@ export const rename = (params: any) => {
  */
 export const removeStaleRecords = () => {
   return defHttp.post({ url: Api.removeStaleRecords, timeout: 60 * 60 * 1000 });
+};
+
+/**
+ * @description: 删除文件和记录
+ */
+export const removePathRecords = (data: any[]) => {
+  return defHttp.post({ url: Api.removePathRecords, data, timeout: 60 * 60 * 1000 });
 };
 
 export const tiktokColumns = [
@@ -109,6 +117,7 @@ export const renameColumns = [
 ];
 
 export const repeatColumns = [
+  { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
   {
     field: 'md5',
     title: 'md5',

@@ -54,6 +54,10 @@
         <br />
         <Divider>文件处理结果</Divider>
         <Divider v-if="resultMessage">{{ resultMessage }}</Divider>
+
+        <Button @click="handleRemovePathRecords" :loading="loadingRemovePath">
+          删除文件及记录
+        </Button>
         <vxe-grid
           v-bind="{ ...gridOptions }"
           :columns="tableColumns"
@@ -79,6 +83,7 @@
     renameColumns,
     colors,
     removeStaleRecords,
+    removePathRecords,
   } from './service';
   import { VxeContainer, PageContainer } from '@/components/Layout';
   import { VxeGridProps } from 'vxe-table';
@@ -89,8 +94,11 @@
   const loadingStock = ref(false);
   const loadingRepeat = ref(false);
   const loadingRemove = ref(false);
+  const loadingRemovePath = ref(false);
   const loadingRename = ref(false);
+  const showRemove = ref(false);
   const resultMessage = ref('');
+  const xTable = ref();
 
   const formState = reactive({
     prefix: '',
@@ -116,6 +124,7 @@
    * 增量文件重命名
    */
   const handleIncrement = async () => {
+    showRemove.value = false;
     loadingIncrement.value = true;
     const res = await increment().finally(() => {
       loadingIncrement.value = false;
@@ -140,6 +149,7 @@
    * 全量重新生成
    */
   const handleStock = async () => {
+    showRemove.value = false;
     loadingStock.value = true;
     const res = await stock().finally(() => {
       loadingStock.value = false;
@@ -164,6 +174,7 @@
    * 重复文件查询
    */
   const handleRepeat = async () => {
+    showRemove.value = false;
     loadingRepeat.value = true;
     const colorMap = {};
     const res = await repeat().finally(() => {
@@ -171,6 +182,7 @@
     });
     tableColumns.value = repeatColumns;
     tableList.value = res.data || [];
+    showRemove.value = true;
 
     let i = 0;
     tableList.value.forEach((item) => {
@@ -188,12 +200,31 @@
       loadingRemove.value = false;
     });
     tableList.value = res.data || [];
+
+    await handleRepeat();
+  };
+
+  /**
+   * 删除文件和记录
+   */
+  const handleRemovePathRecords = async () => {
+    const checkRecords = xTable.value.getCheckRecords();
+    if (checkRecords.length <= 0) {
+      message.error('选择行项目');
+      return;
+    }
+    loadingRemovePath.value = true;
+    const res = await removePathRecords(checkRecords).finally(() => {
+      loadingRemovePath.value = false;
+    });
+    tableList.value = res.data || [];
   };
 
   /**
    * 博主整理
    */
   const handleGenerateDancer = async () => {
+    showRemove.value = false;
     loadingGenerateDancer.value = true;
     await generateDancer().finally(() => {
       loadingGenerateDancer.value = false;
@@ -206,6 +237,7 @@
    * 重命名
    */
   const handleSubmit = async () => {
+    showRemove.value = false;
     loadingRename.value = true;
     const res = await rename(formState).finally(() => {
       loadingRename.value = false;
