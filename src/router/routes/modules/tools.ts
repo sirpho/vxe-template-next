@@ -90,6 +90,18 @@ const route: AppRouteModule = {
         title: t('routes.tools.fetch'),
       },
     },
+    /**
+     * 模板代码生成
+     */
+    {
+      path: 'formatter',
+      name: 'Formatter',
+      component: () => import('@/views/tools/formatter/index.vue'),
+      meta: {
+        icon: 'tabler:transform-filled',
+        title: t('routes.tools.formatter'),
+      },
+    },
   ],
 };
 

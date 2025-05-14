@@ -27,6 +27,13 @@ import '@/features/vxe-helpers/styles/index.scss';
 
 import App from './App.vue';
 
+import 'highlight.js/styles/github.min.css';
+import hljs from 'highlight.js/lib/core';
+import json from 'highlight.js/lib/languages/json';
+
+// 注册JSON语言
+hljs.registerLanguage('json', json);
+
 async function bootstrap() {
   const app = createApp(App);
 

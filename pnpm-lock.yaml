@@ -56,9 +56,6 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
-      driver.js:
-        specifier: ^1.3.5
-        version: 1.3.5
       echarts:
         specifier: ^5.6.0
         version: 5.6.0
@@ -68,6 +65,9 @@ importers:
       flv.js:
         specifier: ^1.6.2
         version: 1.6.2
+      highlight.js:
+        specifier: ^11.11.1
+        version: 11.11.1
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
@@ -6281,10 +6281,6 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /driver.js@1.3.5:
-    resolution: {integrity: sha512-exkp49hXuujvTOZ3zYgySWRlEAa8/3nA8glYjtuZjmkTdsQITXivBsW1ytyhKQx3WkeYaovlnvVcLbtTaN86kA==}
-    dev: false
-
   /dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
@@ -7710,6 +7706,11 @@ packages:
   /hexoid@1.0.0:
     resolution: {integrity: sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g==}
     engines: {node: '>=8'}
+    dev: false
+
+  /highlight.js@11.11.1:
+    resolution: {integrity: sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==}
+    engines: {node: '>=12.0.0'}
     dev: false
 
   /hookable@5.5.3:

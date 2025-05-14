@@ -375,4 +375,8 @@
     gap: 6px;
     width: 100%;
   }
+
+  ::v-deep(.ant-image) {
+    display: none;
+  }
 </style>
