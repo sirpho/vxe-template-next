@@ -11,6 +11,10 @@
   import { formatSize } from '@/utils/formatter';
 
   interface Props {
+    /**
+     * @description 获取数据源的时机
+     */
+    requestTrigger?: 'onMount' | 'onFocus' | 'onParamsChange';
     varient?: string;
     gridProps?: VxeGridProps;
     option?: Option;
@@ -40,6 +44,7 @@
     }),
     value: '',
     autoFill: false,
+    requestTrigger: 'onMount',
     option: () => ({ label: 'author', value: 'author' }),
     transformData: (list) => {
       return list.map((item) => ({

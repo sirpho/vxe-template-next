@@ -90,6 +90,7 @@ export const tiktokColumns = [
     sortable: true,
     filters: [{}],
     filterRender: { name: 'FilterExtend' },
+    width: 110,
   },
 ];
 

@@ -1,6 +1,6 @@
 <template>
   <VxeContainer>
-    <PageContainer style="width: 800px; height: 100%; margin: 0 auto; overflow: auto">
+    <PageContainer style="width: 850px; height: 100%; margin: 0 auto; overflow: auto">
       <Divider>TIKTOK文件处理</Divider>
       <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
         <Button @click="handleIncrement" :loading="loadingIncrement" type="primary">
@@ -55,15 +55,23 @@
         <Divider>文件处理结果</Divider>
         <Divider v-if="resultMessage">{{ resultMessage }}</Divider>
 
-        <Button @click="handleRemovePathRecords" :loading="loadingRemovePath">
-          删除文件及记录
-        </Button>
         <vxe-grid
           v-bind="{ ...gridOptions }"
           :columns="tableColumns"
           :data="tableList"
           ref="xTable"
-        />
+        >
+          <template #toolbar_tools>
+            <Button
+              danger
+              @click="handleRemovePathRecords"
+              :loading="loadingRemovePath"
+              size="small"
+            >
+              删除文件及记录
+            </Button>
+          </template>
+        </vxe-grid>
       </template>
     </PageContainer>
   </VxeContainer>
@@ -111,6 +119,10 @@
   const gridOptions = reactive<VxeGridProps>({
     showHeaderOverflow: 'tooltip',
     height: '400px',
+    checkboxConfig: {
+      showHeader: false,
+    },
+    toolbarConfig: { slots: { tools: 'toolbar_tools' } },
     rowStyle: ({ row }) => {
       const color = row.color || 'unset';
       const exceptionColor = row.exception ? 'rgb(252 86 51 / 20%)' : 'unset';

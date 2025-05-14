@@ -2,11 +2,8 @@
   <PageContainer>
     <QueryFilterContainer>
       <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
-        <FormItem label="作者" name="author" :rules="[{ required: true, message: '必填项' }]">
+        <FormItem label="作者" name="author">
           <TiktokAuthorCombox v-model:value="formState.author" />
-        </FormItem>
-        <FormItem label="类别" name="category">
-          <Input size="small" v-model:value="formState.category" />
         </FormItem>
         <FormItem label="文件名" name="name">
           <Input size="small" v-model:value="formState.name" />
@@ -33,7 +30,12 @@
           <Button size="small" type="primary" @click="handleBatch">批量设置标签</Button>
         </template>
         <template #toolbar_tools>
-          <Space> 合计：{{ tableList.length }}部 </Space>
+          <Space>
+            合计：
+            <span>视频数量：{{ tableList.length }}</span>
+            <span>存储容量：{{ formatSize(totalSize) }}</span>
+            <span>播放时长：{{ formatDuration(totalDuration) }}</span>
+          </Space>
         </template>
         <!-- 可编辑列 -->
         <template #size="{ row }">
@@ -66,16 +68,16 @@
   import { batch, getClassList, list } from './service';
   import { TiktokClassCombox, TiktokAuthorCombox } from '@/features/components/Profession';
   import { formatSize } from '@/utils/formatter';
-  import { arrayFieldRepeat, formatDuration } from '@sirpho/utils';
+  import { add, arrayFieldRepeat, formatDuration } from '@sirpho/utils';
 
-  // interface FormState {
-  //   name: string;
-  //   category: string;
-  //   author: string;
-  //   classIdList: string[];
-  // }
+  interface FormState {
+    name: string;
+    category: string;
+    author: string;
+    classIdList: string[];
+  }
 
-  const formState = reactive({
+  const formState = reactive<FormState>({
     name: '', // 名称
     category: '', // 分类
     author: '', // 作者
@@ -87,6 +89,8 @@
   const classList = ref<any[]>([]);
   const tableLoading = ref(false);
   const submitLoading = ref(false);
+  const totalSize = ref(0);
+  const totalDuration = ref(0);
 
   const gridOptions = reactive<VxeGridProps>({
     editConfig: {},
@@ -165,6 +169,12 @@
    * 查询
    */
   const handleQuery = async () => {
+    if (!formState.author && !formState.name && formState.classIdList?.length <= 0) {
+      if (!confirm('确定不带参查询吗？')) {
+        return;
+      }
+    }
+
     tableLoading.value = true;
     const res = await list(formState).finally(() => {
       tableLoading.value = false;
@@ -174,6 +184,12 @@
       classIdList: (item.classList || []).map((ite: any) => ite.id),
       classNameList: (item.classList || []).map((ite: any) => ite.name),
     }));
+    totalSize.value = tableList.value.reduce((previousValue, currentValue) => {
+      return add(previousValue, currentValue.size);
+    }, 0);
+    totalDuration.value = tableList.value.reduce((previousValue, currentValue) => {
+      return add(previousValue, currentValue.duration);
+    }, 0);
   };
 
   /**
