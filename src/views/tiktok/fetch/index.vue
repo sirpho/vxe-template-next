@@ -1,6 +1,6 @@
 <template>
   <VxeContainer>
-    <PageContainer style="width: 800px; margin: 0 auto">
+    <PageContainer style="width: 800px; height: 100%; margin: 0 auto; overflow: auto">
       <Divider>TIKTOK文件处理</Divider>
       <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
         <Button @click="handleIncrement" :loading="loadingIncrement" type="primary">
@@ -121,10 +121,19 @@
   });
 
   /**
+   * 初始化
+   */
+  const init = () => {
+    resultMessage.value = '';
+    showRemove.value = false;
+    tableList.value = [];
+  };
+
+  /**
    * 增量文件重命名
    */
   const handleIncrement = async () => {
-    showRemove.value = false;
+    init();
     loadingIncrement.value = true;
     const res = await increment().finally(() => {
       loadingIncrement.value = false;
@@ -149,7 +158,7 @@
    * 全量重新生成
    */
   const handleStock = async () => {
-    showRemove.value = false;
+    init();
     loadingStock.value = true;
     const res = await stock().finally(() => {
       loadingStock.value = false;
@@ -174,7 +183,7 @@
    * 重复文件查询
    */
   const handleRepeat = async () => {
-    showRemove.value = false;
+    init();
     loadingRepeat.value = true;
     const colorMap = {};
     const res = await repeat().finally(() => {
@@ -195,11 +204,13 @@
    * 删除无效记录
    */
   const handleRemoveStaleRecords = async () => {
+    init();
     loadingRemove.value = true;
     const res = await removeStaleRecords().finally(() => {
       loadingRemove.value = false;
     });
-    tableList.value = res.data || [];
+    resultMessage.value = `本次共移除${res.data}条记录`;
+    message.success(resultMessage.value);
   };
 
   /**
@@ -224,7 +235,7 @@
    * 博主整理
    */
   const handleGenerateDancer = async () => {
-    showRemove.value = false;
+    init();
     loadingGenerateDancer.value = true;
     await generateDancer().finally(() => {
       loadingGenerateDancer.value = false;
@@ -237,7 +248,7 @@
    * 重命名
    */
   const handleSubmit = async () => {
-    showRemove.value = false;
+    init();
     loadingRename.value = true;
     const res = await rename(formState).finally(() => {
       loadingRename.value = false;

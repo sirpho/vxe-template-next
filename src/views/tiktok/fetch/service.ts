@@ -43,7 +43,7 @@ export const repeat = () => {
  * @description: 文件夹内文件md5重命名
  */
 export const rename = (params: any) => {
-  return defHttp.post({ url: Api.rename, params, timeout: 60 * 60 * 1000 });
+  return defHttp.get({ url: Api.rename, params, timeout: 60 * 60 * 1000 });
 };
 
 /**
