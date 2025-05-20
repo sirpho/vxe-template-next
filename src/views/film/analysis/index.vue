@@ -3,9 +3,9 @@
     <VxeContainer>
       <div class="h-100% flex flex-col p-2">
         <RadioGroup v-model:value="valueMode" @change="handleChangeMode">
-          <RadioButton value="typeMode">按类型</RadioButton>
           <RadioButton value="categoryMode">按大类</RadioButton>
           <RadioButton value="locationMode">按地区</RadioButton>
+          <RadioButton value="typeMode">按类型</RadioButton>
         </RadioGroup>
         <div ref="chartRef" class="h-100% flex-1"></div>
       </div>
@@ -25,7 +25,7 @@
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
 
-  const valueMode = ref<'typeMode' | 'locationMode' | 'categoryMode'>('typeMode');
+  const valueMode = ref<'typeMode' | 'locationMode' | 'categoryMode'>('categoryMode');
 
   const originList = ref<any[]>([]);
   const echartData = ref<any[]>([]);
