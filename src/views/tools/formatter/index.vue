@@ -10,6 +10,12 @@
           <FormItem label="步长">
             <InputNumber v-model:value="step" size="small" />
           </FormItem>
+          <FormItem label="模式">
+            <Select size="small" v-model:value="pageState.mode">
+              <Select.Option value="WMS">WMS</Select.Option>
+              <Select.Option value="TMS">TMS</Select.Option>
+            </Select>
+          </FormItem>
         </Form>
         <Space>
           <Button
@@ -252,7 +258,7 @@
   };
 
   /**
-   * 转换
+   * 开始转换，提取列表字段
    */
   const handleFormatter = async () => {
     const regex = /^[\s\S]*?public class/gm;
@@ -392,6 +398,12 @@
         `);
         antDesignVueSet.add('RangePicker');
         importSet.add(`import dayjs, type { Dayjs } from 'dayjs';`);
+        if (pageState.mode === 'TMS') {
+          importSet.add(`import { timeRangeHandler } from '#/utils/dayjs';`);
+        } else {
+          importSet.add(`import { timeRangeHandler } from '/@/utils/dayjs';`);
+        }
+
         break;
     }
     result.push(close);
@@ -410,9 +422,15 @@
     );
     importSet.add(`import type { VxeGridProps } from 'vxe-table';`);
     importSet.add(`import { useDefaultProps } from '@wahaha/vxe-ext-core';`);
-    importSet.add(
-      `import { list${allowEdit.value || pageState.allowRemove ? ', saveEntity' : ''} } from './service';`,
-    );
+    if (pageState.mode === 'TMS') {
+      importSet.add(
+        `import { list${allowEdit.value || pageState.allowRemove ? ', saveEntity' : ''} } from './server';`,
+      );
+    } else {
+      importSet.add(
+        `import { list${allowEdit.value || pageState.allowRemove ? ', saveEntity' : ''} } from './service';`,
+      );
+    }
     if (pageState.allowRemove) {
       antDesignVueSet.add('message');
       antDesignVueSet.add('Modal');
@@ -521,15 +539,15 @@
     const rangeDateList = searchItemList.value.filter((item) => item.searchMode === 'rangeDate');
     if (rangeDateList.length > 0) {
       vxeDefaultPropsText.push(`beforeSearchSubmit: (params: FormState) => {`);
-      const fieldList = rangeDateList.map((item) => item.field);
+      const fieldList: string[] = rangeDateList.map((item) => item.field);
       vxeDefaultPropsText.push(`const { ${fieldList.join(', ')}, ...other } = params;`);
       const rangeFieldList: string[] = [];
       fieldList.forEach((item) => {
         vxeDefaultPropsText.push(
-          `const [${item.field}Start, ${item.field}End] = timeRangeHandler(date, { format: 'YYYY-MM-DD', });`,
+          `const [${item}Start, ${item}End] = timeRangeHandler(${item}, { format: 'YYYY-MM-DD', });`,
         );
-        rangeFieldList.push(`${item.field}Start`);
-        rangeFieldList.push(`${item.field}End`);
+        rangeFieldList.push(`${item}Start`);
+        rangeFieldList.push(`${item}End`);
       });
       vxeDefaultPropsText.push(`return { ${rangeFieldList.join(', ')}, ...other };`);
       vxeDefaultPropsText.push(`},`);

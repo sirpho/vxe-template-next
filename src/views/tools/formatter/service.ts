@@ -62,7 +62,8 @@ export const QUERY_CONTAINER = `
               layout="inline"
               name="form"
               @finish="vxeInstance.reload"
-            >@@@FORM_ITEM@@@
+            >
+            @@@FORM_ITEM@@@
               <FormItem>
                 <Space>
                   <Button
@@ -72,7 +73,8 @@ export const QUERY_CONTAINER = `
                     type="primary"
                   >
                     查询
-                  </Button>@@@EXPORT_BUTTON@@@
+                  </Button>
+                  @@@EXPORT_BUTTON@@@
                 </Space>
               </FormItem>
             </Form>
@@ -84,7 +86,8 @@ export const PAGE_CONTAINER = `
   <PageContainer>
     <VxeContainer>
       <vxe-grid v-bind="{ ...vxeDefaultProps, ...gridOptions }" ref="xTable">
-        <template #form>@@@QUERY_CONTAINER@@@
+        <template #form>
+        @@@QUERY_CONTAINER@@@
           <div class="bg-background-deep z-100 h-2 md:h-2"></div>
         </template>
         @@@toolbarButtonsText@@@
