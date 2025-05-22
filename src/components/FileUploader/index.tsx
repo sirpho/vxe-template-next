@@ -33,6 +33,7 @@ export default defineComponent({
 
       // 2. read from response and show file link
       resFileList = resFileList.map((file) => {
+        // // 这里逻辑可以根据项目进行修改
         if (file.response && file.response.code === 200) {
           // Component will show file.url as link
           if (file.response.data && file.response.data.length > 0) {
@@ -45,6 +46,7 @@ export default defineComponent({
       state.list = resFileList;
 
       if (info.file.status === 'done') {
+        // 这里逻辑可以根据项目进行修改
         if (info.file.response && info.file.response.code !== 200) {
           message.error(info.file.response.msg || '文件上传异常！');
         }

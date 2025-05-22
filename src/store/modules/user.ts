@@ -117,6 +117,7 @@ export const useUserStore = defineStore({
         userid: data.id,
         username: data.name,
       };
+      // 这里逻辑可以根据项目进行修改
       if (code !== 200) return null;
       const { menuList = [] } = userInfo;
       if (isArray(menuList)) {
