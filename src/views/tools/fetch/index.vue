@@ -6,6 +6,13 @@
         <Button @click="handleGenerateMusic" :loading="loadingGenerateMusic" type="primary">
           音乐文件处理
         </Button>
+        <Button
+          @click="handleGenerateMusicTagger"
+          :loading="loadingGenerateMusicTagger"
+          type="primary"
+        >
+          音乐文件元数据处理
+        </Button>
       </div>
       <br />
       <br />
@@ -37,13 +44,20 @@
 <script lang="ts" setup>
   import { Button, Divider, message, Progress } from 'ant-design-vue';
   import { reactive, ref } from 'vue';
-  import { generateMusic, browseArticle, getArticleList, musicColumns } from './service';
+  import {
+    generateMusic,
+    browseArticle,
+    getArticleList,
+    musicColumns,
+    generateMusicTagger,
+  } from './service';
   import { VxeContainer, PageContainer } from '@/components/Layout';
   import { VxeGridProps } from 'vxe-table';
   import JSZip from 'jszip';
   import dayjs from 'dayjs';
 
   const loadingGenerateMusic = ref(false);
+  const loadingGenerateMusicTagger = ref(false);
   const loadingExport = ref(false);
   const exportTask = ref(false);
   const exportProgress = ref<number>(0);
@@ -73,6 +87,22 @@
       exception: item.duration === 0,
     }));
     message.success(`新增文件记录${res.data.increaseCount}条`);
+  };
+
+  /**
+   * 音乐文件元数据处理
+   */
+  const handleGenerateMusicTagger = async () => {
+    loadingGenerateMusicTagger.value = true;
+    const res = await generateMusicTagger().finally(() => {
+      loadingGenerateMusicTagger.value = false;
+    });
+    tableColumns.value = musicColumns;
+    tableList.value = (res.data.resultList || []).map((item) => ({
+      ...item,
+      exception: item.duration === 0,
+    }));
+    message.success(`修改文件记录${res.data.increaseCount}条`);
   };
 
   /**

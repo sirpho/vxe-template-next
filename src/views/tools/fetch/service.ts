@@ -5,6 +5,7 @@ enum Api {
   articleList = '/api/article/list',
   browseArticle = '/api/article/browse/',
   generateMusic = 'https://localhost.sirpho.top:23456/api/music/generate',
+  generateMusicTagger = 'https://localhost.sirpho.top:23456/api/music/generate/tagger',
 }
 
 /**
@@ -34,6 +35,13 @@ export const browseArticle = (id: string) => {
  */
 export const generateMusic = () => {
   return defHttp.post({ url: Api.generateMusic, timeout: 60 * 60 * 1000 });
+};
+
+/**
+ * @description: 音乐元数据生成
+ */
+export const generateMusicTagger = () => {
+  return defHttp.post({ url: Api.generateMusicTagger, timeout: 60 * 60 * 1000 });
 };
 
 export const musicColumns = [
