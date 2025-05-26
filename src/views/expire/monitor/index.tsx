@@ -18,17 +18,15 @@ import { Loading } from '@/components/Loading';
 import { defineComponent, onMounted, reactive, ref } from 'vue';
 import { useDict } from '@/hooks/web/useDict';
 import { PageContainer, VxeContainer } from '@/components/Layout';
+import { TagUtensilCombox } from '@/features/components/Profession';
 
 const { confirm } = Modal;
 
 export default defineComponent({
-  components: { OperationModal, Loading, Empty, DeleteOutlined, EditOutlined },
+  components: { OperationModal, Loading, Empty, DeleteOutlined, EditOutlined, TagUtensilCombox },
   setup() {
     const operationRef = ref();
-    const [tagList, typeList] = useDict([
-      'TAG', // 标签列表
-      'TYPE',
-    ]);
+    const [typeList] = useDict(['TYPE']);
 
     const state = reactive({
       tableData: [],
@@ -127,24 +125,12 @@ export default defineComponent({
                 <Button class="buoy" type={'primary'} onClick={() => handleAdd()}>
                   录入
                 </Button>
-                <Select
+                <TagUtensilCombox
                   class={'search-select'}
+                  inputProps={{ size: 'default', placeholder: '标签' }}
                   v-model:value={formState.tag}
-                  placeholder="标签"
-                  allowClear
                   onChange={() => getTableList()}
-                >
-                  {(tagList.value || []).map((item) => (
-                    <Select.Option
-                      key={item.value}
-                      value={item.name}
-                      name={item.name}
-                      label={item.label}
-                    >
-                      {item.label}
-                    </Select.Option>
-                  ))}
-                </Select>
+                />
                 <Select
                   class={'search-select'}
                   v-model:value={formState.type}

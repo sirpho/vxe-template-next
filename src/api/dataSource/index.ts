@@ -2,7 +2,7 @@ import { defHttp } from '@/utils/http/axios';
 import { arrayFieldRepeat, isObject } from '@sirpho/utils';
 
 enum Api {
-  TAG = '/api/tag/utensil/list',
+  TAG = '/api/tag/utensil/statistics',
   COMMON = '/api/enum/query/',
 }
 
@@ -10,7 +10,7 @@ enum Api {
  * @description: 过期监控标签
  */
 export const getTagList = (): Promise<Result<any[]>> => {
-  return defHttp.get({ url: Api.TAG });
+  return defHttp.post({ url: Api.TAG });
 };
 
 /**

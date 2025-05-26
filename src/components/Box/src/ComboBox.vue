@@ -6,11 +6,6 @@
         :class="{ selectClass: selectClass }"
         :style="{ width: width }"
         :value="inputText"
-        v-bind="{
-          ...defaultOption.inputProps,
-          ...props.inputProps,
-          disabled: props.inputProps.disabled || props.disabled,
-        }"
         :mode="props.mode"
         :allowClear="allowClear"
         :open="false"
@@ -18,7 +13,11 @@
         @clear="onClear"
         @click="selectClick"
         @deselect="deselect"
-        size="small"
+        v-bind="{
+          ...defaultOption.inputProps,
+          ...props.inputProps,
+          disabled: props.inputProps.disabled || props.disabled,
+        }"
       >
         <template #maxTagPlaceholder="omittedValues">
           <span style="color: red">+ {{ omittedValues.length }}</span>
