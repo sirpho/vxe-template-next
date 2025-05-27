@@ -20,6 +20,11 @@ export const varients: Record<string, SelectTableRemoteConfig> = {
     url: '/api/tag/utensil/statistics',
     method: 'post',
   },
+  // 过期监控分类
+  TypeUtensilCombox: {
+    url: '/api/utensil/type/statistics',
+    method: 'post',
+  },
 };
 
 export type Varient = keyof typeof varients;

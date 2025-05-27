@@ -1,22 +1,11 @@
 import { remove, list } from './service';
 import OperationModal from './components/OperationModal';
-import {
-  Modal,
-  Empty,
-  Button,
-  Select,
-  InputSearch,
-  Row,
-  Col,
-  Card,
-  CardMeta,
-} from 'ant-design-vue';
+import { Modal, Empty, Button, InputSearch, Row, Col, Card, CardMeta } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import './index.less';
 import { ExclamationCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { Loading } from '@/components/Loading';
 import { defineComponent, onMounted, reactive, ref } from 'vue';
-import { useDict } from '@/hooks/web/useDict';
 import { PageContainer, VxeContainer } from '@/components/Layout';
 import { TagUtensilCombox } from '@/features/components/Profession';
 
@@ -26,7 +15,6 @@ export default defineComponent({
   components: { OperationModal, Loading, Empty, DeleteOutlined, EditOutlined, TagUtensilCombox },
   setup() {
     const operationRef = ref();
-    const [typeList] = useDict(['TYPE']);
 
     const state = reactive({
       tableData: [],
@@ -45,16 +33,14 @@ export default defineComponent({
      */
     const getTableList = async () => {
       state.loading = true;
-      const response = await list({
+      const res = await list({
         ...formState,
         keyword: state.keyword?.trim(),
-        pageSize: Number.MAX_SAFE_INTEGER,
       }).finally(() => {
         state.loading = false;
       });
       const today = new Date();
-      const result = response?.data || response?.page;
-      state.tableData = (result?.records || []).map((item: any) => ({
+      state.tableData = (res.data || []).map((item: any) => ({
         ...item,
         expireDate: dayjs(new Date(item.expireDate)).format('YYYY-MM-DD'),
         createTime: dayjs(new Date(item.createTime)).format('YYYY-MM-DD HH:mm'),
@@ -131,24 +117,14 @@ export default defineComponent({
                   v-model:value={formState.tag}
                   onChange={() => getTableList()}
                 />
-                <Select
+
+                <TagUtensilCombox
                   class={'search-select'}
+                  inputProps={{ size: 'default', placeholder: '分类' }}
                   v-model:value={formState.type}
-                  placeholder="分类"
-                  allowClear
+                  varient="TypeUtensilCombox"
                   onChange={() => getTableList()}
-                >
-                  {(typeList.value || []).map((item) => (
-                    <Select.Option
-                      key={item.value}
-                      value={item.value}
-                      name={item.name}
-                      label={item.label}
-                    >
-                      {item.label}
-                    </Select.Option>
-                  ))}
-                </Select>
+                />
                 <InputSearch
                   class={'search-input'}
                   v-model:value={state.keyword}

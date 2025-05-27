@@ -10,8 +10,8 @@ enum Api {
 /**
  * @description: 列表
  */
-export const list = (params: any) => {
-  return defHttp.get({ url: Api.list, params });
+export const list = (data: any) => {
+  return defHttp.post({ url: Api.list, data });
 };
 
 /**

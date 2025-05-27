@@ -46,7 +46,7 @@
         { field: 'qty', title: '数量' },
       ],
     }),
-    value: '',
+    value: undefined,
     autoFill: false,
     requestTrigger: 'onMount',
     option: () => ({ label: 'name', value: 'name' }),
