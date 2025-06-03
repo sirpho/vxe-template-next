@@ -20,4 +20,8 @@ export const Props = {
     type: Object as PropType<Record<string, any>>,
     default: () => {},
   },
+  accept: {
+    type: String as PropType<string>,
+    default: undefined,
+  },
 };

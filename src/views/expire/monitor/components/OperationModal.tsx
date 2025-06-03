@@ -251,6 +251,7 @@ export default defineComponent({
                   <FormItem label="封面" {...validateInfos.cover}>
                     <AvatarUploader
                       v-model:value={formState.cover}
+                      accept={'image/*'}
                       disabled={state.disabled}
                       data={{ obs: 'Y' }}
                     />

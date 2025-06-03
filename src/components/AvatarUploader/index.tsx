@@ -77,6 +77,7 @@ export default defineComponent({
             avatar(true)
           ) : (
             <Upload
+              accept={props.accept}
               headers={{ token: user.getToken }}
               name={'files'}
               list-type="picture-card"
@@ -84,7 +85,6 @@ export default defineComponent({
               action={`${apiUrl}${props.action}`}
               onChange={handleChange}
               beforeUpload={beforeUpload}
-              capture={'environment'}
             >
               {avatar(false)}
             </Upload>
