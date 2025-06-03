@@ -41,7 +41,7 @@ export default defineComponent({
         const file = info.fileList?.pop();
         if (file && file.response && file.response.code === 200) {
           if (file.response.data && file.response.data.length > 0) {
-            const url = file.response.data[0].url;
+            const url = file.response.data[0].url || file.response.data[0].localUrl;
             handleEmit(url);
           }
         }
@@ -84,6 +84,7 @@ export default defineComponent({
               action={`${apiUrl}${props.action}`}
               onChange={handleChange}
               beforeUpload={beforeUpload}
+              capture={'environment'}
             >
               {avatar(false)}
             </Upload>

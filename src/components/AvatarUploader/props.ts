@@ -16,4 +16,8 @@ export const Props = {
     type: String as PropType<string>,
     default: '',
   },
+  data: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => {},
+  },
 };

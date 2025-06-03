@@ -128,7 +128,7 @@ export default defineComponent({
                 <InputSearch
                   class={'search-input'}
                   v-model:value={state.keyword}
-                  placeholder="搜索"
+                  placeholder="搜索一下"
                   onSearch={() => getTableList()}
                 />
               </div>

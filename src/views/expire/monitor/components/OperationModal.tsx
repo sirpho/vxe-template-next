@@ -249,7 +249,11 @@ export default defineComponent({
                 </Col>
                 <Col span={24}>
                   <FormItem label="封面" {...validateInfos.cover}>
-                    <AvatarUploader v-model:value={formState.cover} disabled={state.disabled} />
+                    <AvatarUploader
+                      v-model:value={formState.cover}
+                      disabled={state.disabled}
+                      data={{ obs: 'Y' }}
+                    />
                   </FormItem>
                 </Col>
                 <Col span={24}>

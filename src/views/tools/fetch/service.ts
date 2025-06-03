@@ -4,9 +4,12 @@ import { formatSize } from '@/utils/formatter';
 enum Api {
   articleList = '/api/article/list',
   browseArticle = '/api/article/browse/',
+  generateResize = '/api/file/resize',
   generateMusic = 'https://localhost.sirpho.top:23456/api/music/generate',
   generateMusicTagger = 'https://localhost.sirpho.top:23456/api/music/generate/tagger',
 }
+
+const timeout = 60 * 60 * 1000;
 
 /**
  * @description: 文章列表
@@ -34,14 +37,21 @@ export const browseArticle = (id: string) => {
  * @description: 音乐生成
  */
 export const generateMusic = () => {
-  return defHttp.post({ url: Api.generateMusic, timeout: 60 * 60 * 1000 });
+  return defHttp.post({ url: Api.generateMusic, timeout });
+};
+
+/**
+ * @description: 整理文件大小
+ */
+export const generateResize = () => {
+  return defHttp.post({ url: Api.generateResize, timeout });
 };
 
 /**
  * @description: 音乐元数据生成
  */
 export const generateMusicTagger = () => {
-  return defHttp.post({ url: Api.generateMusicTagger, timeout: 60 * 60 * 1000 });
+  return defHttp.post({ url: Api.generateMusicTagger, timeout });
 };
 
 export const musicColumns = [

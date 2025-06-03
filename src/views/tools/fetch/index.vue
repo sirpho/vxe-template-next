@@ -23,6 +23,12 @@
       </div>
       <Progress v-if="exportTask" :percent="exportProgress" size="small" />
       <br />
+      <Divider>文件柜整理</Divider>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
+        <Button @click="handleResize" :loading="loadingResize" type="primary">
+          整理文件大小
+        </Button>
+      </div>
       <br />
       <br />
       <template v-if="tableList.length > 0">
@@ -50,6 +56,7 @@
     getArticleList,
     musicColumns,
     generateMusicTagger,
+    generateResize,
   } from './service';
   import { VxeContainer, PageContainer } from '@/components/Layout';
   import { VxeGridProps } from 'vxe-table';
@@ -59,6 +66,7 @@
   const loadingGenerateMusic = ref(false);
   const loadingGenerateMusicTagger = ref(false);
   const loadingExport = ref(false);
+  const loadingResize = ref(false);
   const exportTask = ref(false);
   const exportProgress = ref<number>(0);
   const tableList = ref<any[]>([]);
@@ -87,6 +95,17 @@
       exception: item.duration === 0,
     }));
     message.success(`新增文件记录${res.data.increaseCount}条`);
+  };
+
+  /**
+   * 整理文件大小
+   */
+  const handleResize = async () => {
+    loadingResize.value = true;
+    await generateResize().finally(() => {
+      loadingResize.value = false;
+    });
+    message.success(`整理完成`);
   };
 
   /**
