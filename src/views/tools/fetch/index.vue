@@ -64,6 +64,8 @@
   import { VxeGridProps } from 'vxe-table';
   import JSZip from 'jszip';
   import dayjs from 'dayjs';
+  import { adds, thousandsSeparator } from '@sirpho/utils';
+  import { formatSize } from '@/utils/formatter';
 
   const loadingMd5 = ref(false);
   const loadingGenerateMusic = ref(false);
@@ -81,6 +83,33 @@
       return {
         background: row.exception ? 'rgb(252 86 51 / 20%)' : 'unset',
       };
+    },
+    showFooter: true,
+    footerMethod: ({ columns, data }) => {
+      return [
+        columns.map((column, columnIndex) => {
+          if (columnIndex === 1) {
+            return '合计';
+          }
+          // 文件大小 时长
+          if (['size', 'duration'].includes(column.field)) {
+            const result = adds(...data.map((item) => item[column.field] || 0));
+            if (column.field === 'size') {
+              return formatSize(result || 0);
+            }
+            if (column.field === 'duration') {
+              const minute = Math.floor(result / 60);
+              const second = result % 60;
+
+              return result
+                ? `${(minute ? minute + '分钟' : '') + (second ? second + '秒' : '')}`
+                : '';
+            }
+            return thousandsSeparator(result);
+          }
+          return null;
+        }),
+      ];
     },
   });
 

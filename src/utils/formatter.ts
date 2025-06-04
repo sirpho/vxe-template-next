@@ -13,4 +13,5 @@ export const formatSize = (value) => {
       return Number(result.toFixed(2)) + units[i];
     }
   }
+  return '';
 };
