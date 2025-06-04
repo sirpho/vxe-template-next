@@ -11,7 +11,7 @@
             <InputNumber v-model:value="step" size="small" />
           </FormItem>
           <FormItem label="模式">
-            <Select size="small" v-model:value="pageState.mode">
+            <Select size="small" v-model:value="pageState.mode" style="width: 100px">
               <Select.Option value="WMS">WMS</Select.Option>
               <Select.Option value="TMS">TMS</Select.Option>
             </Select>
@@ -59,7 +59,7 @@
       </div>
     </VxeContainer>
     <StatusPop
-      title="表格预览"
+      title="表格字段预览"
       v-model:visible="logVisible"
       :columns="columns"
       :request="requestQuery"
@@ -72,7 +72,13 @@
       wrapClassName="option-wrapper"
       @ok="() => handleConfirm()"
     >
-      <vxe-grid :columns="optionColumns" :data="optionTableList" auto-resize height="400">
+      <vxe-grid
+        :columns="optionColumns"
+        :data="optionTableList"
+        auto-resize
+        height="400"
+        ref="modalTable"
+      >
         <template #form>
           <Form :model="pageState" layout="inline">
             <FormItem label="菜单名称">
@@ -85,6 +91,10 @@
               <Checkbox v-model:checked="pageState.allowExport" size="small"> 可导出 </Checkbox>
             </Space>
           </Form>
+        </template>
+        <!-- 字段名称 -->
+        <template #title="{ row }">
+          <Input v-model:value="row.title" size="small" />
         </template>
         <!-- 查询项 -->
         <template #isSearch="{ row }">
@@ -99,6 +109,7 @@
             <Select.Option value="year">year</Select.Option>
             <Select.Option value="rangeDate">rangeDate</Select.Option>
             <Select.Option value="month">month</Select.Option>
+            <Select.Option value="combox">combox</Select.Option>
           </Select>
           <span v-else>--</span>
         </template>
@@ -115,7 +126,13 @@
             <Select.Option value="year">year</Select.Option>
             <Select.Option value="rangeDate">rangeDate</Select.Option>
             <Select.Option value="month">month</Select.Option>
+            <Select.Option value="combox">combox</Select.Option>
           </Select>
+          <span v-else>--</span>
+        </template>
+        <!-- 带出描述 -->
+        <template #withFunction="{ row }">
+          <Checkbox v-if="row.editMode === 'combox'" v-model:checked="row.withFunction" />
           <span v-else>--</span>
         </template>
       </vxe-grid>
@@ -134,16 +151,22 @@
     Modal,
     Checkbox,
     Select,
+    message,
   } from 'ant-design-vue';
   import { reactive, ref } from 'vue';
   import hljs from 'highlight.js/lib/core';
   import { copyText } from '@/utils/copyTextToClipboard';
   import { StatusPop } from '@/components/status-pop';
   import { PageContainer, VxeContainer } from '@/components/Layout';
-  import type { VxeGridPropTypes } from 'vxe-table';
+  import { VxeGridPropTypes, VxeTableInstance } from 'vxe-table';
+  import { createLocalStorage } from '@/utils/cache';
+
   import {
+    capitalizeFirstLetter,
     EXPORT_BUTTON,
     EXPORT_FUNCTION,
+    getComboxComponentName,
+    getDescription,
     INSERT_BUTTON,
     INSERT_FUNCTION,
     PAGE_CONTAINER,
@@ -151,9 +174,13 @@
     REMOVE_BUTTON,
     REMOVE_FUNCTION,
     SAVE_BUTTON,
+    TOOLBAR_END,
+    TOOLBAR_START,
   } from './service';
+  import { FORMAT_JAVA_CLASS } from '@/enums/cacheEnum';
 
-  const javaCode = ref('');
+  const ls = createLocalStorage();
+  const javaCode = ref(ls.get(FORMAT_JAVA_CLASS));
   const columns = ref<any[]>([]);
   const templateCode = ref('');
   const templateCodeElement = ref();
@@ -161,7 +188,7 @@
   const step = ref(10);
   const logVisible = ref(false);
   const optionVisible = ref(false);
-
+  const modalTable = ref({} as VxeTableInstance);
   // 查询部分的代码
   const queryText = ref('');
   // 表格操作部分的代码
@@ -176,7 +203,10 @@
   const optionTableList = ref<any[]>([]);
   const searchItemList = ref<any[]>([]);
   const editItemList = ref<any[]>([]);
+  // 函数脚本
+  const functionList = ref<any[]>([]);
   const optionColumns = ref<VxeGridPropTypes.Columns>([
+    { type: 'checkbox', width: 60, fixed: 'left', align: 'center' },
     {
       field: 'field',
       title: '字段',
@@ -189,15 +219,17 @@
       title: '字段名称',
       cellType: 'string',
       sortable: true,
-      width: 140,
+      filters: [{}],
+      filterRender: { name: 'FilterExtend' },
+      slots: { default: 'title' },
+      width: 120,
     },
     {
       field: 'isSearch',
       title: '查询项',
       cellType: 'string',
-      sortable: true,
       slots: { default: 'isSearch' },
-      width: 120,
+      width: 80,
     },
     {
       field: 'searchMode',
@@ -205,15 +237,14 @@
       cellType: 'string',
       sortable: true,
       slots: { default: 'searchMode' },
-      width: 160,
+      width: 120,
     },
     {
       field: 'isEdit',
       title: '编辑项',
       cellType: 'string',
-      sortable: true,
       slots: { default: 'isEdit' },
-      width: 120,
+      width: 80,
     },
     {
       field: 'editMode',
@@ -221,11 +252,25 @@
       cellType: 'string',
       sortable: true,
       slots: { default: 'editMode' },
-      width: 160,
+      width: 120,
+    },
+    {
+      field: 'withFunction',
+      title: '带出描述',
+      cellType: 'string',
+      slots: { default: 'withFunction' },
+      width: 100,
     },
   ]);
 
-  const pageState = reactive({
+  const pageState = reactive<{
+    allowCheckbox: boolean;
+    allowInsert: boolean;
+    allowRemove: boolean;
+    allowExport: boolean;
+    title: string;
+    mode: 'TMS' | 'WMS';
+  }>({
     allowCheckbox: true,
     allowInsert: true,
     allowRemove: true,
@@ -236,6 +281,7 @@
 
   const importSet = new Set<String>();
   const antDesignVueSet = new Set<String>();
+  const comboxSet = new Set<String>();
   antDesignVueSet.add('Button');
   antDesignVueSet.add('Form');
   antDesignVueSet.add('FormItem');
@@ -261,6 +307,8 @@
    * 开始转换，提取列表字段
    */
   const handleFormatter = async () => {
+    ls.set(FORMAT_JAVA_CLASS, javaCode.value);
+    functionList.value = [];
     const regex = /^[\s\S]*?public class/gm;
     const tableRegex = /^\s*@Table.*$/gm;
     let code = javaCode.value.replace(regex, 'public class').replace(tableRegex, '');
@@ -314,6 +362,7 @@
       isSearch: false,
       searchMode: getDefaultMode(item),
       isEdit: false,
+      withFunction: false,
       editMode: getDefaultMode(item),
     }));
     optionVisible.value = true;
@@ -321,6 +370,8 @@
 
   /**
    * 生成编辑框
+   * @param item 行项目
+   * @param mode searchMode：生成查询栏  editMode：生成vxe编辑插槽
    */
   const generateFormItem = (item: any, mode: 'searchMode' | 'editMode') => {
     let recordText: string;
@@ -397,14 +448,32 @@
         />
         `);
         antDesignVueSet.add('RangePicker');
-        importSet.add(`import dayjs, type { Dayjs } from 'dayjs';`);
+        importSet.add(`import dayjs, { Dayjs } from 'dayjs';`);
         if (pageState.mode === 'TMS') {
           importSet.add(`import { timeRangeHandler } from '#/utils/dayjs';`);
         } else {
           importSet.add(`import { timeRangeHandler } from '/@/utils/dayjs';`);
         }
-
         break;
+      case 'combox':
+        const componentName = getComboxComponentName(item, pageState.mode);
+        let functionAttr = '';
+        if (mode === 'editMode' && item.withFunction) {
+          functionAttr = `@change='(option) => handleChange${capitalizeFirstLetter(item.field)}(row, option)'`;
+          functionList.value.push(`
+            /**
+             * 修改${item.title}
+             */
+            const handleChange${capitalizeFirstLetter(item.field)} = (row: any, option: any) => {
+              row.${item.field}Name = option?.${item.field}Name;
+            };
+          `);
+        }
+
+        comboxSet.add(componentName);
+        result.push(`
+        <${componentName} v-model:value="${recordText}.${item.field}" ${functionAttr} />
+        `);
     }
     result.push(close);
     /* eslint-enable */
@@ -438,6 +507,18 @@
     importSet.add(
       `import { ${Array.from(antDesignVueSet).sort().join(', ')} } from 'ant-design-vue';`,
     );
+    if (comboxSet.size > 0) {
+      const comboxImport = Array.from(comboxSet).sort().join(', ');
+      let controls = '';
+      if (pageState.mode === 'WMS') {
+        controls = '/@/views/wms-controls';
+      }
+      if (pageState.mode === 'TMS') {
+        controls = '#/features/components/Profession';
+      }
+
+      importSet.add(`import { ${comboxImport} } from '${controls}';`);
+    }
     /* eslint-enable */
     importText.value = Array.from(importSet) as string[];
   };
@@ -449,11 +530,7 @@
     /* eslint-disable */
     toolbarButtonsText.value = '';
     if (pageState.allowRemove || allowEdit.value) {
-      toolbarButtonsText.value = `
-            <!-- 表格操作 -->
-            <template #toolbar_buttons>
-              <Space>
-            `;
+      toolbarButtonsText.value = TOOLBAR_START;
       if (pageState.allowInsert) {
         toolbarButtonsText.value += INSERT_BUTTON;
       }
@@ -461,9 +538,7 @@
         toolbarButtonsText.value += REMOVE_BUTTON;
       }
       toolbarButtonsText.value += SAVE_BUTTON;
-      toolbarButtonsText.value += `
-              </Space>
-        </template>`;
+      toolbarButtonsText.value += TOOLBAR_END;
     }
     /* eslint-enable */
   };
@@ -495,13 +570,7 @@
 
     if (editItemList.value.length > 0) {
       validRulesText.push('\n');
-      validRulesText.push(
-        `
-       /**
-       * 校验
-       */`,
-        'const validRules = ref({',
-      );
+      validRulesText.push(`/**`, `* 校验`, `*/`, 'const validRules = ref({');
       editItemList.value.forEach((item) => {
         validRulesText.push(`${item.field}: [{ required: true, message: '必填项' }],`);
       });
@@ -575,6 +644,7 @@
       ...gridOptionsText,
       ...vxeDefaultPropsText,
       ...functionText,
+      ...functionList.value,
     ];
     result.push('<\/script>');
     scriptText.value = result.join('\n');
@@ -592,8 +662,14 @@
       ];
     }
     importSet.clear();
-    searchItemList.value = optionTableList.value.filter((item) => item.isSearch);
-    editItemList.value = optionTableList.value.filter((item) => item.isEdit);
+    const checkboxRecords = modalTable.value.getCheckboxRecords();
+    if (checkboxRecords.length <= 0) {
+      message.warning('请先选择行项目！');
+      return;
+    }
+
+    searchItemList.value = checkboxRecords.filter((item) => item.isSearch);
+    editItemList.value = checkboxRecords.filter((item) => item.isEdit);
     allowEdit.value = pageState.allowInsert || editItemList.value.length > 0;
 
     const searchFormItemList: string[] = [];
@@ -611,11 +687,13 @@
     editItemList.value.forEach((item) => {
       editSlotList.push(generateFormItem(item, 'editMode'));
     });
+    // 生成import部分
     generateImportCode();
+    // 生成表格操作部分
     generateToolbar();
     let pageHeader = '';
     if (pageState.title) {
-      pageHeader = `<!--\n* @Description: ${pageState.title}\n-->`;
+      pageHeader = getDescription(pageState.title);
     }
 
     templateCode.value =

@@ -1,9 +1,19 @@
 export const INSERT_BUTTON = `<Button type="link" size="small" @click="handleInsertLine">新增</Button>\n`;
 
 export const REMOVE_BUTTON = `<Button type="link" size="small" @click="handleRemoveLine">删除</Button>\n`;
+
 export const SAVE_BUTTON = `<Button :loading="vxeExtraProps.saving" size="small" type="link" @click="vxeInstance.save">保存</Button>`;
 
 export const EXPORT_BUTTON = `<Button type="primary" size="small" @click="handleExport"> 导出 </Button>`;
+
+export const TOOLBAR_START = `
+            <!-- 表格操作 -->
+            <template #toolbar_buttons>
+              <Space>
+`;
+export const TOOLBAR_END = `
+              </Space>
+        </template>`;
 
 export const EXPORT_FUNCTION = (name: string) => {
   return `
@@ -19,6 +29,10 @@ function handleExport() {
     type: 'xlsx',
   });
 }`;
+};
+
+export const getDescription = (title: string) => {
+  return `<!--\n* @Description: ${title}\n-->`;
 };
 
 export const INSERT_FUNCTION = `
@@ -97,3 +111,55 @@ export const PAGE_CONTAINER = `
   </PageContainer>
 </template>
 `;
+
+/**
+ * 首字母大写
+ * @param str
+ */
+export function capitalizeFirstLetter(str: string) {
+  // 处理空字符串或null/undefined
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * 获取combox组件名称
+ */
+export const getComboxComponentName = (item: any, mode: 'TMS' | 'WMS') => {
+  if (mode === 'WMS') {
+    if (item.title?.includes('承运商')) {
+      return 'CarrierCombox';
+    }
+    if (item.title?.includes('基地')) {
+      return 'UserBase';
+    }
+    if (item.title?.includes('工厂')) {
+      return 'UserWerks';
+    }
+    if (item.title?.includes('库存地点')) {
+      return 'UserWarehouse';
+    }
+    if (item.title?.includes('物料类型')) {
+      return 'MaterialType';
+    }
+    if (item.title?.includes('物料')) {
+      return 'MaterialModal';
+    }
+  }
+  if (mode === 'TMS') {
+    if (item.title?.includes('物料')) {
+      return 'Material';
+    }
+    if (item.title?.includes('供应商')) {
+      return 'Supplier';
+    }
+    if (item.title?.includes('承运商')) {
+      return 'Carrier';
+    }
+    if (item.title?.includes('工厂')) {
+      return 'Factory';
+    }
+  }
+
+  return capitalizeFirstLetter(item.field) + 'Combox';
+};
