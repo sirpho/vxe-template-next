@@ -6,6 +6,7 @@ enum Api {
   browseArticle = '/api/article/browse/',
   generateResize = '/api/file/resize',
   generateMusic = 'https://localhost.sirpho.top:23456/api/music/generate',
+  updateMd5 = 'https://localhost.sirpho.top:23456/api/music/update/md5',
   generateMusicTagger = 'https://localhost.sirpho.top:23456/api/music/generate/tagger',
 }
 
@@ -38,6 +39,13 @@ export const browseArticle = (id: string) => {
  */
 export const generateMusic = () => {
   return defHttp.post({ url: Api.generateMusic, timeout });
+};
+
+/**
+ * @description: 音乐md5更新
+ */
+export const updateMd5 = () => {
+  return defHttp.post({ url: Api.updateMd5, timeout });
 };
 
 /**

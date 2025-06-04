@@ -6,6 +6,7 @@
         <Button @click="handleGenerateMusic" :loading="loadingGenerateMusic" type="primary">
           音乐文件处理
         </Button>
+        <Button @click="handleMd5" :loading="loadingMd5" type="primary"> 音乐文件更新md5 </Button>
         <Button
           @click="handleGenerateMusicTagger"
           :loading="loadingGenerateMusicTagger"
@@ -57,12 +58,14 @@
     musicColumns,
     generateMusicTagger,
     generateResize,
+    updateMd5,
   } from './service';
   import { VxeContainer, PageContainer } from '@/components/Layout';
   import { VxeGridProps } from 'vxe-table';
   import JSZip from 'jszip';
   import dayjs from 'dayjs';
 
+  const loadingMd5 = ref(false);
   const loadingGenerateMusic = ref(false);
   const loadingGenerateMusicTagger = ref(false);
   const loadingExport = ref(false);
@@ -95,6 +98,27 @@
       exception: item.duration === 0,
     }));
     message.success(`新增文件记录${res.data.increaseCount}条`);
+  };
+
+  /**
+   * 音乐文件md5更新
+   */
+  const handleMd5 = async () => {
+    loadingMd5.value = true;
+    const res = await updateMd5().finally(() => {
+      loadingMd5.value = false;
+    });
+    tableColumns.value = musicColumns;
+    const resultList = (res.data.resultList || []).map((item) => ({
+      ...item,
+      exception: false,
+    }));
+    const exceptionList = (res.data.exceptionList || []).map((item) => ({
+      ...item,
+      exception: true,
+    }));
+    tableList.value = [...exceptionList, ...resultList];
+    message.success(`更新文件md5记录${resultList.length}条`);
   };
 
   /**
