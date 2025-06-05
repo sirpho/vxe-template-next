@@ -76,6 +76,10 @@
         <template #memo="{ row }">
           <Input v-model:value="row.memo" size="small" />
         </template>
+        <!-- 观影日期 -->
+        <template #watchDate="{ row }">
+          <Input v-model:value="row.watchDate" size="small" />
+        </template>
         <!-- 名字 -->
         <template #name="{ row }">
           <Input v-model:value="row.name" size="small" />
@@ -200,6 +204,17 @@
           return row.duration ? `${thousandsSeparator(row.duration)}分钟` : '';
         },
         sortable: true,
+        minWidth: 130,
+        width: 130,
+      },
+      {
+        field: 'watchDate',
+        title: '观影日期',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'watchDate' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
         minWidth: 130,
         width: 130,
       },
