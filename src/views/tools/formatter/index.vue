@@ -675,7 +675,7 @@
     const searchFormItemList: string[] = [];
     const editSlotList: string[] = [];
     if (editItemList.value.length > 0) {
-      editSlotList.push(`<!-- 可编辑列 -->`);
+      editSlotList.push('<!-- 可编辑列 -->');
     }
 
     searchItemList.value.forEach((item) => {
