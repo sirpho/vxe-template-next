@@ -1,5 +1,30 @@
 <template>
   <PageContainer>
+    <QueryFilterContainer>
+      <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
+        <FormItem label="模式" name="mode" :rules="[{ required: true, message: '必填项' }]">
+          <RadioGroup
+            size="small"
+            button-style="solid"
+            v-model:value="formState.mode"
+            @change="() => handleQuery()"
+          >
+            <RadioButton value="alt">马甲</RadioButton>
+            <RadioButton value="dancer">福利姬</RadioButton>
+          </RadioGroup>
+        </FormItem>
+        <FormItem label="作者" name="author">
+          <Input size="small" v-model:value="formState.author" />
+        </FormItem>
+        <FormItem>
+          <Space>
+            <Button type="primary" html-type="submit" :loading="tableLoading" size="small">
+              查询
+            </Button>
+          </Space>
+        </FormItem>
+      </Form>
+    </QueryFilterContainer>
     <VxeContainer>
       <vxe-grid v-bind="{ ...gridOptions }" :data="tableList" :loading="tableLoading" ref="xTable">
         <template #toolbar_tools>
@@ -21,13 +46,30 @@
   </PageContainer>
 </template>
 <script lang="ts" setup>
-  import { onMounted, reactive, ref } from 'vue';
+  import { onMounted, reactive, ref, computed } from 'vue';
   import { VxeTableInstance, VxeGridProps } from 'vxe-table';
-  import { Space } from 'ant-design-vue';
-  import { list } from './service';
+  import { Button, Form, FormItem, RadioGroup, RadioButton, Space, Input } from 'ant-design-vue';
+  import { list, dancerList } from './service';
   import { formatSize } from '@/utils/formatter';
   import { adds, formatDuration } from '@sirpho/utils';
 
+  interface FormState {
+    mode: 'alt' | 'dancer';
+    author?: string;
+  }
+
+  const formState = reactive<FormState>({
+    mode: 'alt',
+    author: undefined,
+  });
+
+  const operation = computed(() => {
+    if (formState.mode === 'alt') {
+      return list;
+    } else {
+      return dancerList;
+    }
+  });
   const xTable = ref({} as VxeTableInstance);
   const tableList = ref<any[]>([]);
   const tableLoading = ref(false);
@@ -79,7 +121,7 @@
    */
   const handleQuery = async () => {
     tableLoading.value = true;
-    const res = await list({}).finally(() => {
+    const res = await operation.value(formState).finally(() => {
       tableLoading.value = false;
     });
     tableList.value = res.data || [];
@@ -90,6 +132,6 @@
 </script>
 <script lang="ts">
   export default {
-    name: 'Author',
+    name: 'TiktokReport',
   };
 </script>

@@ -26,7 +26,7 @@ export default defineApplicationConfig({
       warmup: {
         clientFiles: ['./index.html', './src/{views,components}/*'],
       },
-      port: 5273,
+      port: 10086,
     },
   },
 });

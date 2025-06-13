@@ -3,7 +3,7 @@
   "analysis": "统计分析",
   "class": "分类标签",
   "manage": "标签管理",
-  "author": "马甲统计",
+  "report": "统计报表",
   "dancer": "博主管理",
   "fetch": "api请求"
 }

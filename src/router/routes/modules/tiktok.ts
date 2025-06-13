@@ -60,18 +60,6 @@ const route: AppRouteModule = {
       },
     },
     /**
-     * 马甲统计
-     */
-    {
-      path: 'author',
-      name: 'Author',
-      component: () => import('@/views/tiktok/author/index.vue'),
-      meta: {
-        icon: 'tabler:woman-filled',
-        title: t('routes.tiktok.author'),
-      },
-    },
-    /**
      * 博主管理
      */
     {
@@ -81,6 +69,18 @@ const route: AppRouteModule = {
       meta: {
         icon: 'mdi:human-female-dance',
         title: t('routes.tiktok.dancer'),
+      },
+    },
+    /**
+     * 统计报表
+     */
+    {
+      path: 'report',
+      name: 'TiktokReport',
+      component: () => import('@/views/tiktok/report/index.vue'),
+      meta: {
+        icon: 'mdi:report-tree',
+        title: t('routes.tiktok.report'),
       },
     },
     /**
