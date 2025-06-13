@@ -35,9 +35,15 @@
             <span>播放时长：{{ formatDuration(totalDuration) }}</span>
           </Space>
         </template>
+        <!-- 比特率 格式化显示 -->
+        <template #bitrate="{ row }">
+          {{ formatBitrate(row.bitrate || 0) }}
+        </template>
+        <!-- 大小 格式化显示 -->
         <template #totalSize="{ row }">
           {{ formatSize(row.totalSize || 0) }}
         </template>
+        <!-- 时长 格式化显示 -->
         <template #totalDuration="{ row }">
           {{ formatDuration(row.totalDuration || 0) }}
         </template>
@@ -50,7 +56,7 @@
   import { VxeTableInstance, VxeGridProps } from 'vxe-table';
   import { Button, Form, FormItem, RadioGroup, RadioButton, Space, Input } from 'ant-design-vue';
   import { list, dancerList } from './service';
-  import { formatSize } from '@/utils/formatter';
+  import { formatBitrate, formatSize } from '@/utils/formatter';
   import { adds, formatDuration } from '@sirpho/utils';
 
   interface FormState {
@@ -106,6 +112,12 @@
         title: '播放时长',
         sortable: true,
         slots: { default: 'totalDuration' },
+      },
+      {
+        field: 'bitrate',
+        title: '比特率',
+        slots: { default: 'bitrate' },
+        sortable: true,
       },
     ],
     showHeaderOverflow: 'tooltip',

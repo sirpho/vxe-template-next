@@ -43,6 +43,15 @@
             <span>播放时长：{{ formatDuration(totalDuration) }}</span>
           </Space>
         </template>
+        <!-- 比特率 格式化显示 -->
+        <template #bitrate="{ row }">
+          {{ formatBitrate(row.bitrate || 0) }}
+        </template>
+        <!-- 比特率 -->
+        <template #bitrateEdit="{ row }">
+          <InputNumber v-model:value="row.bitrate" :precision="0" size="small" :controls="false" />
+        </template>
+        <!-- 大小 格式化显示 -->
         <template #totalSize="{ row }">
           {{ formatSize(row.totalSize || 0) }}
         </template>
@@ -64,6 +73,7 @@
             :controls="false"
           />
         </template>
+        <!-- 时长 格式化显示 -->
         <template #totalDuration="{ row }">
           {{ formatDuration(row.totalDuration || 0) }}
         </template>
@@ -111,7 +121,7 @@
     Space,
   } from 'ant-design-vue';
   import { list, batch } from './service';
-  import { formatSize } from '@/utils/formatter';
+  import { formatBitrate, formatSize } from '@/utils/formatter';
   import { adds, formatDuration } from '@sirpho/utils';
 
   interface FormState {
@@ -173,6 +183,8 @@
         editRender: { autofocus: '.ant-input-number-input' },
         slots: { edit: 'videoCount' },
         sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
       },
       {
         field: 'totalSize',
@@ -180,6 +192,8 @@
         editRender: { autofocus: '.ant-input-number-input' },
         slots: { edit: 'totalSizeEdit', default: 'totalSize' },
         sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
       },
       {
         field: 'totalDuration',
@@ -187,6 +201,17 @@
         editRender: { autofocus: '.ant-input-number-input' },
         slots: { edit: 'totalDurationEdit', default: 'totalDuration' },
         sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+      },
+      {
+        field: 'bitrate',
+        title: '比特率',
+        editRender: { autofocus: '.ant-input-number-input' },
+        slots: { edit: 'bitrateEdit', default: 'bitrate' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
       },
       {
         field: 'tags',
@@ -194,6 +219,8 @@
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'tags' },
         sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
       },
       {
         field: 'memo',
@@ -201,6 +228,8 @@
         editRender: { autofocus: '.ant-input' },
         slots: { edit: 'memo' },
         sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
       },
     ],
     showHeaderOverflow: 'tooltip',

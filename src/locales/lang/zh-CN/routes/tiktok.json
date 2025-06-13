@@ -1,8 +1,8 @@
 {
   "tiktok": "抖音风",
-  "analysis": "统计分析",
   "class": "分类标签",
   "manage": "标签管理",
+  "analysis": "分析图表",
   "report": "统计报表",
   "dancer": "博主管理",
   "fetch": "api请求"

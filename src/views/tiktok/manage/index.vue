@@ -38,9 +38,15 @@
           </Space>
         </template>
         <!-- 可编辑列 -->
+        <!-- 比特率 格式化显示 -->
+        <template #bitrate="{ row }">
+          {{ formatBitrate(row.bitrate || 0) }}
+        </template>
+        <!-- 大小 格式化显示 -->
         <template #size="{ row }">
           {{ formatSize(row.size || 0) }}
         </template>
+        <!-- 时长 格式化显示 -->
         <template #duration="{ row }">
           {{ formatDuration(row.duration || 0) }}
         </template>
@@ -67,7 +73,7 @@
   import { VxeTableInstance, VxeGridProps } from 'vxe-table';
   import { batch, getClassList, list } from './service';
   import { TiktokClassCombox, TiktokAuthorCombox } from '@/features/components/Profession';
-  import { formatSize } from '@/utils/formatter';
+  import { formatBitrate, formatSize } from '@/utils/formatter';
   import { add, arrayFieldRepeat, formatDuration } from '@sirpho/utils';
 
   interface FormState {
@@ -129,6 +135,12 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         slots: { default: 'size' },
+      },
+      {
+        field: 'bitrate',
+        title: '比特率',
+        slots: { default: 'bitrate' },
+        sortable: true,
       },
       {
         field: 'classIdList',

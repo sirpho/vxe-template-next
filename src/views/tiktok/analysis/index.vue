@@ -19,7 +19,7 @@
   import { analysis } from './service';
   import echarts from '@/utils/lib/echarts';
   import { formatDuration, add } from '@sirpho/utils';
-  import { formatSize } from '@/utils/formatter';
+  import { formatBitrate, formatSize } from '@/utils/formatter';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
@@ -47,37 +47,42 @@
       totalDuration: item.totalDuration,
       totalSize: item.totalSize,
       videoCount: item.videoCount,
+      bitrate: item.bitrate,
     }));
     setOptions({
       tooltip: {
-        formatter: (info) => {
+        formatter: (info: any) => {
           const { data, name } = info;
           if (name === 'tiktok') {
             const children = data.children || [];
-            const totalSize = children.reduce((previousValue, currentValue) => {
+            const totalSize = children.reduce((previousValue: number, currentValue: any) => {
               return add(previousValue, currentValue.totalSize);
             }, 0);
-            const videoCount = children.reduce((previousValue, currentValue) => {
+            const videoCount = children.reduce((previousValue: number, currentValue: any) => {
               return add(previousValue, currentValue.videoCount);
             }, 0);
-            const totalDuration = children.reduce((previousValue, currentValue) => {
+            const totalDuration = children.reduce((previousValue: number, currentValue: any) => {
               return add(previousValue, currentValue.totalDuration);
             }, 0);
+            const bitrate = totalDuration ? (totalSize * 8) / totalDuration : 0;
             return [
               `<div class="echarts-tooltip-title">合计人数: ${children.length}</div>`,
               `<div class="echarts-tooltip-title">存储容量: ${formatSize(totalSize)}</div>`,
               `<div class="echarts-tooltip-title">视频数量: ${echarts.format.addCommas(videoCount)}</div>`,
               `<div class="echarts-tooltip-title">播放时长: ${formatDuration(totalDuration)}</div>`,
+              `<div class="echarts-tooltip-title">比特率: ${formatBitrate(bitrate)}</div>`,
             ].join('');
           }
           const totalSize = data.totalSize;
           const videoCount = data.videoCount;
           const totalDuration = data.totalDuration;
+          const bitrate = data.bitrate;
           return [
             '<div class="echarts-tooltip-title">' + data.name + '</div>',
             `<div class="echarts-tooltip-title">存储容量: ${formatSize(totalSize)}</div>`,
             `<div class="echarts-tooltip-title">视频数量: ${echarts.format.addCommas(videoCount)}</div>`,
             `<div class="echarts-tooltip-title">播放时长: ${formatDuration(totalDuration)}</div>`,
+            `<div class="echarts-tooltip-title">比特率: ${formatBitrate(bitrate)}</div>`,
           ].join('');
         },
       },

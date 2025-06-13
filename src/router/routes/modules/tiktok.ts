@@ -23,19 +23,6 @@ const route: AppRouteModule = {
   },
   children: [
     /**
-     * 统计分析
-     */
-    {
-      path: 'analysis',
-      name: 'Analysis',
-      component: () => import('@/views/tiktok/analysis/index.vue'),
-      meta: {
-        // roles: [Attrs.HAS_20223278],
-        icon: 'icon-park-twotone:analysis',
-        title: t('routes.tiktok.analysis'),
-      },
-    },
-    /**
      * 分类标签
      */
     {
@@ -69,6 +56,18 @@ const route: AppRouteModule = {
       meta: {
         icon: 'mdi:human-female-dance',
         title: t('routes.tiktok.dancer'),
+      },
+    },
+    /**
+     * 分析图表
+     */
+    {
+      path: 'analysis',
+      name: 'Analysis',
+      component: () => import('@/views/tiktok/analysis/index.vue'),
+      meta: {
+        icon: 'icon-park-twotone:analysis',
+        title: t('routes.tiktok.analysis'),
       },
     },
     /**
