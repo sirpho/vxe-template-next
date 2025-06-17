@@ -4,14 +4,14 @@ import { envVersion } from '@/features/utils';
 import { useRouter } from 'vue-router';
 import { useThrottleFn } from '@vueuse/core';
 
-const isDevEnvironment = envVersion !== 'release';
+const isDevEnvironment = envVersion !== 'production';
 export default function notifyUpdate() {
   const currentHash = ref<string>('');
   const originHash = ref<string | null>('');
 
   const router = useRouter();
   onMounted(() => {
-    init();
+    init().then();
     document.addEventListener('visibilitychange', handleVisibilitychange);
 
     /**
@@ -83,7 +83,7 @@ export default function notifyUpdate() {
   /**
    * 节流
    */
-  const handleCheckThrottle = useThrottleFn(checkUpdate, 5 * 60 * 1000);
+  const handleCheckThrottle = useThrottleFn(checkUpdate, 60 * 1000);
 
   /**
    * 提示更新消息

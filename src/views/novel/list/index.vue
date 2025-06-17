@@ -98,6 +98,17 @@
             addon-after="万字"
           />
         </template>
+        <!-- 阅读日期 -->
+        <template #readDate="{ row }">
+          <DatePicker
+            :getPopupContainer="(trigger) => trigger.parentElement as HTMLElement"
+            picker="date"
+            size="small"
+            value-format="YYYY-MM-DD"
+            format="YYYY-MM-DD"
+            v-model:value="row.readDate"
+          />
+        </template>
         <!-- 名字 -->
         <template #name="{ row }">
           <Input v-model:value="row.name" size="small" />
@@ -131,6 +142,7 @@
     Select,
     Badge,
     InputNumber,
+    DatePicker,
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
@@ -266,6 +278,15 @@
         minWidth: 120,
         width: 120,
       },
+      {
+        field: 'readDate',
+        title: '阅读日期',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'readDate' },
+        sortable: true,
+        minWidth: 120,
+        width: 120,
+      },
     ],
     showHeaderOverflow: 'tooltip',
     height: 'auto',
@@ -345,7 +366,7 @@
   /**
    * 徽标样式
    */
-  const getBadgeStatus = (record: any) => {
+  const getBadgeStatus = (record: any): any => {
     if (record.readStatus === '在读') {
       return { status: 'processing' };
     }
