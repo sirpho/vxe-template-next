@@ -105,7 +105,7 @@
 </script>
 
 <template>
-  <Modal :footer="false" :title="title" :visible="visible" width="800px" @cancel="handleCancel">
+  <Modal :footer="false" :title="title" :open="visible" width="800px" @cancel="handleCancel">
     <Skeleton :loading="skeletonLoading" :paragraph="{ rows: 6 }" active>
       <vxe-grid :columns="columns!" :data="tableList" auto-resize height="400" />
     </Skeleton>

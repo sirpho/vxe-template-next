@@ -67,13 +67,14 @@
 
     <Modal
       title="页面选项"
-      v-model:visible="optionVisible"
+      v-model:open="optionVisible"
       width="850px"
       wrapClassName="option-wrapper"
       @ok="() => handleConfirm()"
     >
       <vxe-grid
         :columns="optionColumns"
+        :checkbox-config="{ checkAll: true }"
         :data="optionTableList"
         auto-resize
         height="400"
