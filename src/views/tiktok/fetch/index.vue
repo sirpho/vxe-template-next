@@ -136,7 +136,7 @@
     footerMethod: ({ columns, data }) => {
       return [
         columns.map((column, columnIndex) => {
-          if (columnIndex === 1) {
+          if (columnIndex === 0) {
             return '合计';
           }
           // 文件大小 时长

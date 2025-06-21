@@ -84,13 +84,22 @@ export const tiktokColumns = [
     filters: [{}],
     filterRender: { name: 'FilterExtend' },
   },
+  // {
+  //   field: 'suffix',
+  //   title: '后缀名',
+  //   sortable: true,
+  //   filters: [{}],
+  //   filterRender: { name: 'FilterExtend' },
+  //   width: 110,
+  // },
   {
-    field: 'suffix',
-    title: '后缀名',
+    field: 'size',
+    title: '文件大小',
     sortable: true,
-    filters: [{}],
-    filterRender: { name: 'FilterExtend' },
-    width: 110,
+    sortBy: 'size',
+    formatter: ({ row }) => {
+      return formatSize(row.size || 0);
+    },
   },
 ];
 
