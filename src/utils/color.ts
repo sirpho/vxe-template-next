@@ -1,10 +1,10 @@
 import tinycolor from 'tinycolor2';
 
 /**
- * 判断是否 十六进制颜色值.
+ * 判断是否十六进制颜色值.
  * 输入形式可为 #fff000 #f00
  *
- * @param   String  color   十六进制颜色值
+ * @param   color string     十六进制颜色值
  * @return  Boolean
  */
 export function isHexColor(color: string) {
@@ -13,13 +13,13 @@ export function isHexColor(color: string) {
 }
 
 /**
- * RGB 颜色值转换为 十六进制颜色值.
+ * RGB 颜色值转换为十六进制颜色值.
  * r, g, 和 b 需要在 [0, 255] 范围内
  *
- * @return  String          类似#ff00ff
- * @param r
- * @param g
- * @param b
+ * @param r 红色值
+ * @param g 绿色值
+ * @param b 蓝色值
+ * @return String 类似#ff00ff的十六进制颜色值
  */
 export function rgbToHex(r: number, g: number, b: number) {
   // tslint:disable-next-line:no-bitwise
@@ -28,9 +28,9 @@ export function rgbToHex(r: number, g: number, b: number) {
 }
 
 /**
- * Transform a HEX color to its RGB representation
- * @param {string} hex The color to transform
- * @returns The RGB representation of the passed color
+ * 将HEX颜色转换为RGB表示形式
+ * @param {string} hex 要转换的颜色
+ * @returns 传入颜色的RGB表示形式
  */
 export function hexToRGB(hex: string) {
   let sHex = hex.toLowerCase();
@@ -53,8 +53,9 @@ export function hexToRGB(hex: string) {
 
 /**
  * 16进制颜色转为rgba格式
- * @param hex
- * @param alpha
+ * @param hex 十六进制颜色值
+ * @param alpha 透明度
+ * @returns rgba格式颜色字符串
  */
 export function hexToRGBA(hex: string, alpha: number) {
   let sHex = hex.toLowerCase();
@@ -75,6 +76,11 @@ export function hexToRGBA(hex: string, alpha: number) {
   return sHex;
 }
 
+/**
+ * 判断颜色是否为深色
+ * @param color 十六进制颜色值
+ * @returns 如果是深色返回true，否则返回false
+ */
 export function colorIsDark(color: string) {
   if (!isHexColor(color)) return;
   const [r, g, b] = hexToRGB(color)
@@ -85,10 +91,10 @@ export function colorIsDark(color: string) {
 }
 
 /**
- * Darkens a HEX color given the passed percentage
- * @param {string} color The color to process
- * @param {number} amount The amount to change the color by
- * @returns {string} The HEX representation of the processed color
+ * 根据给定百分比加深HEX颜色
+ * @param {string} color 要处理的颜色
+ * @param {number} amount 颜色变化的量
+ * @returns {string} 处理后颜色的HEX表示
  */
 export function darken(color: string, amount: number) {
   color = color.indexOf('#') >= 0 ? color.substring(1, color.length) : color;
@@ -100,10 +106,10 @@ export function darken(color: string, amount: number) {
 }
 
 /**
- * Lightens a 6 char HEX color according to the passed percentage
- * @param {string} color The color to change
- * @param {number} amount The amount to change the color by
- * @returns {string} The processed color represented as HEX
+ * 根据给定百分比减淡HEX颜色
+ * @param {string} color 要改变的颜色
+ * @param {number} amount 颜色变化的量
+ * @returns {string} 处理后颜色的HEX表示
  */
 export function lighten(color: string, amount: number) {
   color = color.indexOf('#') >= 0 ? color.substring(1, color.length) : color;
@@ -114,12 +120,11 @@ export function lighten(color: string, amount: number) {
   )}${addLight(color.substring(4, 6), amount)}`;
 }
 
-/* Suma el porcentaje indicado a un color (RR, GG o BB) hexadecimal para aclararlo */
 /**
- * Sums the passed percentage to the R, G or B of a HEX color
- * @param {string} color The color to change
- * @param {number} amount The amount to change the color by
- * @returns {string} The processed part of the color
+ * 将指定百分比添加到HEX颜色的R、G或B分量上
+ * @param {string} color 要改变的颜色
+ * @param {number} amount 变化的量
+ * @returns {string} 处理后的颜色分量
  */
 function addLight(color: string, amount: number) {
   const cc = parseInt(color, 16) + amount;
@@ -128,10 +133,11 @@ function addLight(color: string, amount: number) {
 }
 
 /**
- * Calculates luminance of an rgb color
- * @param {number} r red
- * @param {number} g green
- * @param {number} b blue
+ * 计算RGB颜色的亮度
+ * @param {number} r 红色值
+ * @param {number} g 绿色值
+ * @param {number} b 蓝色值
+ * @returns {number} 亮度值
  */
 function luminanace(r: number, g: number, b: number) {
   const a = [r, g, b].map((v) => {
@@ -142,9 +148,10 @@ function luminanace(r: number, g: number, b: number) {
 }
 
 /**
- * Calculates contrast between two rgb colors
- * @param {string} rgb1 rgb color 1
- * @param {string} rgb2 rgb color 2
+ * 计算两种RGB颜色之间的对比度
+ * @param {string} rgb1 RGB颜色1
+ * @param {string} rgb2 RGB颜色2
+ * @returns {number} 对比度值
  */
 function contrast(rgb1: string[], rgb2: number[]) {
   return (
@@ -154,10 +161,14 @@ function contrast(rgb1: string[], rgb2: number[]) {
 }
 
 /**
- * Determines what the best text color is (black or white) based con the contrast with the background
- * @param hexColor - Last selected color by the user
+ * 根据与背景的对比度确定最佳文本颜色（黑色或白色）
+ * @param hexColor 用户最后选择的颜色
+ * @returns 最佳文本颜色（#000000或#FFFFFF）
  */
 export function calculateBestTextColor(hexColor: string) {
+  if (!hexColor) {
+    return '#000000';
+  }
   const rgbColor = hexToRGB(hexColor.substring(1));
   const contrastWithBlack = contrast(rgbColor.split(','), [0, 0, 0]);
 
@@ -165,10 +176,10 @@ export function calculateBestTextColor(hexColor: string) {
 }
 
 /**
- * Subtracts the indicated percentage to the R, G or B of a HEX color
- * @param {string} color The color to change
- * @param {number} amount The amount to change the color by
- * @returns {string} The processed part of the color
+ * 从HEX颜色的R、G或B分量中减去指定百分比
+ * @param {string} color 要改变的颜色
+ * @param {number} amount 变化的量
+ * @returns {string} 处理后的颜色分量
  */
 function subtractLight(color: string, amount: number) {
   const cc = parseInt(color, 16) - amount;
@@ -184,13 +195,10 @@ interface HSV {
 
 // 颜色从1-10，主色为第6个，前面有5个浅色，后面有4个深色
 const hueStep = 2; // 色相阶梯
-
 const topColorCount = 5; // 主色前数量，浅色部分
 const behindColorCount = 4; // 主色后数量，深色部分
-
 const topSaturationStep = 0.16; // 饱和度阶梯，主色前(浅色部分)
 const behindSaturationStep = 0.05; // 饱和度阶梯，主色后(深色部分)
-
 const topBrightnessLightStep = 0.05; // 亮度阶梯，主色前(浅色部分)
 const behindBrightnessStep = 0.15; // 亮度阶梯，主色后(深色部分)
 
@@ -268,7 +276,8 @@ const getValue = (hsv: HSV, i: number, isTop?: boolean): number => {
 
 /**
  * 根据给定的颜色生成若干阶梯色
- * @param primaryColor
+ * @param primaryColor 主色
+ * @returns 生成的阶梯色数组
  */
 export const generateStepColor = (primaryColor: string): string[] => {
   const colors: string[] = [];
@@ -304,6 +313,8 @@ export const generateStepColor = (primaryColor: string): string[] => {
 
 /**
  * 生成echarts渐变色
+ * @param primaryColor 主色
+ * @returns 渐变色数组
  */
 export const getLinearColorList = (primaryColor: string) => {
   const stepColor = generateStepColor(primaryColor);
