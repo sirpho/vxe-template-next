@@ -4,11 +4,8 @@
       <div class="wrapper">
         <Divider>JAVA类定义</Divider>
         <Form layout="inline">
-          <FormItem label="最小宽度">
-            <InputNumber v-model:value="minWidth" size="small" />
-          </FormItem>
-          <FormItem label="步长">
-            <InputNumber v-model:value="step" size="small" />
+          <FormItem label="额外宽度">
+            <InputNumber v-model:value="extraWidth" size="small" />
           </FormItem>
           <FormItem label="模式">
             <Select size="small" v-model:value="pageState.mode" style="width: 100px">
@@ -154,7 +151,7 @@
     Select,
     message,
   } from 'ant-design-vue';
-  import { reactive, ref } from 'vue';
+  import { nextTick, reactive, ref } from 'vue';
   import hljs from 'highlight.js/lib/core';
   import { copyText } from '@/utils/copyTextToClipboard';
   import { StatusPop } from '@/components/status-pop';
@@ -179,14 +176,14 @@
     TOOLBAR_START,
   } from './service';
   import { FORMAT_JAVA_CLASS } from '@/enums/cacheEnum';
+  import { cloneDeep } from 'lodash-es';
 
   const ls = createLocalStorage();
   const javaCode = ref(ls.get(FORMAT_JAVA_CLASS));
   const columns = ref<any[]>([]);
   const templateCode = ref('');
   const templateCodeElement = ref();
-  const minWidth = ref(120);
-  const step = ref(10);
+  const extraWidth = ref(10);
   const logVisible = ref(false);
   const optionVisible = ref(false);
   const modalTable = ref({} as VxeTableInstance);
@@ -305,6 +302,21 @@
   };
 
   /**
+   * 获取汉字数量
+   * @param str
+   */
+  const countChineseCharacters = (str) => {
+    // 匹配所有汉字的正则表达式
+    const chineseRegex = /[\u4e00-\u9fa5]/g;
+
+    // 执行匹配
+    const matches = str.match(chineseRegex);
+
+    // 如果有匹配结果则返回数量，否则返回0
+    return matches ? matches.length : 0;
+  };
+
+  /**
    * 开始转换，提取列表字段
    */
   const handleFormatter = async () => {
@@ -338,13 +350,6 @@
         title = '待定字段';
       }
 
-      const length = title?.length || 0;
-      let currentMinWidth = minWidth.value;
-      if (['物料名称', '供应商名称'].includes(title)) {
-        currentMinWidth += 20;
-      }
-      const count = length <= 4 ? 0 : length - 4;
-
       // 构建配置项
       result.push({
         field: fieldName,
@@ -352,7 +357,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
-        minWidth: currentMinWidth + count * step.value,
+        minWidth: 100,
         cellType: cellType,
       });
     }
@@ -367,6 +372,8 @@
       editMode: getDefaultMode(item),
     }));
     optionVisible.value = true;
+    await nextTick();
+    await modalTable.value.setAllCheckboxRow(true);
   };
 
   /**
@@ -460,13 +467,14 @@
         const componentName = getComboxComponentName(item, pageState.mode);
         let functionAttr = '';
         if (mode === 'editMode' && item.withFunction) {
-          functionAttr = `@change='(option) => handleChange${capitalizeFirstLetter(item.field)}(row, option)'`;
+          const pureField = item.field.replace(/Code$/, '').replace(/Id$/, '');
+          functionAttr = `@change='(option) => handleChange${capitalizeFirstLetter(pureField)}(row, option)'`;
           functionList.value.push(`
             /**
              * 修改${item.title}
              */
-            const handleChange${capitalizeFirstLetter(item.field)} = (row: any, option: any) => {
-              row.${item.field}Name = option?.${item.field}Name;
+            const handleChange${capitalizeFirstLetter(pureField)} = (row: any, option: any) => {
+              row.${pureField}Name = option?.${pureField}Name;
             };
           `);
         }
@@ -590,7 +598,34 @@
     if (editItemList.value.length > 0) {
       gridOptionsText.push(`editRules: validRules.value,`);
     }
-    const columnsText = JSON.stringify(columns.value, null, 2);
+    const columnList = cloneDeep(columns.value);
+    for (const item of columnList) {
+      if (!item.title) {
+        continue;
+      }
+      // 基础30，排序20，筛选20
+      let width = 30 + 20 + 20;
+      const titleLength = item.title.length;
+      const chineseCount = countChineseCharacters(item.title);
+      const englishCount = Math.floor((titleLength - chineseCount) / 2) * 2;
+      // 一个汉字10，英文5
+      width += chineseCount * 10 + englishCount * 5;
+      if (editItemList.value.some((ite) => ite.field === item.field)) {
+        // 可编辑20，必填标记20
+        width += 20 + 20;
+      }
+      if (
+        item.title.includes('名称') ||
+        item.title.includes('地址') ||
+        item.title.includes('备注')
+      ) {
+        width += 40;
+      }
+
+      item.minWidth = width + extraWidth.value;
+    }
+
+    const columnsText = JSON.stringify(columnList, null, 2);
     gridOptionsText.push(`columns: ${columnsText},`);
     gridOptionsText.push(`showHeaderOverflow: 'tooltip',`);
     gridOptionsText.push(`});`);
