@@ -53,6 +53,16 @@
         >
         <code ref="templateCodeElement" class="language-json"></code>
       </pre>
+        <Tabs v-model:activeKey="tabActivity">
+          <TabPane v-for="item in regularList" :key="item.key" :tab="item.key">
+            <p>
+              <Button type="link" @click="() => handleCopyContent(item.A)">{{ item.A }}</Button>
+            </p>
+            <p>
+              <Button type="link" @click="() => handleCopyContent(item.B)">{{ item.B }}</Button>
+            </p>
+          </TabPane>
+        </Tabs>
       </div>
     </VxeContainer>
     <StatusPop
@@ -150,6 +160,8 @@
     Checkbox,
     Select,
     message,
+    Tabs,
+    TabPane,
   } from 'ant-design-vue';
   import { nextTick, reactive, ref } from 'vue';
   import hljs from 'highlight.js/lib/core';
@@ -201,6 +213,7 @@
   const optionTableList = ref<any[]>([]);
   const searchItemList = ref<any[]>([]);
   const editItemList = ref<any[]>([]);
+  const checkboxFieldList = ref<any[]>([]);
   // 函数脚本
   const functionList = ref<any[]>([]);
   const optionColumns = ref<VxeGridPropTypes.Columns>([
@@ -258,6 +271,26 @@
       cellType: 'string',
       slots: { default: 'withFunction' },
       width: 100,
+    },
+  ]);
+
+  const tabActivity = ref('filterRender正则');
+  // 正则
+  const regularList = ref([
+    {
+      key: 'filterRender正则',
+      A: "(filterRender:\\s*\\{)(\\s+)(name:\\s*'FilterExtend',)(\\s+)(\\})",
+      B: "filterRender: { name: 'FilterExtend' }",
+    },
+    {
+      key: 'editRender正则',
+      A: "editRender:\\s*\\{\\s+(autofocus:\\s*'.*'),\\s+\\}",
+      B: 'editRender: { $1 }',
+    },
+    {
+      key: 'slots正则',
+      A: "slots:\\s*\\{\\s+(edit:\\s*'.*'),\\s+\\}",
+      B: 'slots: { $1 }',
     },
   ]);
 
@@ -354,6 +387,8 @@
       result.push({
         field: fieldName,
         title: title,
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: fieldName },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
@@ -562,7 +597,7 @@
     const formStateList: string[] = ['// 表单数据', 'const formState = reactive<FormState>({'];
     searchItemList.value.forEach((item) => {
       let interfaceType = item.searchMode;
-      if (['year', 'month', 'date'].includes(item.searchMode)) {
+      if (['year', 'month', 'date', 'combox'].includes(item.searchMode)) {
         interfaceType = 'string';
       } else if (item.searchMode === 'rangeDate') {
         interfaceType = '[Dayjs, Dayjs]';
@@ -598,31 +633,51 @@
     if (editItemList.value.length > 0) {
       gridOptionsText.push(`editRules: validRules.value,`);
     }
-    const columnList = cloneDeep(columns.value);
-    for (const item of columnList) {
-      if (!item.title) {
-        continue;
-      }
-      // 基础30，排序20，筛选20
-      let width = 30 + 20 + 20;
-      const titleLength = item.title.length;
-      const chineseCount = countChineseCharacters(item.title);
-      const englishCount = Math.floor((titleLength - chineseCount) / 2) * 2;
-      // 一个汉字10，英文5
-      width += chineseCount * 10 + englishCount * 5;
-      if (editItemList.value.some((ite) => ite.field === item.field)) {
-        // 可编辑20，必填标记20
-        width += 20 + 20;
-      }
-      if (
-        item.title.includes('名称') ||
-        item.title.includes('地址') ||
-        item.title.includes('备注')
-      ) {
-        width += 40;
-      }
+    debugger;
+    const resultColumns = columns.value.filter((item) =>
+      checkboxFieldList.value.includes(item.field),
+    );
+    const columnList = cloneDeep(resultColumns);
 
-      item.minWidth = width + extraWidth.value;
+    for (const item of columnList) {
+      // 设置宽度
+      if (!!item.title) {
+        // 基础30，排序20，筛选20
+        let width = 30 + 20 + 20;
+        const titleLength = item.title.length;
+        const chineseCount = countChineseCharacters(item.title);
+        const englishCount = Math.floor((titleLength - chineseCount) / 2) * 2;
+        // 一个汉字10，英文5
+        width += chineseCount * 10 + englishCount * 5;
+        if (editItemList.value.some((ite) => ite.field === item.field)) {
+          // 可编辑20，必填标记20
+          width += 20 + 20;
+        }
+        if (
+          item.title.includes('名称') ||
+          item.title.includes('地址') ||
+          item.title.includes('备注')
+        ) {
+          width += 40;
+        }
+
+        item.minWidth = width + extraWidth.value;
+      }
+      const editItem = editItemList.value.find((ite) => ite.field === item.field);
+      if (editItem) {
+        if (editItem.editMode === 'number') {
+          item.editRender = { autofocus: '.ant-input-number-input' };
+        }
+        if (['date', 'year', 'month', 'rangeDate'].includes(editItem.editMode)) {
+          item.editRender = { autofocus: '.ant-picker-input input' };
+        }
+        if (['combox'].includes(editItem.editMode)) {
+          item.editRender = { autofocus: '.ant-select-selection-search-input' };
+        }
+      } else {
+        delete item.editRender;
+        delete item.slots;
+      }
     }
 
     const columnsText = JSON.stringify(columnList, null, 2);
@@ -703,7 +758,7 @@
       message.warning('请先选择行项目！');
       return;
     }
-
+    checkboxFieldList.value = checkboxRecords.map((item) => item.field);
     searchItemList.value = checkboxRecords.filter((item) => item.isSearch);
     editItemList.value = checkboxRecords.filter((item) => item.isEdit);
     allowEdit.value = pageState.allowInsert || editItemList.value.length > 0;
@@ -757,6 +812,13 @@
    */
   const handleCopy = () => {
     copyText(templateCode.value + '\n' + scriptText.value);
+  };
+
+  /**
+   * 复制
+   */
+  const handleCopyContent = (content: string) => {
+    copyText(content);
   };
 
   /**
