@@ -3,7 +3,8 @@ import { defHttp } from '@/utils/http/axios';
 enum Api {
   list = '/api/tiktok/list',
   batch = '/api/tiktok/batch',
-  classList = '/api/tiktok/class/list',
+  // classList = '/api/tiktok/class/list',
+  classList = '/api/tiktok/class/recentList',
 }
 
 /**

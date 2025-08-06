@@ -7,7 +7,7 @@ export type SelectTableRemoteConfig = {
 export const varients: Record<string, SelectTableRemoteConfig> = {
   // 抖音分类标签
   TiktokClass: {
-    url: '/api/tiktok/class/list',
+    url: '/api/tiktok/class/recentList',
     method: 'post',
   },
   // 抖音博主
