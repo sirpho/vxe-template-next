@@ -95,7 +95,21 @@ export const QUERY_CONTAINER = `
           </QueryFilterContainer>
 `;
 
-export const PAGE_CONTAINER = `
+export const PAGE_CONTAINER_WMS = `
+<template>
+  <PageContainer>
+    @@@QUERY_CONTAINER@@@
+    <VxeContainer>
+      <vxe-grid v-bind="{ ...vxeDefaultProps, ...gridOptions }" ref="xTable">
+        @@@toolbarButtonsText@@@
+        @@@vxeSlotText@@@
+      </vxe-grid>
+    </VxeContainer>
+  </PageContainer>
+</template>
+`;
+
+export const PAGE_CONTAINER_TMS = `
 <template>
   <PageContainer>
     <VxeContainer>

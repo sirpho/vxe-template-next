@@ -179,7 +179,8 @@
     getDescription,
     INSERT_BUTTON,
     INSERT_FUNCTION,
-    PAGE_CONTAINER,
+    PAGE_CONTAINER_TMS,
+    PAGE_CONTAINER_WMS,
     QUERY_CONTAINER,
     REMOVE_BUTTON,
     REMOVE_FUNCTION,
@@ -695,6 +696,14 @@
     if (allowEdit.value || pageState.allowRemove) {
       vxeDefaultPropsText.push('// 保存方法');
       vxeDefaultPropsText.push('save: saveEntity,');
+
+      if (pageState.mode === 'WMS') {
+        vxeDefaultPropsText.push('beforeSaveSubmit: ({ created, updated, removed }) => {');
+        vxeDefaultPropsText.push(
+          'return { deleteList: removed, insertList: created, updateList: updated };',
+        );
+        vxeDefaultPropsText.push('},');
+      }
     }
     const rangeDateList = searchItemList.value.filter((item) => item.searchMode === 'rangeDate');
     if (rangeDateList.length > 0) {
@@ -786,9 +795,9 @@
     if (pageState.title) {
       pageHeader = getDescription(pageState.title);
     }
+    const pageContent = pageState.mode === 'TMS' ? PAGE_CONTAINER_TMS : PAGE_CONTAINER_WMS;
 
-    templateCode.value =
-      pageHeader + PAGE_CONTAINER.replace('@@@QUERY_CONTAINER@@@', queryText.value);
+    templateCode.value = pageHeader + pageContent.replace('@@@QUERY_CONTAINER@@@', queryText.value);
     templateCode.value = templateCode.value.replace(
       '@@@toolbarButtonsText@@@',
       toolbarButtonsText.value,
