@@ -38,6 +38,11 @@
           </Space>
         </template>
         <!-- 可编辑列 -->
+        <template #seq="{ row, rowIndex }">
+          <Button size="small" type="link" @click="() => handlePlayer(row)">{{
+            rowIndex + 1
+          }}</Button>
+        </template>
         <!-- 比特率 格式化显示 -->
         <template #bitrate="{ row }">
           {{ formatBitrate(row.bitrate || 0) }}
@@ -71,7 +76,7 @@
   import { onMounted, reactive, ref } from 'vue';
   import { Form, FormItem, Space, Button, Input, Tag, message } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps } from 'vxe-table';
-  import { batch, getClassList, list } from './service';
+  import { batch, getClassList, list, potPlayer } from './service';
   import { TiktokClassCombox, TiktokAuthorCombox } from '@/features/components/Profession';
   import { formatBitrate, formatSize } from '@/utils/formatter';
   import { add, arrayFieldRepeat, formatDuration } from '@sirpho/utils';
@@ -104,7 +109,7 @@
     toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toolbar_tools' } },
     columns: [
       { type: 'checkbox', width: 60, fixed: 'left', align: 'center' },
-      { type: 'seq', title: '序号', width: 120, align: 'center' },
+      { title: '序号', width: 100, align: 'center', slots: { default: 'seq' } },
       {
         field: 'author',
         title: '作者',
@@ -228,7 +233,7 @@
    * @param row
    * @param options
    */
-  const changeClass = (row, options) => {
+  const changeClass = (row: any, options: any[]) => {
     row.classIdList = options.map((item: any) => item.id);
     row.classNameList = options.map((item: any) => item.name);
     row.classList = options;
@@ -257,6 +262,13 @@
     });
 
     xTable.value.clearCheckboxRow();
+  };
+
+  /**
+   * 通过potPlayer播放
+   */
+  const handlePlayer = (row: any) => {
+    potPlayer(row);
   };
 </script>
 <script lang="ts">

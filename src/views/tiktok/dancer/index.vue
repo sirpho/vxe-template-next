@@ -122,7 +122,8 @@
   } from 'ant-design-vue';
   import { list, batch } from './service';
   import { formatBitrate, formatSize } from '@/utils/formatter';
-  import { adds, formatDuration } from '@sirpho/utils';
+  import { adds, formatDuration, thousandsSeparator } from '@sirpho/utils';
+  import { uniq } from 'lodash-es';
 
   interface FormState {
     identification: string;
@@ -159,6 +160,7 @@
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
+      { type: 'seq', title: '序号', width: 100, align: 'center' },
       {
         field: 'identification',
         title: '唯一标识',
@@ -234,6 +236,38 @@
     ],
     showHeaderOverflow: 'tooltip',
     height: 'auto',
+    showFooter: true,
+    footerMethod: ({ columns, data }) => {
+      return [
+        columns.map((column, columnIndex) => {
+          if (columnIndex === 0) {
+            return '合计';
+          }
+          // 视频数量 文件大小 时长
+          if (['videoCount', 'totalSize', 'totalDuration'].includes(column.field)) {
+            const result = adds(...data.map((item) => item[column.field] || 0));
+            if (column.field === 'totalSize') {
+              return formatSize(result || 0);
+            }
+            if (column.field === 'totalDuration') {
+              const minute = Math.floor(result / 60);
+              const second = result % 60;
+
+              return result
+                ? `${(minute ? minute + '分钟' : '') + (second ? second + '秒' : '')}`
+                : '';
+            }
+            return thousandsSeparator(result);
+          }
+          // 唯一标识 作者
+          if (['identification', 'author'].includes(column.field)) {
+            const list = uniq(data.map((item) => item[column.field]));
+            return list.length;
+          }
+          return null;
+        }),
+      ];
+    },
   });
 
   onMounted(() => {

@@ -5,6 +5,7 @@ enum Api {
   batch = '/api/tiktok/batch',
   // classList = '/api/tiktok/class/list',
   classList = '/api/tiktok/class/recentList',
+  potPlayer = 'https://localhost.sirpho.top:23456/api/tiktok/player',
 }
 
 /**
@@ -26,4 +27,11 @@ export const batch = (data: any) => {
  */
 export const getClassList = (data: any) => {
   return defHttp.post({ url: Api.classList, data });
+};
+
+/**
+ * @description: potPlayer
+ */
+export const potPlayer = (data: any) => {
+  return defHttp.post({ url: Api.potPlayer, data });
 };
