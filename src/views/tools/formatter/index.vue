@@ -448,7 +448,7 @@
       case 'date':
         result.push(`
         <DatePicker
-          ${mode === 'editMode' ? ':getPopupContainer="(trigger) => trigger.parentElement as HTMLElement"' : ''}
+          ${mode === 'editMode' ? ':getPopupContainer="(trigger: any) => trigger.parentElement as HTMLElement"' : ''}
           v-model:value="${recordText}.${item.field}"
           format="YYYY-MM-DD"
           size="small"
@@ -504,7 +504,7 @@
         let functionAttr = '';
         if (mode === 'editMode' && item.withFunction) {
           const pureField = item.field.replace(/Code$/, '').replace(/Id$/, '');
-          functionAttr = `@change='(option) => handleChange${capitalizeFirstLetter(pureField)}(row, option)'`;
+          functionAttr = `@change='(option: any) => handleChange${capitalizeFirstLetter(pureField)}(row, option)'`;
           functionList.value.push(`
             /**
              * 修改${item.title}
@@ -634,9 +634,8 @@
     if (editItemList.value.length > 0) {
       gridOptionsText.push(`editRules: validRules.value,`);
     }
-    debugger;
-    const resultColumns = columns.value.filter((item) =>
-      checkboxFieldList.value.includes(item.field),
+    const resultColumns = columns.value.filter(
+      (item) => checkboxFieldList.value.includes(item.field) || item.type === 'checkbox',
     );
     const columnList = cloneDeep(resultColumns);
 
