@@ -97,6 +97,8 @@
               <Checkbox v-model:checked="pageState.allowInsert" size="small">可新增</Checkbox>
               <Checkbox v-model:checked="pageState.allowRemove" size="small">可删除</Checkbox>
               <Checkbox v-model:checked="pageState.allowExport" size="small"> 可导出 </Checkbox>
+              <Checkbox v-model:checked="pageState.allowImport" size="small"> 可导入 </Checkbox>
+              <Checkbox v-model:checked="pageState.allowAudit" size="small"> 可审核 </Checkbox>
             </Space>
           </Form>
         </template>
@@ -172,11 +174,17 @@
   import { createLocalStorage } from '@/utils/cache';
 
   import {
+    AUDIT_BUTTON,
+    AUDIT_CONST,
+    AUDIT_FUNCTION,
+    AUDIT_TEMPLATE,
     capitalizeFirstLetter,
     EXPORT_BUTTON,
     EXPORT_FUNCTION,
     getComboxComponentName,
     getDescription,
+    IMPORT_BUTTON,
+    IMPORT_FUNCTION,
     INSERT_BUTTON,
     INSERT_FUNCTION,
     PAGE_CONTAINER_TMS,
@@ -300,6 +308,8 @@
     allowInsert: boolean;
     allowRemove: boolean;
     allowExport: boolean;
+    allowImport: boolean;
+    allowAudit: boolean;
     title: string;
     mode: 'TMS' | 'WMS';
   }>({
@@ -307,6 +317,8 @@
     allowInsert: true,
     allowRemove: true,
     allowExport: true,
+    allowImport: true,
+    allowAudit: false,
     mode: 'WMS',
     title: '',
   });
@@ -314,6 +326,7 @@
   const importSet = new Set<String>();
   const antDesignVueSet = new Set<String>();
   const comboxSet = new Set<String>();
+  const wahahaWuiSet = new Set<String>(['PageContainer', 'QueryFilterContainer', 'VxeContainer']);
   antDesignVueSet.add('Button');
   antDesignVueSet.add('Form');
   antDesignVueSet.add('FormItem');
@@ -532,7 +545,7 @@
     /* eslint-disable */
     importSet.add(`import { reactive, ref } from 'vue';`);
     importSet.add(
-      `import { PageContainer, QueryFilterContainer, VxeContainer } from '@wahaha/wui-pro-components';`,
+      `import { ${Array.from(wahahaWuiSet).sort().join(', ')} } from '@wahaha/wui-pro-components';`,
     );
     importSet.add(`import type { VxeGridProps } from 'vxe-table';`);
     importSet.add(`import { useDefaultProps } from '@wahaha/vxe-ext-core';`);
@@ -579,8 +592,15 @@
       if (pageState.allowInsert) {
         toolbarButtonsText.value += INSERT_BUTTON;
       }
+      if (pageState.allowImport) {
+        wahahaWuiSet.add('UploadModal');
+        toolbarButtonsText.value += IMPORT_BUTTON;
+      }
       if (pageState.allowRemove) {
         toolbarButtonsText.value += REMOVE_BUTTON;
+      }
+      if (pageState.allowAudit) {
+        toolbarButtonsText.value += AUDIT_BUTTON;
       }
       toolbarButtonsText.value += SAVE_BUTTON;
       toolbarButtonsText.value += TOOLBAR_END;
@@ -610,6 +630,8 @@
     });
     interfaceList.push('}');
     formStateList.push('});');
+
+    const auditList = pageState.allowAudit ? [AUDIT_CONST] : [];
 
     const validRulesText: string[] = [];
 
@@ -729,8 +751,14 @@
     if (pageState.allowRemove) {
       functionText.push(REMOVE_FUNCTION);
     }
+    if (pageState.allowAudit) {
+      functionText.push(AUDIT_FUNCTION);
+    }
     if (pageState.allowExport) {
       functionText.push(EXPORT_FUNCTION(pageState.title));
+    }
+    if (pageState.allowImport) {
+      functionText.push(IMPORT_FUNCTION);
     }
 
     const result: string[] = [
@@ -738,6 +766,7 @@
       ...importText.value,
       ...interfaceList,
       ...formStateList,
+      ...auditList,
       ...validRulesText,
       'const xTable = ref();',
       ...gridOptionsText,
@@ -802,6 +831,9 @@
       toolbarButtonsText.value,
     );
     templateCode.value = templateCode.value.replace('@@@vxeSlotText@@@', editSlotList.join('\n'));
+    const auditTemplate = pageState.allowAudit ? AUDIT_TEMPLATE : '';
+    templateCode.value = templateCode.value.replace('@@@auditTemplate@@@', auditTemplate);
+
     generateScript();
     optionVisible.value = false;
     handleHighLight();

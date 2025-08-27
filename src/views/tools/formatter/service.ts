@@ -1,6 +1,19 @@
 export const INSERT_BUTTON = `<Button type="link" size="small" @click="handleInsertLine">新增</Button>\n`;
 
+export const IMPORT_BUTTON = `<UploadModal
+              :templates="[
+                {
+                  url: 'https://www.xxx.com/导入模板.xlsx',
+                },
+              ]"
+              @on-uploaded="uploaded"
+              v-slot="{ show }"
+            >
+              <Button type="link" size="small" @click="show"> 导入</Button>
+            </UploadModal>\n`;
+
 export const REMOVE_BUTTON = `<Button type="link" size="small" @click="handleRemoveLine">删除</Button>\n`;
+export const AUDIT_BUTTON = `<Button type="link" size="small" @click="handleAuditPass"> 审核通过 </Button>\n<Button type="link" size="small" @click="handleAuditReject"> 审核不通过 </Button>\n`;
 
 export const SAVE_BUTTON = `<Button :loading="vxeExtraProps.saving" size="small" type="link" @click="vxeInstance.save">保存</Button>`;
 
@@ -35,6 +48,36 @@ export const getDescription = (title: string) => {
   return `<!--\n* @Description: ${title}\n-->`;
 };
 
+export const AUDIT_TEMPLATE = `
+    <Modal
+      v-model:visible="auditVisible"
+      title="审核不通过"
+      :destroy-on-close="true"
+      :confirmLoading="rejectLoading"
+      @ok="handleAuditConfirm"
+    >
+      <Form :model="auditModalState" ref="auditForm" :labelCol="{ span: 6 }" :wrapperCol="{ span: 18 }">
+        <FormItem label="不通过原因" name="remark" :rules="[{ required: true, message: '必填项' }]">
+          <Input v-model:value="auditModalState.remark" />
+        </FormItem>
+      </Form>
+    </Modal>
+`;
+
+export const AUDIT_CONST = `
+  const auditForm = ref();
+  // 审核通过加载状态
+  const passLoading = ref(false);
+  // 审核拒绝加载状态
+  const rejectLoading = ref(false);
+  // 审核弹窗
+  const auditVisible = ref(false);
+  const auditModalState = reactive({
+    // 审核不通过原因
+    remark: '',
+  });
+  `;
+
 export const INSERT_FUNCTION = `
 /**
  * 新增
@@ -67,6 +110,89 @@ const handleRemoveLine = () => {
     },
   });
 };
+`;
+
+export const IMPORT_FUNCTION = `
+  /**
+   * 导入回调
+   */
+  const uploaded = async (sheet: any) => {
+    await vxeInstance.updateData(sheet, {
+      beforeUpdate: async (data) => {
+        if (!data.length) return [];
+
+        return data;
+      },
+    });
+  };
+`;
+
+export const AUDIT_FUNCTION = `
+  /**
+   * 审核通过
+   */
+  const handleAuditPass = async () => {
+    const checkboxRecords = xTable.value.getCheckboxRecords();
+    if (!checkboxRecords.length) {
+      message.warning('请先选择行项目！');
+      return;
+    }
+    if (checkboxRecords.some((item: any) => item.status !== '已提交')) {
+      message.warning('仅【已提交】状态可审核通过！');
+      return;
+    }
+    passLoading.value = true;
+    const [err, _res] = await to(
+      auditPass({
+        list: checkboxRecords,
+      }),
+    );
+    passLoading.value = false;
+    if (err) {
+      return;
+    }
+    await vxeInstance.reload();
+  };
+
+  /**
+   * 审核拒绝，打开审核弹框
+   */
+  const handleAuditReject = async () => {
+    const checkboxRecords = xTable.value.getCheckboxRecords();
+    if (!checkboxRecords.length) {
+      message.warning('请先选择行项目！');
+      return;
+    }
+    if (checkboxRecords.some((item: any) => item.status !== '已提交')) {
+      message.warning('仅【已提交】状态可审核通过！');
+      return;
+    }
+
+    auditVisible.value = true;
+  };
+
+  /**
+   * 审核拒绝回调
+   */
+  const handleAuditConfirm = async () => {
+    await auditForm.value?.validate();
+    const checkboxRecords = xTable.value.getCheckboxRecords();
+    rejectLoading.value = true;
+    const [err] = await to(
+      auditNotPass({
+        list: checkboxRecords,
+        ...auditModalState,
+      }),
+    ).finally(() => {
+      rejectLoading.value = false;
+      auditModalState.remark = '';
+    });
+    if (err) {
+      return;
+    }
+    message.success('操作成功');
+    await vxeInstance.reload();
+  };
 `;
 
 export const QUERY_CONTAINER = `
@@ -122,6 +248,7 @@ export const PAGE_CONTAINER_TMS = `
         @@@vxeSlotText@@@
       </vxe-grid>
     </VxeContainer>
+    @@@auditTemplate@@@
   </PageContainer>
 </template>
 `;
