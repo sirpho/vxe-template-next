@@ -52,15 +52,15 @@ export const REMOVE_FUNCTION = `
  * 删除
  */
 const handleRemoveLine = () => {
-  const checkRecord: any[] = xTable.value.getCheckboxRecords();
-  if (checkRecord.length <= 0) {
+  const checkboxRecords: any[] = xTable.value.getCheckboxRecords();
+  if (checkboxRecords.length <= 0) {
     message.warning('请先选择要删除的行项目！');
     return;
   }
   Modal.confirm({
     title: '你确信要删除所选行项目吗?',
     onOk: async () => {
-      xTable.value.remove(checkRecord);
+      xTable.value.remove(checkboxRecords);
     },
     onCancel: () => {
       Modal.destroyAll();
