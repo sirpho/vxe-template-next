@@ -46,10 +46,7 @@
         </template>
         <template #toobar_tools>
           <Button type="link" size="small">
-            <a
-              href="http://pps.cnwaterservice.com.cn/platform/m/bform_gformqry/main?uid=27&fromuserid=anonymous&signature=8d8715b4718e9ac158f0e52eddeb25b7c75f187e&classcode=sfcx.captcha&nonce=8ad205da-02f3-4e58-86a4-33580fb20eec&timestamp=1740105561&Client-Charset=UTF-8#"
-              target="_blank"
-            >
+            <a href="https://www.xswater.com/gongshui/channels/237.html" target="_blank">
               萧山水务水费查询
             </a>
           </Button>
