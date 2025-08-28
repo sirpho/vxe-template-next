@@ -3,11 +3,11 @@
     <QueryFilterContainer>
       <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
         <FormItem label="所属房屋" name="house">
-          <Select v-model:value="formState.house" allow-clear size="small" style="width: 160px">
-            <Select.Option v-for="item in houseList" :key="item.value" :value="item.value">
-              {{ item.label }}
-            </Select.Option>
-          </Select>
+          <ComboBox
+            v-model:value="formState.house"
+            v-bind="{ ...houseOptions }"
+            :data="houseList"
+          />
         </FormItem>
         <FormItem label="年份" name="year">
           <DatePicker
@@ -44,11 +44,7 @@
         <!-- 可编辑列 -->
         <!-- 所属房屋 -->
         <template #house="{ row }">
-          <Select v-model:value="row.house" size="small">
-            <Select.Option v-for="item in houseList" :key="item.value" :value="item.value">
-              {{ item.label }}
-            </Select.Option>
-          </Select>
+          <ComboBox v-model:value="row.house" v-bind="{ ...houseOptions }" :data="houseList" />
         </template>
         <!-- 月份 -->
         <template #month="{ row }">
@@ -96,23 +92,23 @@
     message,
     Modal,
     Input,
-    Select,
     InputNumber,
     DatePicker,
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
-  import { batch, list } from './service';
+  import { batch, list, houseOptions } from './service';
   import dayjs from 'dayjs';
   import { isNumber } from 'mathjs';
   import { divide } from '@sirpho/utils';
   import { useDict } from '@/hooks/web/useDict';
+  import { ComboBox } from '@/components/Box';
 
-  // interface FormState {
-  //   house: string;
-  //   year: string;
-  // }
+  interface FormState {
+    house: string;
+    year: string;
+  }
 
-  const formState = reactive({
+  const formState = reactive<FormState>({
     house: '', // 所属房屋
     year: dayjs().format('YYYY'), // 年份
   });
@@ -152,6 +148,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 150,
       },
       {
         field: 'month',
@@ -161,6 +158,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 120,
       },
       {
         field: 'power',
@@ -170,6 +168,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 180,
       },
       {
         field: 'cost',
@@ -179,6 +178,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 160,
       },
       {
         field: 'price',
@@ -188,6 +188,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 150,
       },
       {
         field: 'memo',

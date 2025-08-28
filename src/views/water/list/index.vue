@@ -3,11 +3,11 @@
     <QueryFilterContainer>
       <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
         <FormItem label="所属房屋" name="house">
-          <Select v-model:value="formState.house" allow-clear size="small" style="width: 160px">
-            <Select.Option v-for="item in houseList" :key="item.value" :value="item.value">
-              {{ item.label }}
-            </Select.Option>
-          </Select>
+          <ComboBox
+            v-model:value="formState.house"
+            v-bind="{ ...houseOptions }"
+            :data="houseList"
+          />
         </FormItem>
         <FormItem label="年份" name="year">
           <DatePicker
@@ -54,11 +54,7 @@
         <!-- 可编辑列 -->
         <!-- 所属房屋 -->
         <template #house="{ row }">
-          <Select v-model:value="row.house" size="small">
-            <Select.Option v-for="item in houseList" :key="item.value" :value="item.value">
-              {{ item.label }}
-            </Select.Option>
-          </Select>
+          <ComboBox v-model:value="row.house" v-bind="{ ...houseOptions }" :data="houseList" />
         </template>
         <!-- 月份 -->
         <template #month="{ row }">
@@ -114,17 +110,17 @@
     message,
     Modal,
     Input,
-    Select,
     InputNumber,
     DatePicker,
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
-  import { batch, list } from './service';
+  import { batch, list, houseOptions } from './service';
   import dayjs from 'dayjs';
   import { divide } from '@sirpho/utils';
   import { useDict } from '@/hooks/web/useDict';
   import { ImportExcel } from '@/components/Excel';
   import { isEmpty, isNumber } from '@/utils/is';
+  import { ComboBox } from '@/components/Box';
 
   interface FormState {
     house: string;
@@ -142,7 +138,7 @@
   const submitLoading = ref(false);
 
   const [houseList] = useDict([
-    'ELECTRICITY_HOUSE', // 用水房屋
+    'WATER_HOUSE', // 用水房屋
   ]);
 
   /**
@@ -171,6 +167,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 150,
       },
       {
         field: 'month',
@@ -180,6 +177,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 120,
       },
       {
         field: 'power',
@@ -189,6 +187,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 170,
       },
       {
         field: 'cost',
@@ -198,6 +197,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 160,
       },
       {
         field: 'price',
@@ -207,6 +207,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 150,
       },
       {
         field: 'memo',
@@ -342,7 +343,7 @@
    */
   const handleImportExcel = async (sheetList: any[], fileName: string) => {
     const house = fileName?.includes('桥南沈') ? '桥南沈85号' : '金珺澜庭7-1-701';
-    const list = [];
+    const list: any[] = [];
     (sheetList || []).forEach((sheet) => {
       const results = sheet.results || [];
       const effectiveDataList = results.filter((item: any) => !isEmptyRow(item));

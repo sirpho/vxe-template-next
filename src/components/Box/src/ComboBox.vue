@@ -55,7 +55,7 @@
   </vxe-pulldown>
 </template>
 <script lang="ts" setup>
-  import { onMounted, ref } from 'vue';
+  import { ComputedRef, onMounted, ref } from 'vue';
   import { Input, Select, Form } from 'ant-design-vue';
   import { VxeGridProps, VxeGridInstance, VxePulldownInstance } from 'vxe-table';
   import type { InputProps } from 'ant-design-vue';
@@ -132,7 +132,7 @@
     /**
      * 基础数据
      */
-    data?: object[];
+    data?: object[] | ComputedRef<any[]>;
     /**
      * @description 请求结束后 改变value 不适用onFocus
      * @params autoFill: 填入list第一项

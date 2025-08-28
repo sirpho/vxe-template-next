@@ -1,14 +1,14 @@
-import { computed } from 'vue';
+import { computed, ComputedRef } from 'vue';
 import { onMountedOrActivated } from '@vben/hooks';
 import { isArray } from '@sirpho/utils/validate';
 import { useDictStoreWithOut } from '@/store/modules/dict';
 import { getDictOptions } from '@/api/dataSource';
 
-export function useDict(val: string[]) {
+export function useDict(val: string[]): ComputedRef<any[]>[] {
   const dict = useDictStoreWithOut();
 
   async function getDict() {
-    let dictOptions;
+    let dictOptions: any[];
     if (isArray(val)) {
       for (let i = 0; i < val.length; i += 1) {
         const dictType = val[i];

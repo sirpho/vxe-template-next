@@ -55,7 +55,7 @@
       loading.value = false;
     });
     tableList.value = res.data || [];
-    const result = groupBy(tableList.value, 'house');
+    const result: any = groupBy(tableList.value, 'house');
 
     for (const field in result) {
       result[field] = groupBy(result[field] || [], 'year');
@@ -84,16 +84,16 @@
     } else {
       chartDataMap.value = {};
     }
-    const trendList = [];
+    const trendList: any[] = [];
     chartTrendX.value = Object.keys(chartDataMap.value).sort();
     for (const field of chartTrendX.value) {
       const list = chartDataMap.value[field];
       const power = list.reduce(
-        (previousValue, currentValue) => add(previousValue, currentValue.power),
+        (previousValue: number, currentValue: any) => add(previousValue, currentValue.power),
         0,
       );
       const cost = list.reduce(
-        (previousValue, currentValue) => add(previousValue, currentValue.cost),
+        (previousValue: number, currentValue: any) => add(previousValue, currentValue.cost),
         0,
       );
       trendList.push({

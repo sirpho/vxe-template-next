@@ -20,9 +20,9 @@ export const getCommonList = (params: { module: string }): Promise<Result<any[]>
   return defHttp.get({ url: `${Api.COMMON}${params.module}` });
 };
 
-export function getDictOptions(dictCode) {
+export function getDictOptions(dictCode: string) {
   return new Promise((resolve, reject) => {
-    let operation;
+    let operation: Function;
     let valueKey = '';
     let nameKey = '';
     let mixLabel = true;
@@ -54,12 +54,12 @@ export function getDictOptions(dictCode) {
       resolve([]);
     }
     operation(params)
-      .then((res) => {
-        let result = res.data || res.page || [];
+      .then((res: any) => {
+        let result: any[] | any = res.data || res.page || [];
         result = result?.list || result;
-        const isObj = result.find((item) => isObject(item));
+        const isObj = result.find((item: any) => isObject(item));
         if (isObj) {
-          result = result.map((item) => ({
+          result = result.map((item: any) => ({
             ...item,
             label: mixLabel ? `${item[valueKey]}-${item[nameKey]}` : item[nameKey],
             value: item[valueKey] || undefined,
@@ -71,7 +71,7 @@ export function getDictOptions(dictCode) {
         }
         resolve(result);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         reject(error);
       });
   });

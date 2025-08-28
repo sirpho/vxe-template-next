@@ -18,3 +18,19 @@ export const list = (data: any) => {
 export const batch = (data: any) => {
   return defHttp.post({ url: Api.batch, data });
 };
+
+/**
+ * 房屋下拉配置
+ */
+export const houseOptions: any = {
+  gridProps: {
+    columns: [
+      { field: 'name', title: '房屋', width: '150px' },
+      { field: 'value', title: '水费户号' },
+    ],
+  },
+  autoFill: false,
+  action: 'noChange',
+  allowInput: false,
+  option: { label: 'name', value: 'name' },
+};
