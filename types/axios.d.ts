@@ -25,7 +25,7 @@ export interface RequestOptions {
   // Whether to add a timestamp
   joinTime?: boolean;
   ignoreCancelToken?: boolean;
-  // Whether to send token in header
+  // 是否携带token消息头 (Token与Authorization)
   withToken?: boolean;
   // 请求重试机制
   retryRequest?: RetryRequest;

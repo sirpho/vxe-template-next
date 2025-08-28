@@ -102,6 +102,18 @@ const route: AppRouteModule = {
         title: t('routes.tools.formatter'),
       },
     },
+    /**
+     * gitlab提交日志
+     */
+    {
+      path: 'gitlog',
+      name: 'Gitlog',
+      component: () => import('@/views/tools/gitlog/index.vue'),
+      meta: {
+        icon: 'fa7-brands:square-gitlab',
+        title: t('routes.tools.gitlog'),
+      },
+    },
   ],
 };
 

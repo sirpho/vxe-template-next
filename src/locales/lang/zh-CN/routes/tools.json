@@ -6,5 +6,6 @@
   "desktop": "文件夹图标生成",
   "network": "网络拓扑",
   "fetch": "API接口",
-  "formatter": "模板代码生成"
+  "formatter": "模板代码生成",
+  "gitlog": "gitlab提交日志"
 }
