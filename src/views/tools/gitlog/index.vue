@@ -73,6 +73,7 @@
     { label: '松裕信息化系统', value: 732, dev: 'development' },
     { label: 'wms分厂仓储系统', value: 643, dev: 'development' },
     { label: '资金链系统', value: 769, dev: 'dev' },
+    { label: '基建系统', value: 784, dev: 'dev' },
     { label: '迅尔tms系统', value: 943, dev: 'dev' },
     { label: 'srm供应链系统', value: 644, dev: 'development' },
     { label: '综合服务系统', value: 673, dev: 'development' },
