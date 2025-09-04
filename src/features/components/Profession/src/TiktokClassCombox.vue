@@ -9,6 +9,10 @@
   import ComboBox from '@/components/Box/src/ComboBox.vue';
 
   interface Props {
+    /**
+     * @description 获取数据源的时机
+     */
+    requestTrigger?: 'onMount' | 'onFocus' | 'onParamsChange';
     varient?: string;
     gridProps?: VxeGridProps;
     option?: Option;
@@ -27,6 +31,7 @@
 
   const props = withDefaults(defineProps<Props>(), {
     varient: 'TiktokClass',
+    requestTrigger: 'onFocus',
     gridProps: () => ({
       columns: [
         { field: 'id', title: '代码', visible: false },

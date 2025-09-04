@@ -60,7 +60,7 @@
           <TiktokClassCombox
             :data="classList"
             v-model:value="row.classIdList"
-            @change="(option) => changeClass(row, option)"
+            @change="(option: any) => changeClass(row, option)"
           />
         </template>
         <template #classIdList_default="{ row }">
