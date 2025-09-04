@@ -39,9 +39,9 @@
         </template>
         <!-- 可编辑列 -->
         <template #seq="{ row, rowIndex }">
-          <Button size="small" type="link" @click="() => handlePlayer(row)">{{
-            rowIndex + 1
-          }}</Button>
+          <Button size="small" type="link" @click="() => handlePlayer(row)">
+            {{ rowIndex + 1 }}
+          </Button>
         </template>
         <!-- 比特率 格式化显示 -->
         <template #bitrate="{ row }">
@@ -226,6 +226,8 @@
       submitLoading.value = false;
     });
     await handleQuery();
+    // 重新查询标签，以便根据更新时间重新排序
+    queryClassList();
   };
 
   /**
