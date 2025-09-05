@@ -25,6 +25,16 @@
           </Button>
         </Space>
         <Input.TextArea placeholder="java类" v-model:value="javaCode" />
+        <Tabs v-model:activeKey="tabActivity1">
+          <TabPane v-for="item in regularList1" :key="item.key" :tab="item.key">
+            <p>
+              <Button type="link" @click="() => handleCopyContent(item.A)">{{ item.A }}</Button>
+            </p>
+            <p>
+              <Button type="link" @click="() => handleCopyContent(item.B)">{{ item.B }}</Button>
+            </p>
+          </TabPane>
+        </Tabs>
       </div>
       <div class="wrapper">
         <Divider>JSON生成</Divider>
@@ -51,10 +61,10 @@
           class="m-0 p-4 overflow-auto w-full"
           style="flex: 1; border: 1px solid #d9d9d9; border-radius: 6px"
         >
-        <code ref="templateCodeElement" class="language-json"></code>
-      </pre>
-        <Tabs v-model:activeKey="tabActivity">
-          <TabPane v-for="item in regularList" :key="item.key" :tab="item.key">
+          <code ref="templateCodeElement" class="language-json"></code>
+        </pre>
+        <Tabs v-model:activeKey="tabActivity2">
+          <TabPane v-for="item in regularList2" :key="item.key" :tab="item.key">
             <p>
               <Button type="link" @click="() => handleCopyContent(item.A)">{{ item.A }}</Button>
             </p>
@@ -283,26 +293,39 @@
     },
   ]);
 
-  const tabActivity = ref('通用正则');
+  const tabActivity1 = ref('private正则');
+  const tabActivity2 = ref('通用正则');
   // 正则
-  const regularList = ref([
+  const regularList1 = ref([
+    {
+      key: 'private正则',
+      A: '(String|Date|BigDecimal|Integer) ',
+      B: 'private $1 ',
+    },
+    {
+      key: '注释正则',
+      A: '// (.*?)$',
+      B: '/**\\n\\t* $1\\n \\t*/',
+    },
+  ]);
+  const regularList2 = ref([
     {
       key: '通用正则',
       A: "(filterRender|editRender|slots):\\s*\\{\\s+((name|autofocus|edit):\\s*'.*'),?\\s+\\}",
       B: '$1: { $2 }',
     },
     {
-      key: 'filterRender正则',
+      key: 'filterRender',
       A: "filterRender:\\s*\\{\\s+(name:\\s*'.*'),\\s+\\}",
       B: 'filterRender: { $1 }',
     },
     {
-      key: 'editRender正则',
+      key: 'editRender',
       A: "editRender:\\s*\\{\\s+(autofocus:\\s*'.*'),\\s+\\}",
       B: 'editRender: { $1 }',
     },
     {
-      key: 'slots正则',
+      key: 'slots',
       A: "slots:\\s*\\{\\s+(edit:\\s*'.*'),\\s+\\}",
       B: 'slots: { $1 }',
     },
