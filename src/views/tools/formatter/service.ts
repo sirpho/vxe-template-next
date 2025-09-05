@@ -163,7 +163,7 @@ export const AUDIT_REJECT_FUNCTION_WMS = `
     }
 
       const [registerForm, { validate }] = useForm({
-        labelWidth: 80,
+        layout: 'vertical',
         size: 'small',
         showActionButtonGroup: false,
         schemas: [{
