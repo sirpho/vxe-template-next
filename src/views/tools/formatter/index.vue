@@ -283,13 +283,18 @@
     },
   ]);
 
-  const tabActivity = ref('filterRender正则');
+  const tabActivity = ref('通用正则');
   // 正则
   const regularList = ref([
     {
+      key: '通用正则',
+      A: "(filterRender|editRender|slots):\\s*\\{\\s+((name|autofocus|edit):\\s*'.*'),?\\s+\\}",
+      B: '$1: { $2 }',
+    },
+    {
       key: 'filterRender正则',
-      A: "(filterRender:\\s*\\{)(\\s+)(name:\\s*'FilterExtend',)(\\s+)(\\})",
-      B: "filterRender: { name: 'FilterExtend' }",
+      A: "filterRender:\\s*\\{\\s+(name:\\s*'.*'),\\s+\\}",
+      B: 'filterRender: { $1 }',
     },
     {
       key: 'editRender正则',
