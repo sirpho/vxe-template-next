@@ -306,7 +306,6 @@ export const PAGE_CONTAINER_WMS = `
         @@@vxeSlotText@@@
       </vxe-grid>
     </VxeContainer>
-    @@@auditTemplate@@@
   </PageContainer>
 </template>
 `;
@@ -324,7 +323,6 @@ export const PAGE_CONTAINER_TMS = `
         @@@vxeSlotText@@@
       </vxe-grid>
     </VxeContainer>
-    @@@auditTemplate@@@
   </PageContainer>
 </template>
 `;

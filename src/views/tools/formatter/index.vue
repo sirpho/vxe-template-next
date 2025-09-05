@@ -190,7 +190,6 @@
     AUDIT_FUNCTION,
     AUDIT_REJECT_FUNCTION_TMS,
     AUDIT_REJECT_FUNCTION_WMS,
-    AUDIT_TEMPLATE,
     capitalizeFirstLetter,
     EXPORT_BUTTON,
     EXPORT_FUNCTION,
@@ -926,8 +925,8 @@
       toolbarButtonsText.value,
     );
     templateCode.value = templateCode.value.replace('@@@vxeSlotText@@@', editSlotList.join('\n'));
-    const auditTemplate = pageState.allowAudit ? AUDIT_TEMPLATE : '';
-    templateCode.value = templateCode.value.replace('@@@auditTemplate@@@', auditTemplate);
+    // const auditTemplate = pageState.allowAudit ? AUDIT_TEMPLATE : '';
+    // templateCode.value = templateCode.value.replace('@@@auditTemplate@@@', auditTemplate);
 
     generateScript();
     optionVisible.value = false;
