@@ -65,17 +65,8 @@ export const AUDIT_TEMPLATE = `
 `;
 
 export const AUDIT_CONST = `
-  const auditForm = ref();
   // 审核通过加载状态
-  const passLoading = ref(false);
-  // 审核拒绝加载状态
-  const rejectLoading = ref(false);
-  // 审核弹窗
-  const auditVisible = ref(false);
-  const auditModalState = reactive({
-    // 审核不通过原因
-    remark: '',
-  });
+  const auditLoading = ref(false);
   `;
 
 export const INSERT_FUNCTION = `
@@ -141,19 +132,22 @@ export const AUDIT_FUNCTION = `
       message.warning('仅【已提交】状态可审核通过！');
       return;
     }
-    passLoading.value = true;
-    const [err, _res] = await to(
-      auditPass({
+    auditLoading.value = true;
+    const [err, _res] = await auditPass({
         list: checkboxRecords,
-      }),
-    );
-    passLoading.value = false;
+      });
+    auditLoading.value = false;
     if (err) {
       return;
     }
     await vxeInstance.reload();
   };
+`;
 
+/**
+ * 审批拒绝WMS
+ */
+export const AUDIT_REJECT_FUNCTION_WMS = `
   /**
    * 审核拒绝，打开审核弹框
    */
@@ -168,30 +162,111 @@ export const AUDIT_FUNCTION = `
       return;
     }
 
-    auditVisible.value = true;
-  };
+      const [registerForm, { validate }] = useForm({
+        labelWidth: 80,
+        size: 'small',
+        showActionButtonGroup: false,
+        schemas: [{
+                    field: 'reason',
+                    label: '不通过原因',
+                    colProps: {
+                      span: 24,
+                    },
+                    component: 'InputTextArea',
+                    componentProps: {
+                      autoSize: { minRows: 2, maxRows: 4 },
+                    },
+                    required: true,
+                  }],
+      });
 
+      Modal.confirm({
+        zIndex: 1099,
+        title: '审核不通过',
+        content: h(BasicForm, {
+            onRegister: registerForm,
+          }),
+        width: 650,
+        okText: '提交',
+        cancelText: '取消',
+        onOk: async () => {
+          const result = await validate();
+          await auditNotPass({
+          ...result,
+          list: checkboxRecords,
+          });
+          message.success('操作成功');
+          await vxeInstance.reload();
+        },
+        onCancel: () => {},
+      });
+      
+  };
+`;
+
+/**
+ * 审批拒绝TMS
+ */
+export const AUDIT_REJECT_FUNCTION_TMS = `
   /**
-   * 审核拒绝回调
+   * 审核拒绝，打开审核弹框
    */
-  const handleAuditConfirm = async () => {
-    await auditForm.value?.validate();
+  const handleAuditReject = async () => {
     const checkboxRecords = xTable.value.getCheckboxRecords();
-    rejectLoading.value = true;
-    const [err] = await to(
-      auditNotPass({
-        list: checkboxRecords,
-        ...auditModalState,
-      }),
-    ).finally(() => {
-      rejectLoading.value = false;
-      auditModalState.remark = '';
-    });
-    if (err) {
+    if (!checkboxRecords.length) {
+      message.warning('请先选择行项目！');
       return;
     }
-    message.success('操作成功');
-    await vxeInstance.reload();
+    if (checkboxRecords.some((item: any) => item.status !== '已提交')) {
+      message.warning('仅【已提交】状态可审核通过！');
+      return;
+    }
+
+      const [BasicForm, { validate, getValues }] = useVbenForm(
+        reactive({
+          commonConfig: {
+              labelWidth: 80,
+          },
+          schema: [{
+                    fieldName: 'reason',
+                    label: '不通过原因',
+                    colProps: {
+                      span: 24,
+                    },
+                    component: InputTextArea,
+                    componentProps: {
+                      autoSize: { minRows: 2, maxRows: 4 },
+                    },
+                    rules: z.string().min(1, '必填项'),
+                  }],
+          showDefaultActions: false,
+        }),
+      )
+
+      Modal.confirm({
+        zIndex: 1099,
+        title: '审核不通过',
+        content: h(BasicForm),
+        width: 650,
+        okText: '提交',
+        cancelText: '取消',
+        onOk: async () => {
+          const { valid } = await validate();
+          const values = await getValues();
+          if(valid) {
+            await auditNotPass({
+              ...values,
+              list: checkboxRecords,
+            });
+            message.success('操作成功');
+            await vxeInstance.reload();
+          } else {
+            throw new Error('校验失败');
+          }
+        },
+        onCancel: () => {},
+      });
+      
   };
 `;
 
@@ -231,6 +306,7 @@ export const PAGE_CONTAINER_WMS = `
         @@@vxeSlotText@@@
       </vxe-grid>
     </VxeContainer>
+    @@@auditTemplate@@@
   </PageContainer>
 </template>
 `;

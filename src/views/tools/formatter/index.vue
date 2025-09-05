@@ -109,6 +109,7 @@
               <Checkbox v-model:checked="pageState.allowExport" size="small"> 可导出 </Checkbox>
               <Checkbox v-model:checked="pageState.allowImport" size="small"> 可导入 </Checkbox>
               <Checkbox v-model:checked="pageState.allowAudit" size="small"> 可审核 </Checkbox>
+              <Checkbox v-model:checked="pageState.allowSummary" size="small"> 添加合计 </Checkbox>
             </Space>
           </Form>
         </template>
@@ -187,6 +188,8 @@
     AUDIT_BUTTON,
     AUDIT_CONST,
     AUDIT_FUNCTION,
+    AUDIT_REJECT_FUNCTION_TMS,
+    AUDIT_REJECT_FUNCTION_WMS,
     AUDIT_TEMPLATE,
     capitalizeFirstLetter,
     EXPORT_BUTTON,
@@ -332,12 +335,20 @@
   ]);
 
   const pageState = reactive<{
+    // 勾选
     allowCheckbox: boolean;
+    // 新增
     allowInsert: boolean;
+    // 删除
     allowRemove: boolean;
+    // 导出
     allowExport: boolean;
+    // 导入
     allowImport: boolean;
+    // 审批
     allowAudit: boolean;
+    // 合计
+    allowSummary: boolean;
     title: string;
     mode: 'TMS' | 'WMS';
   }>({
@@ -347,12 +358,14 @@
     allowExport: true,
     allowImport: true,
     allowAudit: false,
+    allowSummary: false,
     mode: 'WMS',
     title: '',
   });
 
   const importSet = new Set<String>();
   const antDesignVueSet = new Set<String>();
+  const vueSet = new Set<String>();
   const comboxSet = new Set<String>();
   const wahahaWuiSet = new Set<String>(['PageContainer', 'QueryFilterContainer', 'VxeContainer']);
   antDesignVueSet.add('Button');
@@ -571,7 +584,8 @@
    */
   const generateImportCode = () => {
     /* eslint-disable */
-    importSet.add(`import { reactive, ref } from 'vue';`);
+    vueSet.add('reactive');
+    vueSet.add('ref');
     importSet.add(
       `import { ${Array.from(wahahaWuiSet).sort().join(', ')} } from '@wahaha/wui-pro-components';`,
     );
@@ -586,10 +600,28 @@
         `import { list${allowEdit.value || pageState.allowRemove ? ', saveEntity' : ''} } from './service';`,
       );
     }
-    if (pageState.allowRemove) {
+    // 允许删除则添加消息和模态框组件
+    if (pageState.allowRemove || pageState.allowAudit) {
       antDesignVueSet.add('message');
       antDesignVueSet.add('Modal');
     }
+    // 添加合计则添加合计函数
+    if (pageState.allowSummary) {
+      if (pageState.mode === 'WMS') {
+        importSet.add("import { columnSum } from '/@/utils/vxe-table';");
+      } else {
+        importSet.add("import { columnSum } from '@/utils/vxe-table';");
+      }
+    }
+    if (pageState.allowAudit) {
+      vueSet.add('h');
+      if (pageState.mode === 'WMS') {
+        importSet.add("import { BasicForm, useForm } from '/@/components/Form';");
+      } else {
+        importSet.add("import { useVbenForm, z } from '@vben-core/form-ui';");
+      }
+    }
+    importSet.add(`import { ${Array.from(vueSet).sort().join(', ')} } from 'vue';`);
     importSet.add(
       `import { ${Array.from(antDesignVueSet).sort().join(', ')} } from 'ant-design-vue';`,
     );
@@ -615,7 +647,7 @@
   const generateToolbar = () => {
     /* eslint-disable */
     toolbarButtonsText.value = '';
-    if (pageState.allowRemove || allowEdit.value) {
+    if (pageState.allowRemove || pageState.allowAudit || allowEdit.value) {
       toolbarButtonsText.value = TOOLBAR_START;
       if (pageState.allowInsert) {
         toolbarButtonsText.value += INSERT_BUTTON;
@@ -679,6 +711,8 @@
     if (allowEdit.value) {
       gridOptionsText.push('editConfig: {},');
       gridOptionsText.push('keepSource: true,');
+    }
+    if (allowEdit.value || pageState.allowAudit || pageState.allowRemove) {
       gridOptionsText.push(`toolbarConfig: { slots: { buttons: 'toolbar_buttons' } },`);
     }
     if (editItemList.value.length > 0) {
@@ -733,6 +767,33 @@
     const columnsText = JSON.stringify(columnList, null, 2);
     gridOptionsText.push(`columns: ${columnsText},`);
     gridOptionsText.push(`showHeaderOverflow: 'tooltip',`);
+
+    // 添加合计
+    if (pageState.allowSummary) {
+      const columnIndex = pageState.allowCheckbox ? 1 : 0;
+      const numberColumns = resultColumns.filter((item) => item.cellType === 'number');
+      if (numberColumns.length > 0) {
+        const numberFieldList = numberColumns.map((item) => `'${item.field}'`);
+        const numberTitleList = numberColumns.map((item) => item.title);
+        const footerMethod = `showFooter: true,
+            footerMethod: ({ columns, data }) => {
+              return [
+                columns.map((column, columnIndex) => {
+                  if (columnIndex === ${columnIndex}) {
+                    return '合计';
+                  }
+                  // ${numberTitleList.join(' ')}
+                  if ([${numberFieldList.join(',')}].includes(column.field)) {
+                    return columnSum(data, column.field);
+                  }
+                  return null;
+                }),
+              ];
+            },
+    `;
+        gridOptionsText.push(footerMethod);
+      }
+    }
     gridOptionsText.push(`});`);
 
     const vxeDefaultPropsText: string[] = [
@@ -781,6 +842,11 @@
     }
     if (pageState.allowAudit) {
       functionText.push(AUDIT_FUNCTION);
+      if (pageState.mode === 'WMS') {
+        functionText.push(AUDIT_REJECT_FUNCTION_WMS);
+      } else {
+        functionText.push(AUDIT_REJECT_FUNCTION_TMS);
+      }
     }
     if (pageState.allowExport) {
       functionText.push(EXPORT_FUNCTION(pageState.title));
@@ -826,7 +892,8 @@
     checkboxFieldList.value = checkboxRecords.map((item) => item.field);
     searchItemList.value = checkboxRecords.filter((item) => item.isSearch);
     editItemList.value = checkboxRecords.filter((item) => item.isEdit);
-    allowEdit.value = pageState.allowInsert || editItemList.value.length > 0;
+    allowEdit.value =
+      pageState.allowInsert || pageState.allowImport || editItemList.value.length > 0;
 
     const searchFormItemList: string[] = [];
     const editSlotList: string[] = [];
