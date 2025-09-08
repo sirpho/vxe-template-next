@@ -7,6 +7,7 @@ enum Api {
   rename = 'https://localhost.sirpho.top:23456/api/file/rename',
   removeStaleRecords = 'https://localhost.sirpho.top:23456/api/tiktok/remove/stale/records',
   removePathRecords = 'https://localhost.sirpho.top:23456/api/tiktok/remove/path/records',
+  updateCategorizeAddress = 'https://localhost.sirpho.top:23456/api/tiktok/categorize/address/update',
   generateDancer = '/api/dancer/generate',
   repeat = '/api/tiktok/repeat',
 }
@@ -58,6 +59,13 @@ export const removeStaleRecords = () => {
  */
 export const removePathRecords = (data: any[]) => {
   return defHttp.post({ url: Api.removePathRecords, data, timeout: 60 * 60 * 1000 });
+};
+
+/**
+ * @description: 归档文件重新处理
+ */
+export const updateCategorizeAddress = () => {
+  return defHttp.post({ url: Api.updateCategorizeAddress, timeout: 60 * 60 * 1000 });
 };
 
 export const tiktokColumns = [

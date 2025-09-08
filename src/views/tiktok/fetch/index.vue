@@ -6,6 +6,9 @@
         <Button @click="handleIncrement" :loading="loadingIncrement" type="primary">
           增量文件重命名
         </Button>
+        <Button @click="handleCategorize" :loading="loadingCategorize" type="primary">
+          归档文件重新处理
+        </Button>
         <Button @click="handleStock" :loading="loadingStock">全量重新生成</Button>
       </div>
       <br />
@@ -54,6 +57,7 @@
         <br />
         <Divider>文件处理结果</Divider>
         <Divider v-if="resultMessage">{{ resultMessage }}</Divider>
+        <Divider v-if="periodTime">耗时{{ periodTime }}</Divider>
 
         <vxe-grid
           v-bind="{ ...gridOptions }"
@@ -79,7 +83,7 @@
 
 <script lang="ts" setup>
   import { Button, Checkbox, Divider, Form, FormItem, Input, message } from 'ant-design-vue';
-  import { reactive, ref } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import {
     increment,
     rename,
@@ -92,15 +96,18 @@
     colors,
     removeStaleRecords,
     removePathRecords,
+    updateCategorizeAddress,
   } from './service';
   import { VxeContainer, PageContainer } from '@/components/Layout';
   import { VxeGridProps } from 'vxe-table';
   import { hexToRGBA } from '@/utils/color';
   import { adds, thousandsSeparator } from '@sirpho/utils';
   import { formatSize } from '@/utils/formatter';
+  import { formatDuration } from '@sirpho/utils/util';
 
   const loadingGenerateDancer = ref(false);
   const loadingIncrement = ref(false);
+  const loadingCategorize = ref(false);
   const loadingStock = ref(false);
   const loadingRepeat = ref(false);
   const loadingRemove = ref(false);
@@ -161,14 +168,26 @@
     },
   });
 
+  const startTime = ref(0);
+  const endTime = ref(0);
+
   /**
    * 初始化
    */
   const init = () => {
+    startTime.value = new Date().getTime();
+    endTime.value = 0;
     resultMessage.value = '';
     showRemove.value = false;
     tableList.value = [];
   };
+
+  const periodTime = computed(() => {
+    if (startTime.value >= endTime.value) {
+      return '';
+    }
+    return formatDuration((endTime.value - startTime.value) / 1000);
+  });
 
   /**
    * 增量文件重命名
@@ -193,6 +212,33 @@
     tableList.value = [...exceptionList, ...resultList];
     resultMessage.value = `新增文件记录${res.data.increaseCount}条，新增标签记录${res.data.tagCount}条`;
     message.success(resultMessage.value);
+    endTime.value = new Date().getTime();
+  };
+
+  /**
+   * 归档文件重新处理
+   */
+  const handleCategorize = async () => {
+    init();
+    loadingCategorize.value = true;
+    const res = await updateCategorizeAddress().finally(() => {
+      loadingCategorize.value = false;
+    });
+    tableColumns.value = tiktokColumns;
+    const exceptionList = (res.data.exceptionList || []).map((item) => ({
+      ...item,
+      exception: true,
+    }));
+
+    const resultList = (res.data.resultList || []).map((item) => ({
+      ...item,
+      exception: false,
+    }));
+
+    tableList.value = [...exceptionList, ...resultList];
+    resultMessage.value = `处理文件记录${res.data.increaseCount}条，处理标签记录${res.data.tagCount}条`;
+    message.success(resultMessage.value);
+    endTime.value = new Date().getTime();
   };
 
   /**
@@ -218,6 +264,7 @@
     tableList.value = [...exceptionList, ...resultList];
     resultMessage.value = `新增文件记录${res.data.increaseCount}条，新增标签记录${res.data.tagCount}条`;
     message.success(resultMessage.value);
+    endTime.value = new Date().getTime();
   };
 
   /**
@@ -239,6 +286,7 @@
       colorMap[item.md5] = colorMap[item.md5] || hexToRGBA(colors[i++ % colors.length], 0.2);
       item.color = colorMap[item.md5];
     });
+    endTime.value = new Date().getTime();
   };
 
   /**
@@ -252,6 +300,7 @@
     });
     resultMessage.value = `本次共移除${res.data}条记录`;
     message.success(resultMessage.value);
+    endTime.value = new Date().getTime();
   };
 
   /**
@@ -283,6 +332,7 @@
     });
 
     message.success(`整理完成`);
+    endTime.value = new Date().getTime();
   };
 
   /**
@@ -298,5 +348,6 @@
     tableList.value = res.data.list || [];
     resultMessage.value = `重命名数量${res.data.renameCount}条，删除已收录的重复文件${res.data.removeCount}条`;
     message.success(resultMessage.value);
+    endTime.value = new Date().getTime();
   };
 </script>
