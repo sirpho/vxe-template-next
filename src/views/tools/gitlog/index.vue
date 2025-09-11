@@ -72,6 +72,7 @@
   const options = ref([
     { label: '松裕信息化系统', value: 732, dev: 'development' },
     { label: 'wms分厂仓储系统', value: 643, dev: 'development' },
+    { label: '铲板系统', value: 969, dev: 'dev' },
     { label: '资金链系统', value: 769, dev: 'dev' },
     { label: '基建系统', value: 784, dev: 'dev' },
     { label: '迅尔tms系统', value: 943, dev: 'dev' },
