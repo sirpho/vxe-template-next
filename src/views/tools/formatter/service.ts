@@ -33,7 +33,7 @@ export const EXPORT_FUNCTION = (name: string) => {
   /**
  * 导出方法
  */
-function handleExport() {
+const handleExport = () => {
   xTable.value.exportData({
     filename: '${name || '导出文件'}',
     columnFilterMethod: (params: any) => {
@@ -73,7 +73,7 @@ export const INSERT_FUNCTION = `
 /**
  * 新增
  */
-async function handleInsertLine() {
+const handleInsertLine = async () => {
   // 新增行默认值
   const record = {};
   const { row: newRow } = await xTable.value.insertAt(record, null);

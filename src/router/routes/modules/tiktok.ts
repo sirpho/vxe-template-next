@@ -94,6 +94,18 @@ const route: AppRouteModule = {
         title: t('routes.tiktok.fetch'),
       },
     },
+    /**
+     * ffmpeg
+     */
+    {
+      path: 'ffmpeg',
+      name: 'Ffmpeg',
+      component: () => import('@/views/tiktok/ffmpeg/index.vue'),
+      meta: {
+        icon: 'eos-icons:api',
+        title: t('routes.tiktok.ffmpeg'),
+      },
+    },
   ],
 };
 

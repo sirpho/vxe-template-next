@@ -617,7 +617,7 @@
       if (pageState.mode === 'WMS') {
         importSet.add("import { BasicForm, useForm } from '/@/components/Form';");
       } else {
-        importSet.add("import { useVbenForm, z } from '@vben-core/form-ui';");
+        importSet.add("import { useVbenForm, z } from '#/adapter/form';");
       }
     }
     importSet.add(`import { ${Array.from(vueSet).sort().join(', ')} } from 'vue';`);
