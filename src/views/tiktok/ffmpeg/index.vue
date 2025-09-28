@@ -340,6 +340,11 @@ pause > nul`;
     height: 100%;
     padding: 12px;
 
+    .ant-upload-wrapper {
+      flex: 1;
+      overflow: hidden;
+    }
+
     .clear-btn {
       position: absolute;
       right: 7px;
@@ -350,6 +355,11 @@ pause > nul`;
     :deep(.ant-upload-select) {
       width: 100%;
       margin-bottom: 8px;
+    }
+
+    :deep(.ant-upload-list) {
+      height: 100%;
+      overflow: auto;
     }
 
     :deep(.ant-upload) {
