@@ -41,9 +41,14 @@
         <FormItem prop="path" :rules="[{ required: true, message: '路径必填' }]">
           <Input placeholder="路径" v-model:value="formState.path" />
         </FormItem>
-        <FormItem prop="removeExisted">
-          <Checkbox v-model:checked="formState.removeExisted">删除已收录的</Checkbox>
-        </FormItem>
+        <template v-if="!!formState.prefix">
+          <FormItem prop="removeExisted">
+            <Checkbox v-model:checked="formState.removeExisted">删除已收录的</Checkbox>
+          </FormItem>
+          <FormItem prop="archived">
+            <Checkbox v-model:checked="formState.archived">根据已收录的判断</Checkbox>
+          </FormItem>
+        </template>
         <div style="display: flex; justify-content: center">
           <Button html-type="submit" type="primary" :loading="loadingRename" style="width: 200px">
             开始重命名
@@ -121,6 +126,7 @@
     prefix: '',
     path: '',
     removeExisted: true,
+    archived: true,
   });
 
   const tableList = ref<any[]>([]);
