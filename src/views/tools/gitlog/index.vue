@@ -47,12 +47,13 @@
     Space,
   } from 'ant-design-vue';
   import { PageContainer, VxeContainer } from '@/components/Layout';
-  import { onMounted, reactive, ref, watch } from 'vue';
+  import { reactive, ref, watch, computed, watchEffect } from 'vue';
   import { getLog } from '@/views/tools/gitlog/service';
   import dayjs, { Dayjs } from 'dayjs';
   import { timeRangeHandler } from '@/features/dayjs';
   import { uniq } from 'lodash-es';
   import { number2CN } from '@sirpho/utils';
+  import { useDict } from '@/hooks/web/useDict';
 
   const loading = ref(false);
   const checkAll = ref(false);
@@ -68,27 +69,27 @@
       dayjs().subtract(1, 'month').endOf('month'),
     ],
   });
-
-  const options = ref([
-    { label: '松裕信息化系统', value: 732, dev: 'development' },
-    { label: 'wms分厂仓储系统', value: 643, dev: 'development' },
-    { label: '铲板系统', value: 969, dev: 'dev' },
-    { label: '资金链系统', value: 769, dev: 'dev' },
-    { label: '基建系统', value: 784, dev: 'dev' },
-    { label: '迅尔tms系统', value: 943, dev: 'dev' },
-    { label: 'srm供应链系统', value: 644, dev: 'development' },
-    { label: '综合服务系统', value: 673, dev: 'development' },
-    { label: '餐饮材料招标系统', value: 727, dev: 'development' },
+  const [gitlabOptions] = useDict([
+    'GITLAB', // gitlab项目
   ]);
 
-  onMounted(() => {
-    checkList.value = [...plainOptions.value];
-  });
+  const options = computed(() =>
+    (gitlabOptions.value || []).map((item) => ({
+      label: item.name,
+      value: item.sortOrder,
+      dev: item.value,
+    })),
+  );
 
   /**
    * 全选下拉
    */
-  const plainOptions = ref(options.value.map((item) => item.value));
+  const plainOptions = ref<any[]>([]);
+
+  watchEffect(() => {
+    plainOptions.value = options.value.map((item) => item.value);
+    checkList.value = [...plainOptions.value];
+  });
 
   /**
    * 全选

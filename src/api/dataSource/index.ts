@@ -41,6 +41,14 @@ export function getDictOptions(dictCode: string) {
         excludeDuplicates = true;
         mixLabel = false;
         break;
+      case 'GITLAB': // git项目
+        operation = getCommonList;
+        nameKey = 'name';
+        valueKey = 'value';
+        params.module = dictCode;
+        excludeDuplicates = false;
+        mixLabel = false;
+        break;
       default: // 通用枚举
         operation = getCommonList;
         nameKey = 'name';

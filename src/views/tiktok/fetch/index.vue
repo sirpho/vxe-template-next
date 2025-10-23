@@ -46,7 +46,7 @@
             <Checkbox v-model:checked="formState.removeExisted">删除已收录的</Checkbox>
           </FormItem>
           <FormItem prop="archived">
-            <Checkbox v-model:checked="formState.archived">根据已收录的判断</Checkbox>
+            <Checkbox v-model:checked="formState.archived">忽略《真·百花开》</Checkbox>
           </FormItem>
         </template>
         <div style="display: flex; justify-content: center">
