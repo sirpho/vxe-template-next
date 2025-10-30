@@ -39,7 +39,7 @@
           <Input placeholder="前缀" v-model:value="formState.prefix" />
         </FormItem>
         <FormItem prop="path" :rules="[{ required: true, message: '路径必填' }]">
-          <Input placeholder="路径" v-model:value="formState.path" />
+          <Input placeholder="路径" v-model:value="formState.path" @change="handleChangePath" />
         </FormItem>
         <template v-if="!!formState.prefix">
           <FormItem prop="removeExisted">
@@ -355,5 +355,26 @@
     resultMessage.value = `重命名数量${res.data.renameCount}条，删除已收录的重复文件${res.data.removeCount}条`;
     message.success(resultMessage.value);
     endTime.value = new Date().getTime();
+  };
+
+  function getFoldersFromPath(path: string) {
+    if (path.trim() === '') {
+      return [];
+    }
+
+    // 处理未转义的反斜杠：先将单个\替换为\\，再分割
+    // 注意：仅当路径中确实存在未转义的\时适用
+    const normalizedPath = path.replace(/\\(?!\\)/g, '\\\\');
+
+    // 按反斜杠分割并过滤空字符串
+    return normalizedPath.split(/\\/).filter((folder) => folder !== '');
+  }
+  /**
+   * 修改路径，自动带出前缀
+   */
+  const handleChangePath = () => {
+    if (formState.path) {
+      formState.prefix = getFoldersFromPath(String.raw`${formState.path}`).pop() || '';
+    }
   };
 </script>
