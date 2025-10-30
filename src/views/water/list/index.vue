@@ -44,7 +44,7 @@
             <Button size="small" type="link" @click="handleRemoveLine">删除行</Button>
           </Space>
         </template>
-        <template #toobar_tools>
+        <template #toolbar_tools>
           <Button type="link" size="small">
             <a href="https://www.xswater.com/gongshui/channels/237.html" target="_blank">
               萧山水务水费查询
@@ -155,7 +155,7 @@
   const gridOptions = reactive<VxeGridProps>({
     editConfig: {},
     keepSource: true,
-    toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toobar_tools' } },
+    toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toolbar_tools' } },
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },

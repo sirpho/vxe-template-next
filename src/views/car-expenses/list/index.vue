@@ -36,6 +36,14 @@
             <Button size="small" type="link" @click="handleRemoveLine">删除行</Button>
           </Space>
         </template>
+        <template #toolbar_tools>
+          <Space v-if="totalList.length">
+            合计：
+            <span v-for="item in totalList" :key="item.label">
+              {{ item.label }}：{{ thousandsSeparator(item.value) }}元
+            </span>
+          </Space>
+        </template>
         <!-- 可编辑列 -->
         <!-- 日期 -->
         <template #date="{ row }">
@@ -51,6 +59,9 @@
         <!-- 类型 -->
         <template #type="{ row }">
           <ComboBox v-model:value="row.type" v-bind="{ ...typeOptions }" :data="typeList" />
+        </template>
+        <template #type_default="{ row }">
+          <Tag v-if="row.type" :color="getTagColor(row)">{{ row.type }}</Tag>
         </template>
         <!-- 费用 -->
         <template #cost="{ row }">
@@ -86,6 +97,7 @@
     Input,
     InputNumber,
     DatePicker,
+    Tag,
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list, typeOptions } from './service';
@@ -93,6 +105,7 @@
   import { ComboBox } from '@/components/Box';
   import dayjs from 'dayjs';
   import { adds, thousandsSeparator } from '@sirpho/utils';
+  import { groupBy } from 'lodash-es';
 
   interface FormState {
     year: string;
@@ -106,6 +119,7 @@
 
   const xTable = ref({} as VxeTableInstance);
   const tableList = ref<any[]>([]);
+  const totalList = ref<any[]>([]);
   const tableLoading = ref(false);
   const submitLoading = ref(false);
 
@@ -124,7 +138,7 @@
   const gridOptions = reactive<VxeGridProps>({
     editConfig: {},
     keepSource: true,
-    toolbarConfig: { slots: { buttons: 'toolbar_buttons' } },
+    toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toolbar_tools' } },
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
@@ -143,7 +157,7 @@
         field: 'type',
         title: '类型',
         editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'type' },
+        slots: { edit: 'type', default: 'type_default' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
@@ -153,7 +167,7 @@
       {
         field: 'cost',
         title: '费用',
-        editRender: { autofocus: '.ant-input' },
+        editRender: { autofocus: '.ant-input-number-input' },
         slots: { edit: 'cost' },
         sortable: true,
         filters: [{}],
@@ -164,7 +178,7 @@
       {
         field: 'mileage',
         title: '里程',
-        editRender: { autofocus: '.ant-input' },
+        editRender: { autofocus: '.ant-input-number-input' },
         slots: { edit: 'mileage' },
         sortable: true,
         filters: [{}],
@@ -215,6 +229,16 @@
       tableLoading.value = false;
     });
     tableList.value = res.data || [];
+    const totalArray: any[] = [];
+    const map = groupBy(tableList.value, 'type');
+    for (const field in map) {
+      const subList = map[field] || [];
+      totalArray.push({
+        label: field,
+        value: adds(...subList.map((item) => item.cost)),
+      });
+    }
+    totalList.value = totalArray;
   };
 
   /**
@@ -267,6 +291,20 @@
         Modal.destroyAll();
       },
     });
+  };
+
+  /**
+   * 标签颜色
+   */
+  const getTagColor = (row: any) => {
+    switch (row.type) {
+      case '车险':
+        return '#cd201f';
+      case '保养':
+        return '#3b5999';
+      default:
+        return '#FF9500';
+    }
   };
 </script>
 <script lang="ts">
