@@ -13,7 +13,7 @@ const route: AppRouteModule = {
   meta: {
     icon: 'jam:car-f',
     title: t('routes.car-expenses.car-expenses'),
-    orderNo: 13,
+    orderNo: 16,
   },
   children: [
     /**
@@ -21,25 +21,25 @@ const route: AppRouteModule = {
      */
     {
       path: 'list',
-      name: 'car-expenses-list',
+      name: 'CarExpensesList',
       component: () => import('@/views/car-expenses/list/index.vue'),
       meta: {
         icon: 'arcticons:calgary-transit-my-fare',
         title: t('routes.car-expenses.list'),
       },
     },
-    // /**
-    //  * 统计分析
-    //  */
-    // {
-    //   path: 'car-expensesAnalysis',
-    //   name: 'car-expenses-analysis',
-    //   component: () => import('@/views/car-expenses/analysis/index.vue'),
-    //   meta: {
-    //     icon: 'carbon:text-link-analysis',
-    //     title: t('routes.car-expenses.analysis'),
-    //   },
-    // },
+    /**
+     * 统计分析
+     */
+    {
+      path: 'analysis',
+      name: 'CarExpensesAnalysis',
+      component: () => import('@/views/car-expenses/analysis/index.vue'),
+      meta: {
+        icon: 'carbon:text-link-analysis',
+        title: t('routes.car-expenses.analysis'),
+      },
+    },
   ],
 };
 

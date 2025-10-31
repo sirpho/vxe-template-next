@@ -77,6 +77,10 @@
             addon-after="公里"
           />
         </template>
+        <!-- 品牌 -->
+        <template #brand="{ row }">
+          <Input v-model:value="row.brand" size="small" />
+        </template>
         <!-- 备注 -->
         <template #memo="{ row }">
           <Input v-model:value="row.memo" size="small" />
@@ -180,6 +184,17 @@
         title: '里程',
         editRender: { autofocus: '.ant-input-number-input' },
         slots: { edit: 'mileage' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        minWidth: 130,
+        width: 130,
+      },
+      {
+        field: 'brand',
+        title: '品牌',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'brand' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
