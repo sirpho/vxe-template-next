@@ -9,18 +9,21 @@
           <RadioButton value="">全部</RadioButton>
         </RadioGroup>
         <Divider />
-        <Space>
-          <RadioGroup v-model:value="valueMode" @change="handleChangeMode">
-            <RadioButton value="typeMode">按类型</RadioButton>
-            <RadioButton value="brandMode">按品牌</RadioButton>
-          </RadioGroup>
-          <Checkbox
-            v-if="valueMode === 'brandMode'"
-            v-model:checked="onlyFuel"
-            @change="handleChangeMode"
-            >只看油费</Checkbox
-          >
-        </Space>
+        <div class="mode-wrapper">
+          <Space>
+            <RadioGroup v-model:value="chartType" @change="resetOptions">
+              <RadioButton value="pie">饼图</RadioButton>
+              <RadioButton value="bar">柱状图</RadioButton>
+            </RadioGroup>
+            <Checkbox
+              v-if="chartType === 'bar'"
+              v-model:checked="onlyFuel"
+              @change="handleChangeYear"
+            >
+              只看油费
+            </Checkbox>
+          </Space>
+        </div>
 
         <div ref="chartRef" class="h-100% flex-1"></div>
       </div>
@@ -29,97 +32,79 @@
 </template>
 <script lang="ts" setup>
   import { Ref, ref, onMounted } from 'vue';
-  import { RadioGroup, RadioButton, Divider, Space, Checkbox } from 'ant-design-vue';
+  import { Checkbox, RadioGroup, RadioButton, Divider, Space } from 'ant-design-vue';
   import { useECharts } from '@/hooks/web/useECharts';
-  import { list } from './service';
+  import { getTableTemplate, list, xAxios } from './service';
   import { getLinearColorList } from '@/utils/color';
-  import { groupBy } from 'lodash-es';
+  import { groupBy, orderBy } from 'lodash-es';
   import dayjs from 'dayjs';
-  import { add } from '@sirpho/utils';
+  import { add, adds, percentage, thousandsSeparator } from '@sirpho/utils';
+  import echarts from '@/utils/lib/echarts';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
 
-  const valueMode = ref<'typeMode' | 'brandMode'>('typeMode');
-
+  // echart类型
+  const chartType = ref<'pie' | 'bar'>('pie');
+  // 只看油费
+  const onlyFuel = ref(false);
   const year = ref(dayjs().format('YYYY年'));
 
   const originList = ref<any[]>([]);
   const echartData = ref<any[]>([]);
   const typeGroupBy = ref<any>({});
-  const brandGroupBy = ref<any>({});
-  const onlyFuel = ref<boolean>(false);
 
   const yearGroupBy = ref<any>({});
+  // 年过滤数据
   const yearFilterList = ref<any[]>([]);
+  // 油费过滤数据
+  const filterFuelList = ref<any[]>([]);
+  const monthTotalList = ref<any[]>([]);
 
   onMounted(() => {
     list().then((res) => {
       originList.value = (res.data || []).map((item: any) => ({
         ...item,
         year: dayjs(item.date).format('YYYY年'),
+        month: dayjs(item.date).format('YYYY-MM'),
       }));
       yearFilterList.value = originList.value;
 
       yearGroupBy.value = groupBy(yearFilterList.value, 'year');
       typeGroupBy.value = groupBy(yearFilterList.value, 'type');
-      brandGroupBy.value = groupBy(yearFilterList.value, 'brand');
 
       handleChangeYear();
       resetOptions();
     });
   });
 
-  const getModeName = () => {
-    switch (valueMode.value) {
-      case 'typeMode':
-        return '类型';
-      case 'brandMode':
-        return '品牌';
-    }
-  };
-
   /**
-   * 更新echarts
+   * 饼图展示
    */
-  const resetOptions = () => {
+  const resetBieOptions = () => {
     echartData.value = [];
     // 次数
-    const countMap: Record<string, number> = {};
+    const result: Record<string, number> = {};
     // 金额
-    const moneyMap: Record<string, number> = {};
+    const totalMap: Record<string, number> = {};
 
-    const list =
-      onlyFuel.value && valueMode.value === 'brandMode'
-        ? yearFilterList.value.filter((item) => item.type === '油费')
-        : yearFilterList.value;
-
-    list.forEach((item) => {
-      let nameField: string;
-      switch (valueMode.value) {
-        case 'typeMode':
-          nameField = 'type';
-          break;
-        case 'brandMode':
-          nameField = 'brand';
-          break;
-      }
-      if (countMap[item[nameField]]) {
-        countMap[item[nameField]] = countMap[item[nameField]] + 1;
+    yearFilterList.value.forEach((item) => {
+      if (result[item.type]) {
+        result[item.type] = result[item.type] + 1;
       } else {
-        countMap[item[nameField]] = 1;
+        result[item.type] = 1;
       }
-      if (moneyMap[item[nameField]]) {
-        moneyMap[item[nameField]] = add(moneyMap[item[nameField]], item.cost);
+      if (totalMap[item.type]) {
+        totalMap[item.type] = add(totalMap[item.type], item.cost);
       } else {
-        moneyMap[item[nameField]] = item.cost || 0;
+        totalMap[item.type] = item.cost || 0;
       }
     });
     const resultList: any[] = [];
-    for (const field of Object.keys(countMap)) {
+    for (const field of Object.keys(result)) {
       resultList.push({
         name: field,
-        value: moneyMap[field],
+        value: totalMap[field],
       });
     }
     echartData.value = resultList;
@@ -129,17 +114,32 @@
         trigger: 'item',
         formatter: (info: any) => {
           const { value, name, percent } = info;
+          let list = typeGroupBy.value[name] || [];
+          const countMap = groupBy(list, 'brand');
+
+          const trList: any[] = [];
+          for (const field in countMap) {
+            const currentBrandTotalMoney = adds(
+              ...(countMap[field] || []).map((item: any) => item.cost),
+            );
+            trList.push({
+              name: field,
+              count: countMap[field].length,
+              total: currentBrandTotalMoney,
+            });
+          }
+          const echartTable = getTableTemplate(trList, trList.length > 1);
 
           return [
-            `<div class="echarts-tooltip-title">${name} * ${countMap[name]}次</div>`,
-            `<div class="echarts-tooltip-title">${value}元，占比${percent}%</div>`,
+            `<div class="echarts-tooltip-title">${name} × ${result[name]}次，合计${thousandsSeparator(value)}元，占比${percent}%</div>`,
+            echartTable,
           ].join('');
         },
       },
       series: [
         {
           color: getLinearColorList('#6F6F6F'),
-          name: getModeName(),
+          name: '类型',
           type: 'pie',
           radius: '55%',
           center: ['50%', '50%'],
@@ -147,6 +147,90 @@
         },
       ],
     });
+  };
+
+  /**
+   * 柱状图展示
+   */
+  const resetBarOptions = () => {
+    const options = {
+      tooltip: {
+        trigger: 'item',
+        formatter: (info: any) => {
+          const { value, name } = info;
+          const yearTotalMoney = adds(...filterFuelList.value.map((item: any) => item.cost));
+          let list = filterFuelList.value
+            .map((item: any) => ({
+              ...item,
+              monthChinese: getMonthChinese(item.month),
+            }))
+            .filter((item: any) => item.monthChinese === name);
+
+          const countMap = groupBy(list, 'brand');
+
+          const trList: any[] = [];
+          for (const field in countMap) {
+            const currentBrandTotalMoney = adds(
+              ...(countMap[field] || []).map((item: any) => item.cost),
+            );
+            trList.push({
+              name: field,
+              count: countMap[field].length,
+              total: currentBrandTotalMoney,
+            });
+          }
+          const echartTable = getTableTemplate(trList, trList.length > 1);
+
+          return [
+            `<div class="echarts-tooltip-title">${name}，合计${thousandsSeparator(value)}元，占比${percentage(value / yearTotalMoney)}</div>`,
+            echartTable,
+          ].join('');
+        },
+      },
+      xAxis: [
+        {
+          type: 'category',
+          data: xAxios,
+          axisPointer: {
+            type: 'shadow',
+          },
+          axisTick: false,
+        },
+      ],
+      yAxis: [
+        {
+          splitLine: { show: true },
+          type: 'value',
+          name: '金额',
+          min: 0,
+          axisLabel: {
+            formatter: '{value} 元',
+          },
+        },
+      ],
+      series: [
+        {
+          name: '金额',
+          type: 'bar',
+          tooltip: {
+            valueFormatter: function (value: any) {
+              return echarts.format.addCommas(value) + ' 元';
+            },
+          },
+          itemStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: '#6F6F6F' },
+                { offset: 1, color: '#6B727C' },
+              ]),
+            },
+          },
+          yAxisIndex: 0,
+          data: monthTotalList.value,
+        },
+      ],
+    };
+    setOptions(options);
   };
 
   /**
@@ -159,16 +243,61 @@
       yearFilterList.value = yearGroupBy.value[year.value] || [];
     }
     typeGroupBy.value = groupBy(yearFilterList.value, 'type');
-    brandGroupBy.value = groupBy(yearFilterList.value, 'brand');
+    const totalList: number[] = [];
+    filterFuelList.value = onlyFuel.value
+      ? yearFilterList.value.filter((item) => item.type === '油费')
+      : yearFilterList.value;
 
+    const monthMap = groupBy(filterFuelList.value, 'month');
+    orderBy(Object.keys(monthMap)).forEach((field) => {
+      const list = monthMap[field] || [];
+      totalList.push(adds(...list.map((item: any) => item.cost)));
+    });
+    monthTotalList.value = totalList;
     resetOptions();
   };
 
   /**
-   * 修改统计维度
+   * 修改echart类型
    */
-  const handleChangeMode = () => {
-    resetOptions();
+  const resetOptions = () => {
+    if (chartType.value === 'pie') {
+      resetBieOptions();
+    } else {
+      resetBarOptions();
+    }
+  };
+
+  const getMonthChinese = (month: string) => {
+    const monthFormat = dayjs(month).format('MM');
+    switch (monthFormat) {
+      case '01':
+        return '一月';
+      case '02':
+        return '二月';
+      case '03':
+        return '三月';
+      case '04':
+        return '四月';
+      case '05':
+        return '五月';
+      case '06':
+        return '六月';
+      case '07':
+        return '七月';
+      case '08':
+        return '八月';
+      case '09':
+        return '九月';
+      case '10':
+        return '十月';
+      case '11':
+        return '十一月';
+      case '12':
+        return '十二月';
+      default:
+        return '其他';
+    }
   };
 </script>
 <script lang="ts">
@@ -176,3 +305,10 @@
     name: 'CarExpensesAnalysis',
   };
 </script>
+<style lang="less" scoped>
+  .mode-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+</style>

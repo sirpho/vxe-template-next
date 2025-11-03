@@ -17,3 +17,40 @@
 .echarts-tooltip-title {
   font-weight: bold;
 }
+
+/* 表格核心样式 */
+.echarts-tooltip-table {
+  width: 100%;
+  border-collapse: collapse; /* 合并边框 */
+  background-color: #fff;
+}
+
+/* 表头样式 */
+.echarts-tooltip-table thead th {
+  padding: 6px 8px;
+  border-bottom: 1px solid #34495e;
+  background-color: #2c3e50;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* 表格内容样式 */
+.echarts-tooltip-table tbody td {
+  padding: 6px 8px;
+  transition: background-color 0.2s ease; /* 过渡效果 */
+  border-bottom: 1px solid #e0e6ed;
+  color: #333;
+  font-size: 12px;
+}
+
+/* 交替行背景（可选） */
+.echarts-tooltip-table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+/* 最后一行去除下边框 */
+.echarts-tooltip-table tbody tr:last-child td {
+  border-bottom: none;
+}

@@ -121,7 +121,7 @@
     setOptions({
       tooltip: {
         trigger: 'item',
-        formatter: (info) => {
+        formatter: (info: any) => {
           const { value, name, percent } = info;
           let list = [];
           switch (valueMode.value) {
