@@ -243,7 +243,7 @@
       yearFilterList.value = yearGroupBy.value[year.value] || [];
     }
     typeGroupBy.value = groupBy(yearFilterList.value, 'type');
-    const totalList: number[] = [];
+    const totalList: number[] = new Array(12).fill(0);
     filterFuelList.value = onlyFuel.value
       ? yearFilterList.value.filter((item) => item.type === '油费')
       : yearFilterList.value;
@@ -251,7 +251,8 @@
     const monthMap = groupBy(filterFuelList.value, 'month');
     orderBy(Object.keys(monthMap)).forEach((field) => {
       const list = monthMap[field] || [];
-      totalList.push(adds(...list.map((item: any) => item.cost)));
+      const index = new Date(field).getMonth();
+      totalList[index] = adds(...list.map((item: any) => item.cost));
     });
     monthTotalList.value = totalList;
     resetOptions();

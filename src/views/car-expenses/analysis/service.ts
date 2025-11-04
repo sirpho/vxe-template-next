@@ -17,7 +17,7 @@ export const tableTemplate = `
 <table class="echarts-tooltip-table">
     <thead>
         <tr>
-            <th>明细</th>
+            <th style="width: 80px">明细</th>
             <th>次数</th>
             <th>占比</th>
             <th>金额</th>
@@ -32,7 +32,7 @@ export const tableTemplate2 = `
 <table class="echarts-tooltip-table">
     <thead>
         <tr>
-            <th>明细</th>
+            <th style="width: 80px">明细</th>
             <th>次数</th>
             <th>金额</th>
         </tr>
