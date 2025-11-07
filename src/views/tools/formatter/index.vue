@@ -619,6 +619,7 @@
       } else {
         importSet.add("import { useVbenForm, z } from '#/adapter/form';");
       }
+      importSet.add(`import to from 'await-to-js';`);
     }
     importSet.add(`import { ${Array.from(vueSet).sort().join(', ')} } from 'vue';`);
     importSet.add(
@@ -876,6 +877,10 @@
    * 弹框确认
    */
   const handleConfirm = () => {
+    if (pageState.allowInsert || pageState.allowRemove || pageState.allowAudit) {
+      pageState.allowCheckbox = true;
+    }
+
     if (pageState.allowCheckbox) {
       columns.value = [
         { type: 'checkbox', width: 40, fixed: 'left', align: 'center' },

@@ -133,9 +133,9 @@ export const AUDIT_FUNCTION = `
       return;
     }
     auditLoading.value = true;
-    const [err, _res] = await auditPass({
+    const [err, _res] = await to(auditPass({
         list: checkboxRecords,
-      });
+      }));
     auditLoading.value = false;
     if (err) {
       return;
