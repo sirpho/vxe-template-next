@@ -140,6 +140,7 @@ export const AUDIT_FUNCTION = `
     if (err) {
       return;
     }
+    message.success('操作成功');
     await vxeInstance.reload();
   };
 `;

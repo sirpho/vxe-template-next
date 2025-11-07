@@ -612,6 +612,7 @@
         importSet.add("import { columnSum } from '@/utils/vxe-table';");
       }
     }
+    // 可审核
     if (pageState.allowAudit) {
       vueSet.add('h');
       if (pageState.mode === 'WMS') {
@@ -620,6 +621,7 @@
         importSet.add("import { useVbenForm, z } from '#/adapter/form';");
       }
       importSet.add(`import to from 'await-to-js';`);
+      antDesignVueSet.add('message');
     }
     importSet.add(`import { ${Array.from(vueSet).sort().join(', ')} } from 'vue';`);
     importSet.add(
