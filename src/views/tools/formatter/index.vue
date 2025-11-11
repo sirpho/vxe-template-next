@@ -585,6 +585,9 @@
     /* eslint-disable */
     vueSet.add('reactive');
     vueSet.add('ref');
+    if (pageState.allowImport) {
+      wahahaWuiSet.add('UploadModal');
+    }
     importSet.add(
       `import { ${Array.from(wahahaWuiSet).sort().join(', ')} } from '@wahaha/wui-pro-components';`,
     );
