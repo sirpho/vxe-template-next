@@ -174,8 +174,8 @@
   const totalWordCount = ref<number>(0);
 
   const [readStatusList, writeStatusList] = useDict([
-    'NOVEL_READ_STATUS', // 小说阅读状态
-    'NOVEL_WRITE_STATUS', // 小说创作状态
+    '小说阅读状态', // 小说阅读状态
+    '小说创作状态', // 小说创作状态
   ]);
 
   /**

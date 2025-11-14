@@ -128,8 +128,8 @@
   const totalDuration = ref<string>('0');
 
   const [locationList, categoryList] = useDict([
-    'FILM_LOCATION', // 影视地区
-    'FILM_CATEGORY', // 影视大类
+    '影视地区', // 影视地区
+    '影视大类', // 影视大类
   ]);
 
   /**

@@ -138,7 +138,7 @@
   const submitLoading = ref(false);
 
   const [houseList] = useDict([
-    'WATER_HOUSE', // 用水房屋
+    '用水户号', // 用水户号
   ]);
 
   /**

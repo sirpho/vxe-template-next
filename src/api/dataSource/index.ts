@@ -34,14 +34,14 @@ export function getDictOptions(dictCode: string) {
       limit: undefined,
     };
     switch (dictCode) {
-      case 'TAG': // 标签
+      case '药品标签': // 标签
         operation = getTagList;
         nameKey = 'name';
         valueKey = 'id';
         excludeDuplicates = true;
         mixLabel = false;
         break;
-      case 'GITLAB': // git项目
+      case 'gitlab项目': // gitlab项目
         operation = getCommonList;
         nameKey = 'name';
         valueKey = 'value';

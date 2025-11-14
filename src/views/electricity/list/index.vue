@@ -119,7 +119,7 @@
   const submitLoading = ref(false);
 
   const [houseList] = useDict([
-    'ELECTRICITY_HOUSE', // 用电房屋
+    '用电户号', // 用电户号
   ]);
 
   /**

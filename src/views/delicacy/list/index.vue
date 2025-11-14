@@ -158,7 +158,7 @@
   const submitLoading = ref(false);
 
   const [delicacyTypeList] = useDict([
-    'DELICACY_TYPE', // 类型
+    '美食类型', // 类型
   ]);
 
   /**

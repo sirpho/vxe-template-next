@@ -70,7 +70,7 @@
     ],
   });
   const [gitlabOptions] = useDict([
-    'GITLAB', // gitlab项目
+    'gitlab项目', // gitlab项目
   ]);
 
   const options = computed(() =>

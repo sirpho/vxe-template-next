@@ -57,9 +57,9 @@ export default defineComponent({
       unit: '盒',
     });
     const [tagList, unitList, typeList] = useDict([
-      'TAG', // 标签列表
-      'UNIT', // 单位列表
-      'TYPE', // 类别列表
+      '药品标签', // 药品标签
+      '药物单位', // 药物单位
+      '药品类别', // 药品类别
     ]);
 
     const rulesRef = reactive({ ...rules });
