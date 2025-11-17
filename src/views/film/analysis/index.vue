@@ -35,7 +35,10 @@
 
   onMounted(() => {
     analysis().then((res) => {
-      originList.value = res.data || [];
+      originList.value = (res.data || []).map((item: any) => ({
+        ...item,
+        watchDate: item.watchDate || '2000-01-01',
+      }));
       typeGroupBy.value = groupBy(originList.value, 'type');
       locationGroupBy.value = groupBy(originList.value, 'location');
       categoryGroupBy.value = groupBy(originList.value, 'category');
@@ -127,12 +130,16 @@
           const totalDuration = divide(adds(...list.map((item: any) => item.duration)), 60).toFixed(
             2,
           );
-          list = orderBy(list, ['name'], ['asc']).map((item) => getClass(item));
+          list = orderBy(list, ['watchDate'], ['desc']).map((item) => getClass(item));
           const batchQty = list.length > 50 ? 5 : 4;
           let chunkList: any[] = [];
           for (let i = 0; i < list.length; i += batchQty) {
             const chunk = list.slice(i, i + batchQty);
             chunkList.push(chunk.join('  '));
+          }
+          if (chunkList.length > 10) {
+            chunkList = chunkList.slice(0, 10);
+            chunkList.push('......');
           }
 
           return [
