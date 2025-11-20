@@ -212,3 +212,8 @@
     message.success(`成功导出${count}篇博客！`);
   };
 </script>
+<script lang="ts">
+  export default {
+    name: 'Fetch',
+  };
+</script>

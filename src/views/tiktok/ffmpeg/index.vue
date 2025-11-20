@@ -95,7 +95,7 @@
   const fileList = ref<any[]>([]);
   // FFmpeg命令代码容器
   const ffmpegCode = ref<HTMLElement | null>(null);
-  const scriptList = ref([]);
+  const scriptList = ref<any[]>([]);
 
   /**
    * 清空文件列表
@@ -331,7 +331,11 @@ pause > nul`;
     copyText(scriptList.value.join(' && '));
   };
 </script>
-
+<script lang="ts">
+  export default {
+    name: 'Ffmpeg',
+  };
+</script>
 <style lang="less" scoped>
   .operation-bar {
     display: flex;

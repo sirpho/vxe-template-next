@@ -978,7 +978,11 @@
     });
   };
 </script>
-
+<script lang="ts">
+  export default {
+    name: 'Formatter',
+  };
+</script>
 <style lang="less" scoped>
   .wrapper {
     display: flex;

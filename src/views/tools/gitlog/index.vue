@@ -180,7 +180,11 @@
     content.value = textList.join('\n');
   };
 </script>
-
+<script lang="ts">
+  export default {
+    name: 'Gitlog',
+  };
+</script>
 <style scoped lang="less">
   .operation-bar {
     display: flex;
