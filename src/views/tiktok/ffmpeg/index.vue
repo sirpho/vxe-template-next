@@ -88,6 +88,8 @@
   const dropBeforeTime = ref('00:00:00');
   const startTime = ref('00:00:49');
   const endTime = ref('00:02:00');
+  // 总序号
+  const totalIndex = ref<number>(1);
   // 裁剪比例参数
   const rate1 = ref(1);
   const rate2 = ref(3);
@@ -142,8 +144,8 @@
     }
     const timestamp = dayjs().format('_HHmm');
     const result = fileList.value.map(
-      (item, index) =>
-        `ffmpeg -ss ${dropBeforeTime.value} -i "${item.name}" -c:v copy -c:a copy "output_drop${timestamp}_${index + 1}.${getSuffix(item.name)}"`,
+      (item) =>
+        `ffmpeg -ss ${dropBeforeTime.value} -i "${item.name}" -c:v copy -c:a copy "output_drop${timestamp}_${totalIndex.value++}.${getSuffix(item.name)}"`,
     );
     // 渲染命令并高亮
     if (ffmpegCode.value) {
@@ -163,8 +165,8 @@
     }
     const timestamp = dayjs().format('_HHmm');
     const result = fileList.value.map(
-      (item, index) =>
-        `ffmpeg -ss ${startTime.value} -to ${endTime.value} -i "${item.name}" -c copy "output_capture${timestamp}_${index + 1}.${getSuffix(item.name)}"`,
+      (item) =>
+        `ffmpeg -ss ${startTime.value} -to ${endTime.value} -i "${item.name}" -c copy "output_capture${timestamp}_${totalIndex.value++}.${getSuffix(item.name)}"`,
     );
     if (ffmpegCode.value) {
       ffmpegCode.value.textContent = result.join('\n');
@@ -183,8 +185,8 @@
     }
     const timestamp = dayjs().format('_HHmm');
     const result = fileList.value.map(
-      (item, index) =>
-        `ffmpeg -i "${item.name}" -map_metadata -1 -c:v copy -c:a copy -y "output_noMeta${timestamp}_${index + 1}.${getSuffix(item.name)}"`,
+      (item) =>
+        `ffmpeg -i "${item.name}" -map_metadata -1 -c:v copy -c:a copy -y "output_noMeta${timestamp}_${totalIndex.value++}.${getSuffix(item.name)}"`,
     );
     if (ffmpegCode.value) {
       ffmpegCode.value.textContent = result.join('\n');
@@ -203,8 +205,8 @@
     }
     const timestamp = dayjs().format('_HHmm');
     const result = fileList.value.map(
-      (item, index) =>
-        `ffmpeg -i "${item.name}" -c:v h264_nvenc -crf 23 -profile:v high -level 4.1 -preset slow -c:a copy "output_nvenc${timestamp}_${index + 1}.${getSuffix(item.name)}"`,
+      (item) =>
+        `ffmpeg -i "${item.name}" -c:v h264_nvenc -crf 23 -profile:v high -level 4.1 -preset slow -c:a copy "output_nvenc${timestamp}_${totalIndex.value++}.${getSuffix(item.name)}"`,
     );
     if (ffmpegCode.value) {
       ffmpegCode.value.textContent = result.join('\n');
@@ -223,8 +225,8 @@
     }
     const timestamp = dayjs().format('_HHmm');
     const result = fileList.value.map(
-      (item, index) =>
-        `ffmpeg -i "${item.name}" -c:v h264_amf -crf 23 -profile:v high -level 4.1 -c:a copy "output_amf${timestamp}_${index + 1}.${getSuffix(item.name)}"`,
+      (item) =>
+        `ffmpeg -i "${item.name}" -c:v h264_amf -crf 23 -profile:v high -level 4.1 -c:a copy "output_amf${timestamp}_${totalIndex.value++}.${getSuffix(item.name)}"`,
     );
     if (ffmpegCode.value) {
       ffmpegCode.value.textContent = result.join('\n');
@@ -247,8 +249,8 @@
     }
     const timestamp = dayjs().format('_HHmm');
     const result = fileList.value.map(
-      (item, index) =>
-        `ffmpeg -i "${item.name}" -vf "crop=iw*${rate1.value}/${rate2.value}:ih:0:0" -c:v libx264 -crf 18 -preset slow -c:a copy "output_left${timestamp}_${index + 1}.${getSuffix(item.name)}"`,
+      (item) =>
+        `ffmpeg -i "${item.name}" -vf "crop=iw*${rate1.value}/${rate2.value}:ih:0:0" -c:v libx264 -crf 18 -preset slow -c:a copy "output_left${timestamp}_${totalIndex.value++}.${getSuffix(item.name)}"`,
     );
     if (ffmpegCode.value) {
       ffmpegCode.value.textContent = result.join('\n');
@@ -271,8 +273,8 @@
     }
     const timestamp = dayjs().format('_HHmm');
     const result = fileList.value.map(
-      (item, index) =>
-        `ffmpeg -i "${item.name}" -vf "crop=iw*${rate1.value}/${rate2.value}:ih:iw*${rate2.value - rate1.value}/${rate2.value}:0" -c:v libx264 -crf 18 -preset slow -c:a copy "output_right${timestamp}_${index + 1}.${getSuffix(item.name)}"`,
+      (item) =>
+        `ffmpeg -i "${item.name}" -vf "crop=iw*${rate1.value}/${rate2.value}:ih:iw*${rate2.value - rate1.value}/${rate2.value}:0" -c:v libx264 -crf 18 -preset slow -c:a copy "output_right${timestamp}_${totalIndex.value++}.${getSuffix(item.name)}"`,
     );
     if (ffmpegCode.value) {
       ffmpegCode.value.textContent = result.join('\n');

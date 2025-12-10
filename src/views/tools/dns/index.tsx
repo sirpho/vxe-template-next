@@ -5,6 +5,7 @@ import { defineComponent, nextTick, onMounted, reactive } from 'vue';
 import { PageContainer, VxeContainer } from '@/components/Layout';
 import { VxeGrid, VxeGridProps } from 'vxe-table';
 import { createRecord, deleteRecord, modifyRecord, queryList } from '@/views/tools/dns/service';
+import { copyText } from '@/utils/copyTextToClipboard';
 
 export default defineComponent({
   setup() {
@@ -19,7 +20,7 @@ export default defineComponent({
           value: 'perflogs.top',
           label: 'perflogs.top（namesilo）',
           type: 'namesilo',
-          key: '96de19f1a334141437af4806',
+          key: 'd0575cf2a5a6eb7750a90f',
         },
       ],
       dnsRecordsList: [] as any[],
@@ -326,6 +327,7 @@ export default defineComponent({
       formState.rrhost = record.host.replace(`.${domain}`, '');
       formState.rrvalue = record.value;
       formState.remark = record.remark;
+      copyText(record.host);
     };
 
     return () => {
