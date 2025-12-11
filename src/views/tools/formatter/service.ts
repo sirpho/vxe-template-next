@@ -379,3 +379,15 @@ export const getComboxComponentName = (item: any, mode: 'TMS' | 'WMS') => {
 
   return capitalizeFirstLetter(item.field) + 'Combox';
 };
+
+/**
+ * 组件名
+ */
+export const getDefaultName = (name: string) => `
+
+<script lang="ts">
+  export default {
+    name: "${name}",
+  };
+</script>
+`;

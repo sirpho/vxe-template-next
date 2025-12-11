@@ -191,6 +191,7 @@
     AUDIT_REJECT_FUNCTION_TMS,
     AUDIT_REJECT_FUNCTION_WMS,
     capitalizeFirstLetter,
+    getDefaultName,
     EXPORT_BUTTON,
     EXPORT_FUNCTION,
     getComboxComponentName,
@@ -874,6 +875,9 @@
       ...functionList.value,
     ];
     result.push('<\/script>');
+    if (pageState.mode === 'WMS') {
+      result.push(getDefaultName(pageState.title || 'name'));
+    }
     scriptText.value = result.join('\n');
     /* eslint-enable */
   };
