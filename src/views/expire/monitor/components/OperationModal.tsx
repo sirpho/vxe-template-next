@@ -1,7 +1,7 @@
 import { rules, formItemLayout, shelfLifeUnitList } from '../utils/config';
 import { useForm } from 'ant-design-vue/es/form';
 import dayjs from 'dayjs';
-import { defineComponent, reactive, unref } from 'vue';
+import { defineComponent, reactive, unref, ref } from 'vue';
 import { getInfo, update } from '../service';
 import { BasicModal } from '@/components/Modal';
 import {
@@ -39,6 +39,8 @@ export default defineComponent({
       type: 'watch' as 'add' | 'edit' | 'watch',
     });
 
+    const locationRecord = ref('');
+
     const formState: any = reactive({
       id: undefined,
       advanceDays: undefined,
@@ -46,7 +48,7 @@ export default defineComponent({
       advanceWarning: 'N',
       shelfLife: undefined,
       shelfLifeUnit: 'month',
-      location: undefined,
+      location: '四楼药箱',
       name: undefined,
       memo: undefined,
       quantity: 1,
@@ -70,11 +72,13 @@ export default defineComponent({
      * 恢复数据到初始化状态
      */
     const resetModalState = () => {
+      locationRecord.value = formState.location;
       state.isFail = false;
       state.spinning = false;
       state.visible = false;
       state.skeletonLoading = false;
       resetFields();
+      formState.location = locationRecord.value;
     };
 
     /**
@@ -408,13 +412,10 @@ export default defineComponent({
                 </Col>
                 <Col span={24}>
                   <FormItem label="过期时间" {...validateInfos.expireDate}>
-                    <DatePicker
+                    <Input
                       v-model:value={formState.expireDate}
                       disabled={state.disabled}
-                      style="width: 100%"
-                      placeholder="请选择过期时间"
-                      format="YYYY-MM-DD"
-                      valueFormat="YYYY-MM-DD"
+                      placeholder="YYYY-MM-DD"
                     />
                   </FormItem>
                 </Col>
