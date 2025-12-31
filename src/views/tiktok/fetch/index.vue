@@ -1,6 +1,13 @@
 <template>
   <VxeContainer>
     <PageContainer style="width: 850px; height: 100%; margin: 0 auto; overflow: auto">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
+        <RadioGroup size="small" button-style="solid" v-model:value="domain">
+          <RadioButton value="https://localhost.sirpho.top:23456">本机</RadioButton>
+          <RadioButton value="https://jnas.sirpho.top:23456">虚拟机</RadioButton>
+        </RadioGroup>
+        <Input v-model:value="domain" style="width: 300px" size="small" />
+      </div>
       <Divider>TIKTOK文件处理</Divider>
       <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
         <Button @click="handleIncrement" :loading="loadingIncrement" type="primary">
@@ -9,18 +16,18 @@
         <Button @click="handleCategorize" :loading="loadingCategorize" type="primary">
           归档文件重新处理
         </Button>
-        <Button @click="handleStock" :loading="loadingStock">全量重新生成</Button>
+        <Button @click="handleStock" :loading="loadingStock" type="primary">全量重新生成</Button>
       </div>
       <br />
       <br />
       <br />
       <Divider>数据整理</Divider>
       <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
-        <Button @click="handleGenerateDancer" :loading="loadingGenerateDancer" type="primary">
-          博主整理
-        </Button>
+        <Button @click="handleGenerateDancer" :loading="loadingGenerateDancer"> 博主整理 </Button>
         <Button @click="handleRepeat" :loading="loadingRepeat">重复文件查询</Button>
-        <Button @click="handleRemoveStaleRecords" :loading="loadingRemove">删除无效记录</Button>
+        <Button @click="handleRemoveStaleRecords" :loading="loadingRemove" type="primary">
+          删除无效记录
+        </Button>
       </div>
       <br />
       <br />
@@ -87,7 +94,17 @@
 </template>
 
 <script lang="ts" setup>
-  import { Button, Checkbox, Divider, Form, FormItem, Input, message } from 'ant-design-vue';
+  import {
+    Button,
+    Checkbox,
+    Divider,
+    Form,
+    FormItem,
+    Input,
+    message,
+    RadioButton,
+    RadioGroup,
+  } from 'ant-design-vue';
   import { computed, reactive, ref } from 'vue';
   import {
     increment,
@@ -121,6 +138,8 @@
   const showRemove = ref(false);
   const resultMessage = ref('');
   const xTable = ref();
+
+  const domain = ref('https://localhost.sirpho.top:23456');
 
   const formState = reactive({
     prefix: '',
@@ -201,7 +220,7 @@
   const handleIncrement = async () => {
     init();
     loadingIncrement.value = true;
-    const res = await increment().finally(() => {
+    const res = await increment(domain.value).finally(() => {
       loadingIncrement.value = false;
     });
     tableColumns.value = tiktokColumns;
@@ -227,7 +246,7 @@
   const handleCategorize = async () => {
     init();
     loadingCategorize.value = true;
-    const res = await updateCategorizeAddress().finally(() => {
+    const res = await updateCategorizeAddress(domain.value).finally(() => {
       loadingCategorize.value = false;
     });
     tableColumns.value = tiktokColumns;
@@ -253,7 +272,7 @@
   const handleStock = async () => {
     init();
     loadingStock.value = true;
-    const res = await stock().finally(() => {
+    const res = await stock(domain.value).finally(() => {
       loadingStock.value = false;
     });
     tableColumns.value = tiktokColumns;
@@ -301,7 +320,7 @@
   const handleRemoveStaleRecords = async () => {
     init();
     loadingRemove.value = true;
-    const res = await removeStaleRecords().finally(() => {
+    const res = await removeStaleRecords(domain.value).finally(() => {
       loadingRemove.value = false;
     });
     resultMessage.value = `本次共移除${res.data}条记录`;
@@ -319,7 +338,7 @@
       return;
     }
     loadingRemovePath.value = true;
-    const res = await removePathRecords(checkRecords).finally(() => {
+    const res = await removePathRecords(domain.value, checkRecords).finally(() => {
       loadingRemovePath.value = false;
     });
     tableList.value = res.data || [];
@@ -347,7 +366,7 @@
   const handleSubmit = async () => {
     init();
     loadingRename.value = true;
-    const res = await rename(formState).finally(() => {
+    const res = await rename(domain.value, formState).finally(() => {
       loadingRename.value = false;
     });
     tableColumns.value = renameColumns;

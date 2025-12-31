@@ -2,12 +2,12 @@ import { defHttp } from '@/utils/http/axios';
 import { formatSize } from '@/utils/formatter';
 
 enum Api {
-  increment = 'https://localhost.sirpho.top:23456/api/tiktok/increment/generate',
-  stock = 'https://localhost.sirpho.top:23456/api/tiktok/stock/generate',
-  rename = 'https://localhost.sirpho.top:23456/api/file/rename',
-  removeStaleRecords = 'https://localhost.sirpho.top:23456/api/tiktok/remove/stale/records',
-  removePathRecords = 'https://localhost.sirpho.top:23456/api/tiktok/remove/path/records',
-  updateCategorizeAddress = 'https://localhost.sirpho.top:23456/api/tiktok/categorize/address/update',
+  increment = '/api/tiktok/increment/generate',
+  stock = '/api/tiktok/stock/generate',
+  rename = '/api/file/rename',
+  removeStaleRecords = '/api/tiktok/remove/stale/records',
+  removePathRecords = '/api/tiktok/remove/path/records',
+  updateCategorizeAddress = '/api/tiktok/categorize/address/update',
   generateDancer = '/api/dancer/generate',
   repeat = '/api/tiktok/repeat',
 }
@@ -15,15 +15,15 @@ enum Api {
 /**
  * @description: 增量文件重命名
  */
-export const increment = () => {
-  return defHttp.post({ url: Api.increment, timeout: 60 * 60 * 1000 });
+export const increment = (domain: string) => {
+  return defHttp.post({ url: `${domain}${Api.increment}`, timeout: 60 * 60 * 1000 });
 };
 
 /**
  * @description: 全量重新生成
  */
-export const stock = () => {
-  return defHttp.post({ url: Api.stock, timeout: 60 * 60 * 1000 });
+export const stock = (domain: string) => {
+  return defHttp.post({ url: `${domain}${Api.stock}`, timeout: 60 * 60 * 1000 });
 };
 
 /**
@@ -43,29 +43,29 @@ export const repeat = () => {
 /**
  * @description: 文件夹内文件md5重命名
  */
-export const rename = (params: any) => {
-  return defHttp.get({ url: Api.rename, params, timeout: 60 * 60 * 1000 });
+export const rename = (domain: string, params: any) => {
+  return defHttp.get({ url: `${domain}${Api.rename}`, params, timeout: 60 * 60 * 1000 });
 };
 
 /**
  * @description: 移除无效记录
  */
-export const removeStaleRecords = () => {
-  return defHttp.post({ url: Api.removeStaleRecords, timeout: 60 * 60 * 1000 });
+export const removeStaleRecords = (domain: string) => {
+  return defHttp.post({ url: `${domain}${Api.removeStaleRecords}`, timeout: 60 * 60 * 1000 });
 };
 
 /**
  * @description: 删除文件和记录
  */
-export const removePathRecords = (data: any[]) => {
-  return defHttp.post({ url: Api.removePathRecords, data, timeout: 60 * 60 * 1000 });
+export const removePathRecords = (domain: string, data: any[]) => {
+  return defHttp.post({ url: `${domain}${Api.removePathRecords}`, data, timeout: 60 * 60 * 1000 });
 };
 
 /**
  * @description: 归档文件重新处理
  */
-export const updateCategorizeAddress = () => {
-  return defHttp.post({ url: Api.updateCategorizeAddress, timeout: 60 * 60 * 1000 });
+export const updateCategorizeAddress = (domain: string) => {
+  return defHttp.post({ url: `${domain}${Api.updateCategorizeAddress}`, timeout: 60 * 60 * 1000 });
 };
 
 export const tiktokColumns = [

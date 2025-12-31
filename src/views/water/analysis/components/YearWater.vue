@@ -164,7 +164,7 @@
     if (props.total || data.length === xAxis.length) {
       return data;
     }
-    const result = [];
+    const result: any[] = [];
 
     for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
       const dataItem = data.find((item) => new Date(item.month).getMonth() === monthIndex);
