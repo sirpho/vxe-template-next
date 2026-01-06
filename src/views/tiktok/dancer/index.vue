@@ -250,11 +250,12 @@
               return formatSize(result || 0);
             }
             if (column.field === 'totalDuration') {
-              const minute = Math.floor(result / 60);
+              const hour = Math.floor(result / 3600);
+              const minute = Math.floor((result % 3600) / 60);
               const second = result % 60;
 
               return result
-                ? `${(minute ? minute + '分钟' : '') + (second ? second + '秒' : '')}`
+                ? `${(hour ? hour + '小时' : '') + (minute ? minute + '分钟' : '') + (second ? second + '秒' : '')}`
                 : '';
             }
             return thousandsSeparator(result);
@@ -262,7 +263,7 @@
           // 唯一标识 作者
           if (['identification', 'author'].includes(column.field)) {
             const list = uniq(data.map((item) => item[column.field]));
-            return list.length;
+            return thousandsSeparator(list.length);
           }
           return null;
         }),

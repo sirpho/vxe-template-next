@@ -79,7 +79,7 @@
   import { batch, getClassList, list, potPlayer } from './service';
   import { TiktokClassCombox, TiktokAuthorCombox } from '@/features/components/Profession';
   import { formatBitrate, formatSize } from '@/utils/formatter';
-  import { add, arrayFieldRepeat, formatDuration } from '@sirpho/utils';
+  import { add, adds, arrayFieldRepeat, formatDuration, thousandsSeparator } from '@sirpho/utils';
 
   interface FormState {
     name: string;
@@ -176,6 +176,43 @@
     ],
     showHeaderOverflow: 'tooltip',
     height: 'auto',
+    showFooter: true,
+    footerMethod: ({ columns, data }) => {
+      return [
+        columns.map((column, columnIndex) => {
+          if (columnIndex === 1) {
+            return '合计';
+          }
+          // 人数
+          if (['author'].includes(column.field)) {
+            return thousandsSeparator(new Set(data.map((item: any) => item.author)).size) + '人';
+          }
+          // 文件数
+          if (['name'].includes(column.field)) {
+            return thousandsSeparator(data.length);
+          }
+          // 文件大小
+          if (['size'].includes(column.field)) {
+            const result = adds(...data.map((item) => item[column.field] || 0));
+            if (column.field === 'size') {
+              return formatSize(result || 0);
+            }
+          }
+          // 时长
+          if (['duration'].includes(column.field)) {
+            const result = adds(...data.map((item) => item[column.field] || 0));
+            const hour = Math.floor(result / 3600);
+            const minute = Math.floor((result % 3600) / 60);
+            const second = result % 60;
+
+            return result
+              ? `${(hour ? hour + '小时' : '') + (minute ? minute + '分钟' : '') + (second ? second + '秒' : '')}`
+              : '';
+          }
+          return null;
+        }),
+      ];
+    },
   });
 
   onMounted(() => {

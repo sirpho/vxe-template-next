@@ -9,7 +9,7 @@
         :mode="props.mode"
         :allowClear="allowClear"
         :open="false"
-        :max-tag-count="6"
+        :max-tag-count="props.maxTagCount"
         @clear="onClear"
         @click="selectClick"
         @deselect="deselect"
@@ -124,7 +124,7 @@
     /**
      * @description 多选传multiple 单选不传
      */
-    mode?: string;
+    mode?: 'multiple' | 'tags';
     /**
      * @description params改变是否清空值 requestTrigger=onFocus, onParamsChange时使用
      */
@@ -169,6 +169,11 @@
      * 是否禁用
      */
     disabled?: boolean;
+    /**
+     * 最多显示几个标签
+     * 默认1个
+     */
+    maxTagCount?: number;
   }
 
   const emit = defineEmits(['update:value', 'change', 'input']);
@@ -183,7 +188,7 @@
     inputProps: () => ({}),
     gridProps: () => ({}),
     requestTrigger: 'onMount',
-    mode: '',
+    mode: undefined,
     autoFill: true,
     allowClear: true,
     transformData: (e) => e,
@@ -191,6 +196,7 @@
     paramsChangeClear: true,
     popWidth: '500px',
     allowInput: false,
+    maxTagCount: 1,
   });
 
   const defaultOption = {
