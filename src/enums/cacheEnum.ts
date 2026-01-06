@@ -30,6 +30,8 @@ export const APP_SESSION_CACHE_KEY = 'COMMON__SESSION__KEY__';
 export const TABLE_SETTING_KEY = 'TABLE__SETTING__KEY__';
 // 模板代码生成
 export const FORMAT_JAVA_CLASS = 'FORMAT_JAVA_CLASS__KEY__';
+// TIKTOK列设置
+export const TIKTOK_TABLE_COLUMNS_KEY = 'TIKTOK_TABLE_COLUMNS_KEY__';
 
 export enum CacheTypeEnum {
   SESSION,

@@ -9,7 +9,11 @@
           <Input size="small" v-model:value="formState.name" />
         </FormItem>
         <FormItem label="标签" name="classIdList">
-          <TiktokClassCombox :data="classList" v-model:value="formState.classIdList" />
+          <TiktokClassCombox
+            :data="classList"
+            v-model:value="formState.classIdList"
+            style="width: 260px"
+          />
         </FormItem>
         <FormItem>
           <Space>
@@ -27,7 +31,20 @@
       <vxe-grid v-bind="{ ...gridOptions }" :data="tableList" :loading="tableLoading" ref="xTable">
         <!-- 表格操作 -->
         <template #toolbar_buttons>
-          <Button size="small" type="primary" @click="handleBatch">批量设置标签</Button>
+          <Form layout="inline">
+            <FormItem label="">
+              <Button size="small" type="primary" @click="handleBatch">批量设置标签</Button>
+            </FormItem>
+            <FormItem label="表格字段">
+              <ComboBox
+                v-bind="{ ...fieldComboboxOption }"
+                v-model:value="selectedColumns"
+                :data="optionalColumns"
+                mode="multiple"
+                @change="() => handleField()"
+              />
+            </FormItem>
+          </Form>
         </template>
         <template #toolbar_tools>
           <Space>
@@ -75,11 +92,22 @@
 <script lang="ts" setup>
   import { onMounted, reactive, ref } from 'vue';
   import { Form, FormItem, Space, Button, Input, Tag, message } from 'ant-design-vue';
-  import { VxeTableInstance, VxeGridProps } from 'vxe-table';
-  import { batch, getClassList, list, potPlayer } from './service';
+  import { VxeTableInstance } from 'vxe-table';
+  import {
+    batch,
+    defaultColumns,
+    optionalColumns,
+    fieldComboboxOption,
+    getClassList,
+    list,
+    potPlayer,
+  } from './service';
   import { TiktokClassCombox, TiktokAuthorCombox } from '@/features/components/Profession';
   import { formatBitrate, formatSize } from '@/utils/formatter';
   import { add, adds, arrayFieldRepeat, formatDuration, thousandsSeparator } from '@sirpho/utils';
+  import { TIKTOK_TABLE_COLUMNS_KEY } from '@/enums/cacheEnum';
+  import { createLocalStorage } from '@/utils/cache';
+  import ComboBox from '@/components/Box/src/ComboBox.vue';
 
   interface FormState {
     name: string;
@@ -102,78 +130,13 @@
   const submitLoading = ref(false);
   const totalSize = ref(0);
   const totalDuration = ref(0);
+  const ls = createLocalStorage();
 
-  const gridOptions = reactive<VxeGridProps>({
+  const gridOptions = reactive<any>({
     editConfig: {},
     keepSource: true,
     toolbarConfig: { slots: { buttons: 'toolbar_buttons', tools: 'toolbar_tools' } },
-    columns: [
-      { type: 'checkbox', width: 60, fixed: 'left', align: 'center' },
-      { title: '序号', width: 100, align: 'center', slots: { default: 'seq' } },
-      {
-        field: 'author',
-        title: '作者',
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-        width: 140,
-      },
-      {
-        field: 'name',
-        title: '文件名称',
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-      },
-      {
-        field: 'duration',
-        title: '播放时长',
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-        slots: { default: 'duration' },
-        width: 120,
-      },
-      {
-        field: 'size',
-        title: '存储容量',
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-        slots: { default: 'size' },
-        width: 120,
-      },
-      {
-        field: 'bitrate',
-        title: '比特率',
-        slots: { default: 'bitrate' },
-        sortable: true,
-        width: 120,
-      },
-      {
-        field: 'classIdList',
-        title: '标签',
-        editRender: { autofocus: '.ant-input' },
-        slots: { edit: 'classIdList', default: 'classIdList_default' },
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-      },
-      {
-        field: 'category',
-        title: '类别',
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-      },
-      {
-        field: 'path',
-        title: '路径',
-        sortable: true,
-        filters: [{}],
-        filterRender: { name: 'FilterExtend' },
-      },
-    ],
+    columns: [...defaultColumns],
     showHeaderOverflow: 'tooltip',
     height: 'auto',
     showFooter: true,
@@ -188,7 +151,7 @@
             return thousandsSeparator(new Set(data.map((item: any) => item.author)).size) + '人';
           }
           // 文件数
-          if (['name'].includes(column.field)) {
+          if (['path'].includes(column.field)) {
             return thousandsSeparator(data.length);
           }
           // 文件大小
@@ -215,9 +178,30 @@
     },
   });
 
+  /**
+   * 已选择的字段
+   */
+  const selectedColumns = ref<any[]>([]);
+
+  /**
+   * 记住选择
+   */
+  const remember = ref(true);
+  /**
+   * 初始化获取表格列字段
+   */
+  const init = () => {
+    const selected = ls.get(TIKTOK_TABLE_COLUMNS_KEY);
+    selectedColumns.value = selected || [];
+    if (selectedColumns.value.length > 0) {
+      remember.value = true;
+    }
+    generate();
+  };
+
   onMounted(() => {
+    init();
     queryClassList();
-    // handleQuery();
   });
 
   /**
@@ -318,6 +302,35 @@
    */
   const handlePlayer = (row: any) => {
     potPlayer(row);
+  };
+
+  /**
+   * 添加列
+   */
+  const generate = () => {
+    const nextColumns: any[] = optionalColumns.filter((item) =>
+      selectedColumns.value.includes(item.field),
+    );
+    gridOptions.columns = [...defaultColumns, ...nextColumns];
+  };
+
+  /**
+   * 记住特性选择
+   */
+  const handleRemember = () => {
+    if (remember.value) {
+      ls.set(TIKTOK_TABLE_COLUMNS_KEY, selectedColumns.value);
+    } else {
+      ls.remove(TIKTOK_TABLE_COLUMNS_KEY);
+    }
+  };
+
+  /**
+   * 修改表格字段配置
+   */
+  const handleField = () => {
+    generate();
+    handleRemember();
   };
 </script>
 <script lang="ts">
