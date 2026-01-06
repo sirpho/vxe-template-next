@@ -132,6 +132,7 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         slots: { default: 'duration' },
+        width: 120,
       },
       {
         field: 'size',
@@ -140,12 +141,14 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         slots: { default: 'size' },
+        width: 120,
       },
       {
         field: 'bitrate',
         title: '比特率',
         slots: { default: 'bitrate' },
         sortable: true,
+        width: 120,
       },
       {
         field: 'classIdList',
@@ -159,6 +162,13 @@
       {
         field: 'category',
         title: '类别',
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+      },
+      {
+        field: 'path',
+        title: '路径',
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
