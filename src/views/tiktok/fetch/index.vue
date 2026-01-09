@@ -135,7 +135,6 @@
   const loadingRemove = ref(false);
   const loadingRemovePath = ref(false);
   const loadingRename = ref(false);
-  const showRemove = ref(false);
   const resultMessage = ref('');
   const xTable = ref();
 
@@ -171,6 +170,14 @@
           if (columnIndex === 0) {
             return '合计';
           }
+          // 人数
+          if (['author'].includes(column.field)) {
+            return thousandsSeparator(new Set(data.map((item: any) => item.author)).size) + '人';
+          }
+          // 文件数
+          if (['path'].includes(column.field)) {
+            return thousandsSeparator(data.length);
+          }
           // 文件大小 时长
           if (['size', 'duration'].includes(column.field)) {
             const result = adds(...data.map((item) => item[column.field] || 0));
@@ -203,7 +210,6 @@
     startTime.value = new Date().getTime();
     endTime.value = 0;
     resultMessage.value = '';
-    showRemove.value = false;
     tableList.value = [];
   };
 
@@ -304,7 +310,6 @@
     });
     tableColumns.value = repeatColumns;
     tableList.value = res.data || [];
-    showRemove.value = true;
 
     let i = 0;
     tableList.value.forEach((item) => {
@@ -323,7 +328,9 @@
     const res = await removeStaleRecords(domain.value).finally(() => {
       loadingRemove.value = false;
     });
-    resultMessage.value = `本次共移除${res.data}条记录`;
+    tableColumns.value = repeatColumns;
+    tableList.value = res.data || [];
+    resultMessage.value = `本次共移除${res.data.length}条记录`;
     message.success(resultMessage.value);
     endTime.value = new Date().getTime();
   };
