@@ -44,7 +44,7 @@ export default defineComponent({
     const formState: any = reactive({
       id: undefined,
       advanceDays: undefined,
-      cover: '',
+      cover: 'https://fe-static.obs.cn-hz1.ctyun.cn/sirpho/VCG211439920400.webp',
       advanceWarning: 'N',
       shelfLife: undefined,
       shelfLifeUnit: 'month',
@@ -140,22 +140,21 @@ export default defineComponent({
     /**
      * 确定
      */
-    const handleOk = () => {
-      validate().then(async () => {
-        state.spinning = true;
-        const res = await update({
-          ...formState,
-        }).finally(() => {
-          state.spinning = false;
-        });
-        if (res && res.code === 200) {
-          message.success('操作成功！');
-          emit('handleOk');
-          handleCancel();
-        } else {
-          message.error(res.msg || '操作异常！');
-        }
+    const handleOk = async () => {
+      await validate();
+      state.spinning = true;
+      const res = await update({
+        ...formState,
+      }).finally(() => {
+        state.spinning = false;
       });
+      if (res && res.code === 200) {
+        message.success('操作成功！');
+        emit('handleOk');
+        handleCancel();
+      } else {
+        message.error(res.msg || '操作异常！');
+      }
     };
 
     /**

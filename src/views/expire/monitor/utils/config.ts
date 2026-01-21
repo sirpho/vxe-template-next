@@ -29,19 +29,20 @@ export const rules = {
       message: '请选择过期时间',
     },
     {
-      validator: (_rule: any, value: string) => {
+      validator: async (_rule: any, value: string) => {
         if (!/\d{4}-\d{2}-\d{2}/.test(value)) {
-          throw new Error('格式错误');
+          return Promise.reject('格式错误');
         }
+        return Promise.resolve();
       },
     },
   ],
-  cover: [
-    {
-      required: true,
-      message: '请选择封面',
-    },
-  ],
+  // cover: [
+  //   {
+  //     required: true,
+  //     message: '请选择封面',
+  //   },
+  // ],
 };
 
 export const formItemLayout = {
