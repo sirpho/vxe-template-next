@@ -18,8 +18,7 @@
   import { analysis } from './service';
   import { groupBy, sortBy } from 'lodash-es';
   import { getLinearColorList } from '@/utils/color';
-  import { adds, thousandsSeparator } from '@sirpho/utils';
-  import { divide, percentage } from '@sirpho/utils/math';
+  import { adds, thousandsSeparator, divide, percentage } from '@sirpho/utils';
   import { formatSize } from '@/utils/formatter';
 
   const chartRef = ref<HTMLDivElement | null>(null);

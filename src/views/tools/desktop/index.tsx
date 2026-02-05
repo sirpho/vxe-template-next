@@ -1,6 +1,6 @@
 import { Button, Input, Select } from 'ant-design-vue';
 import './index.less';
-import { dataURLtoFile } from '@sirpho/utils/util';
+import { dataURLtoFile } from '@sirpho/utils';
 import { upload } from './service';
 import { defineComponent, reactive, ref } from 'vue';
 import { PageContainer, VxeContainer } from '@/components/Layout';

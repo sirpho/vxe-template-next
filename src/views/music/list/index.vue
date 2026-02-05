@@ -85,8 +85,7 @@
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
-  import { adds, thousandsSeparator } from '@sirpho/utils';
-  import { divide } from '@sirpho/utils/math';
+  import { adds, thousandsSeparator, divide } from '@sirpho/utils';
   import { formatSize } from '@/utils/formatter';
 
   interface FormState {

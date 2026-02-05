@@ -123,9 +123,7 @@
   import { VxeContainer, PageContainer } from '@/components/Layout';
   import { VxeGridProps } from 'vxe-table';
   import { hexToRGBA } from '@/utils/color';
-  import { adds, thousandsSeparator } from '@sirpho/utils';
-  import { formatSize } from '@/utils/formatter';
-  import { formatDuration } from '@sirpho/utils/util';
+  import { adds, thousandsSeparator, formatSize, formatDuration } from '@sirpho/utils';
 
   const loadingGenerateDancer = ref(false);
   const loadingIncrement = ref(false);

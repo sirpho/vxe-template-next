@@ -104,8 +104,7 @@
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
   import { useDict } from '@/hooks/web/useDict';
-  import { adds, thousandsSeparator } from '@sirpho/utils';
-  import { divide } from '@sirpho/utils/math';
+  import { adds, thousandsSeparator, divide } from '@sirpho/utils';
 
   interface FormState {
     name: string;

@@ -1,6 +1,6 @@
 import { computed, ComputedRef } from 'vue';
 import { onMountedOrActivated } from '@vben/hooks';
-import { isArray } from '@sirpho/utils/validate';
+import { isArray } from '@sirpho/utils';
 import { useDictStoreWithOut } from '@/store/modules/dict';
 import { getDictOptions } from '@/api/dataSource';
 

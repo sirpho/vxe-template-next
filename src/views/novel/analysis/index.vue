@@ -26,8 +26,7 @@
   import { analysis } from './service';
   import { groupBy, sortBy } from 'lodash-es';
   import { getLinearColorList } from '@/utils/color';
-  import { adds, thousandsSeparator } from '@sirpho/utils';
-  import { percentage } from '@sirpho/utils/math';
+  import { adds, thousandsSeparator, percentage } from '@sirpho/utils';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);

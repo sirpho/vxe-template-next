@@ -1,10 +1,9 @@
-/* stylelint-disable scss/percent-placeholder-pattern */
-%ResetBorder {
+.ResetBorder() {
   border: 0;
   box-shadow: none;
 }
 
-%CompWidth {
+.CompWidth() {
   & > .ant-input,
   & > .ant-input-number,
   & > .ant-select,
@@ -17,7 +16,8 @@
 
 .vxe-form {
   .vxe-form--item-content {
-    @extend %CompWidth;
+    // 调用CompWidth混合
+    .CompWidth();
   }
 }
 
@@ -32,7 +32,8 @@
 
 .vxe-cell,
 .vxe-tree-cell {
-  @extend %CompWidth;
+  // 调用CompWidth混合
+  .CompWidth();
 
   & > .ant-rate {
     vertical-align: bottom;
@@ -62,20 +63,21 @@
   .vxe-tree-cell {
     & > .ant-input,
     & > .ant-input-number {
-      @extend %ResetBorder;
+      // 调用ResetBorder混合
+      .ResetBorder();
 
       padding: 0;
     }
 
     & > .ant-select {
       .ant-input {
-        @extend %ResetBorder;
+        .ResetBorder();
 
         padding: 0;
       }
 
       .ant-select-selection {
-        @extend %ResetBorder;
+        .ResetBorder();
 
         .ant-select-selection__rendered {
           margin: 0;
@@ -90,13 +92,13 @@
 
       .ant-input-number-handler-wrap,
       .ant-input-number-handler-down {
-        @extend %ResetBorder;
+        .ResetBorder();
       }
     }
 
     & > .ant-cascader-picker {
       .ant-input {
-        @extend %ResetBorder;
+        .ResetBorder();
       }
 
       .ant-cascader-picker-label {
@@ -106,7 +108,7 @@
 
     & > .ant-calendar-picker {
       .ant-calendar-picker-input {
-        @extend %ResetBorder;
+        .ResetBorder();
 
         padding: 0;
       }
@@ -114,7 +116,7 @@
 
     & > .ant-time-picker {
       .ant-time-picker-input {
-        @extend %ResetBorder;
+        .ResetBorder();
 
         padding: 0;
       }

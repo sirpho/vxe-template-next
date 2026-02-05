@@ -1,6 +1,6 @@
 import { getDictOptions } from '@/services/system/dictData';
 import { useStore } from '@/store';
-import { isArray } from '@sirpho/utils/validate';
+import { isArray } from '@sirpho/utils';
 
 export function resetDict(val: string | string[]) {
   const store = useStore();

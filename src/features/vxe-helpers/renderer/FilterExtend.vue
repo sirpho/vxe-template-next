@@ -102,7 +102,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { PropType, reactive, computed, watch, defineProps } from 'vue';
+  import { PropType, reactive, computed, watch } from 'vue';
   import { VxeGlobalRendererHandles } from 'vxe-table';
   import { Tabs, TabPane, message, Tooltip } from 'ant-design-vue';
 
