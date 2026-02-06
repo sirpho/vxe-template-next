@@ -135,7 +135,7 @@
   import { useDict } from '@/hooks/web/useDict';
   import { isNumber } from '@/utils/is';
   import FileUploader from '@/components/FileUploader';
-  import PageContainer from '@/components/Layout/src/PageContainer/index.vue';
+  import { PageContainer, QueryFilterContainer, VxeContainer } from '@sirpho/components';
 
   interface FormState {
     date: string;

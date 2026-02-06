@@ -46,7 +46,7 @@
     RangePicker,
     Space,
   } from 'ant-design-vue';
-  import { PageContainer, VxeContainer } from '@/components/Layout';
+  import { PageContainer, VxeContainer } from '@sirpho/components';
   import { reactive, ref, watch, computed, watchEffect } from 'vue';
   import { getLog } from '@/views/tools/gitlog/service';
   import dayjs, { Dayjs } from 'dayjs';

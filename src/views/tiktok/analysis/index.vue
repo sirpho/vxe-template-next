@@ -20,6 +20,7 @@
   import echarts from '@/utils/lib/echarts';
   import { formatDuration, add } from '@sirpho/utils';
   import { formatBitrate, formatSize } from '@/utils/formatter';
+  import { PageContainer, VxeContainer } from '@sirpho/components';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);

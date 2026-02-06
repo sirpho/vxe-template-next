@@ -120,10 +120,11 @@
     removePathRecords,
     updateCategorizeAddress,
   } from './service';
-  import { VxeContainer, PageContainer } from '@/components/Layout';
+  import { VxeContainer, PageContainer } from '@sirpho/components';
   import { VxeGridProps } from 'vxe-table';
   import { hexToRGBA } from '@/utils/color';
-  import { adds, thousandsSeparator, formatSize, formatDuration } from '@sirpho/utils';
+  import { adds, thousandsSeparator, formatDuration } from '@sirpho/utils';
+  import { formatSize } from '@/utils/formatter';
 
   const loadingGenerateDancer = ref(false);
   const loadingIncrement = ref(false);

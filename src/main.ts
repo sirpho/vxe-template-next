@@ -4,6 +4,7 @@ import '@/components/VxeTable/src/css/index.less';
 import 'ant-design-vue/dist/reset.css';
 // Register icon sprite
 import 'virtual:svg-icons-register';
+import '@sirpho/components/dist/style.css';
 
 import { createApp } from 'vue';
 
@@ -15,8 +16,9 @@ import { initAppConfigStore } from '@/logics/initAppConfig';
 import { router, setupRouter } from '@/router';
 import { setupRouterGuard } from '@/router/guard';
 import { setupStore } from '@/store';
-
-import { registerVarient } from '@/features/config';
+import { defHttp } from '@/utils/http/axios';
+import { variants } from '@/features/config/consts';
+import { registerVariant } from '@sirpho/components';
 
 // vxe-table
 import '@/features/vxe-helpers/plugins/xlsx';
@@ -76,7 +78,7 @@ async function bootstrap() {
   // https://next.router.vuejs.org/api/#isready
   // await router.isReady();
 
-  registerVarient();
+  registerVariant(defHttp, variants);
   app.mount('#app');
 }
 

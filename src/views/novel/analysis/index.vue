@@ -27,6 +27,7 @@
   import { groupBy, sortBy } from 'lodash-es';
   import { getLinearColorList } from '@/utils/color';
   import { adds, thousandsSeparator, percentage } from '@sirpho/utils';
+  import { VxeContainer, PageContainer } from '@sirpho/components';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);

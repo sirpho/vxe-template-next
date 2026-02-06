@@ -60,7 +60,7 @@
     generateResize,
     updateMd5,
   } from './service';
-  import { VxeContainer, PageContainer } from '@/components/Layout';
+  import { VxeContainer, PageContainer } from '@sirpho/components';
   import { VxeGridProps } from 'vxe-table';
   import JSZip from 'jszip';
   import dayjs from 'dayjs';

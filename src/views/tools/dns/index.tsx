@@ -2,7 +2,7 @@ import { Button, Input, message, Select, Form, FormItem, Modal } from 'ant-desig
 import './index.less';
 import { useForm } from 'ant-design-vue/es/form';
 import { defineComponent, nextTick, onMounted, reactive } from 'vue';
-import { PageContainer, VxeContainer } from '@/components/Layout';
+import { PageContainer, VxeContainer } from '@sirpho/components';
 import { VxeGrid, VxeGridProps } from 'vxe-table';
 import { createRecord, deleteRecord, modifyRecord, queryList } from '@/views/tools/dns/service';
 import { copyText } from '@/utils/copyTextToClipboard';

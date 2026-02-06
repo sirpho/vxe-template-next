@@ -31,6 +31,7 @@
   import { getLinearColorList } from '@/utils/color';
   import { groupBy, sortBy } from 'lodash-es';
   import dayjs from 'dayjs';
+  import { VxeContainer, PageContainer } from '@sirpho/components';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);

@@ -6,7 +6,7 @@ import './index.less';
 import { ExclamationCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { Loading } from '@/components/Loading';
 import { defineComponent, onMounted, reactive, ref } from 'vue';
-import { PageContainer, VxeContainer } from '@/components/Layout';
+import { PageContainer, VxeContainer } from '@sirpho/components';
 import { TagUtensilCombox } from '@/features/components/Profession';
 
 const { confirm } = Modal;
@@ -113,16 +113,16 @@ export default defineComponent({
                 </Button>
                 <TagUtensilCombox
                   class={'search-select'}
-                  inputProps={{ size: 'default', placeholder: '标签' }}
+                  inputProps={{ size: 'default', placeholder: '标签' } as any}
                   v-model:value={formState.tag}
                   onChange={() => getTableList()}
                 />
 
                 <TagUtensilCombox
                   class={'search-select'}
-                  inputProps={{ size: 'default', placeholder: '分类' }}
+                  inputProps={{ size: 'default', placeholder: '分类' } as any}
                   v-model:value={formState.type}
-                  varient="TypeUtensilCombox"
+                  variant="TypeUtensilCombox"
                   onChange={() => getTableList()}
                 />
                 <InputSearch

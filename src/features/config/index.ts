@@ -1,25 +1,25 @@
 import { defHttp } from '@/utils/http/axios';
-import { varients } from '@/features/config/consts';
+import { variants } from '@/features/config/consts';
 
 /**
  * 多列下拉全局配置
  */
 export const globalConfig: any = {
   http: null,
-  varients: null,
+  variants: null,
   methods: null, //存储xTable中的公共方法
   env: {},
   setConfig(
     config: {
       http?: any;
-      varients?: any;
+      variants?: any;
       env?: any;
       methods?: (params: { [key: string]: any }) => object;
     } = {},
   ) {
-    const { http, varients = {}, methods, env } = config;
+    const { http, variants = {}, methods, env } = config;
     this.http = http;
-    this.varients = varients;
+    this.variants = variants;
     this.methods = methods;
     this.env = env;
   },
@@ -93,5 +93,5 @@ export const vxeTableDefaultConfig: any = {
 };
 
 export function registerVarient() {
-  globalConfig.setConfig({ http: defHttp, varients });
+  globalConfig.setConfig({ http: defHttp, variants });
 }

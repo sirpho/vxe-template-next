@@ -106,7 +106,7 @@
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list, typeOptions } from './service';
   import { useDict } from '@/hooks/web/useDict';
-  import { ComboBox } from '@/components/Box';
+  import { ComboBox, PageContainer, QueryFilterContainer, VxeContainer } from '@sirpho/components';
   import dayjs from 'dayjs';
   import { adds, thousandsSeparator } from '@sirpho/utils';
   import { groupBy } from 'lodash-es';

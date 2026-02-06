@@ -179,8 +179,7 @@
   import { nextTick, reactive, ref } from 'vue';
   import hljs from 'highlight.js/lib/core';
   import { copyText } from '@/utils/copyTextToClipboard';
-  import { StatusPop } from '@/components/status-pop';
-  import { PageContainer, VxeContainer } from '@/components/Layout';
+  import { PageContainer, VxeContainer, StatusPop } from '@sirpho/components';
   import { VxeGridPropTypes, VxeTableInstance } from 'vxe-table';
   import { createLocalStorage } from '@/utils/cache';
 

@@ -6,7 +6,7 @@
 <script lang="ts" setup>
   import { useAttrs, computed } from 'vue';
   import { VxeGridProps } from 'vxe-table';
-  import ComboBox from '@/components/Box/src/ComboBox.vue';
+  import { ComboBox } from '@sirpho/components';
   import type { InputProps } from 'ant-design-vue';
 
   interface Props {
@@ -14,7 +14,7 @@
      * @description 获取数据源的时机
      */
     requestTrigger?: 'onMount' | 'onFocus' | 'onParamsChange';
-    varient?: string;
+    variant?: string;
     gridProps?: VxeGridProps;
     option?: Option;
     value?: string | number | null | undefined | (string | number)[];
@@ -37,7 +37,7 @@
   const _emits = defineEmits(['update:value']);
 
   const props = withDefaults(defineProps<Props>(), {
-    varient: 'TagUtensilCombox',
+    variant: 'TagUtensilCombox',
     inputProps: () => ({}),
     gridProps: () => ({
       columns: [

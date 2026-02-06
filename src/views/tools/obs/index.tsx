@@ -2,7 +2,7 @@ import { Button, Input, message, Switch, Image, Popconfirm } from 'ant-design-vu
 import './index.less';
 import { list, remove, upload } from './service';
 import { defineComponent, onMounted, reactive, ref } from 'vue';
-import { PageContainer, VxeContainer } from '@/components/Layout';
+import { PageContainer, VxeContainer } from '@sirpho/components';
 import { VxeGrid, VxeGridProps } from 'vxe-table';
 
 export default defineComponent({

@@ -20,6 +20,7 @@
   import { getLinearColorList } from '@/utils/color';
   import { adds, thousandsSeparator, divide, percentage } from '@sirpho/utils';
   import { formatSize } from '@/utils/formatter';
+  import { VxeContainer, PageContainer } from '@sirpho/components';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);

@@ -20,6 +20,7 @@
 <script lang="ts" setup>
   import { BasicTitle } from '@/components/Basic';
   import { Card } from 'ant-design-vue';
+  import { PageContainer, VxeContainer } from '@sirpho/components';
 </script>
 <script lang="ts">
   export default {

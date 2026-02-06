@@ -4,7 +4,7 @@ export type SelectTableRemoteConfig = {
   params?: {};
 };
 
-export const varients: Record<string, SelectTableRemoteConfig> = {
+export const variants: Record<string, SelectTableRemoteConfig> = {
   // 抖音分类标签
   TiktokClass: {
     url: '/api/tiktok/class/recentList',
@@ -27,4 +27,4 @@ export const varients: Record<string, SelectTableRemoteConfig> = {
   },
 };
 
-export type Varient = keyof typeof varients;
+export type Variant = keyof typeof variants;

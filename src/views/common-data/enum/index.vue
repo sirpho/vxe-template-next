@@ -64,6 +64,7 @@
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
+  import { PageContainer, QueryFilterContainer, VxeContainer } from '@sirpho/components';
 
   interface FormState {
     name: string;

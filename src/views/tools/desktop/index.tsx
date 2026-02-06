@@ -3,7 +3,7 @@ import './index.less';
 import { dataURLtoFile } from '@sirpho/utils';
 import { upload } from './service';
 import { defineComponent, reactive, ref } from 'vue';
-import { PageContainer, VxeContainer } from '@/components/Layout';
+import { PageContainer, VxeContainer } from '@sirpho/components';
 
 export default defineComponent({
   setup() {

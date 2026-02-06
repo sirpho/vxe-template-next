@@ -107,7 +107,7 @@
   import { add, adds, arrayFieldRepeat, formatDuration, thousandsSeparator } from '@sirpho/utils';
   import { TIKTOK_TABLE_COLUMNS_KEY } from '@/enums/cacheEnum';
   import { createLocalStorage } from '@/utils/cache';
-  import ComboBox from '@/components/Box/src/ComboBox.vue';
+  import { ComboBox, PageContainer, QueryFilterContainer, VxeContainer } from '@sirpho/components';
 
   interface FormState {
     name: string;

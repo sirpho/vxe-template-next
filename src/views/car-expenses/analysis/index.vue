@@ -40,6 +40,7 @@
   import dayjs from 'dayjs';
   import { add, adds, percentage, thousandsSeparator } from '@sirpho/utils';
   import echarts from '@/utils/lib/echarts';
+  import { VxeContainer, PageContainer } from '@sirpho/components';
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);

@@ -79,7 +79,7 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { Upload, Button, Divider, Input, InputNumber, message } from 'ant-design-vue';
-  import { VxeContainer, PageContainer } from '@/components/Layout';
+  import { VxeContainer, PageContainer } from '@sirpho/components';
   import dayjs from 'dayjs';
   import hljs from 'highlight.js/lib/core';
   import { copyText } from '@/utils/copyTextToClipboard';
