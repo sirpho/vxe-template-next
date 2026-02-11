@@ -39,10 +39,9 @@
                         : 'vxe-icon-checkbox-checked icon-color my-fe-search-item-icon',
                     ]"
                   ></span>
-                  <Tooltip>
-                    <template #title>{{ val }}</template>
+                  <OverflowTooltip :title="val">
                     <span style="padding-left: 10px"> {{ val }}</span>
-                  </Tooltip>
+                  </OverflowTooltip>
                 </div>
               </template>
             </vxe-list>
@@ -104,7 +103,8 @@
 <script lang="ts" setup>
   import { PropType, reactive, computed, watch } from 'vue';
   import { VxeGlobalRendererHandles } from 'vxe-table';
-  import { Tabs, TabPane, message, Tooltip } from 'ant-design-vue';
+  import { Tabs, TabPane, message } from 'ant-design-vue';
+  import OverflowTooltip from '@/features/vxe-helpers/renderer/OverflowTooltip.vue';
 
   const props = defineProps({
     params: Object as PropType<VxeGlobalRendererHandles.RenderFilterParams>,
@@ -464,6 +464,7 @@
   }
 
   .my-filter-excel .my-fe-search .my-fe-search-list .my-fe-search-item {
+    display: flex;
     width: 186px;
     overflow: hidden;
     text-overflow: ellipsis;
