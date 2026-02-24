@@ -21,8 +21,8 @@ importers:
         specifier: ^1.2.28
         version: 1.2.28
       '@sirpho/components':
-        specifier: ^1.0.4
-        version: 1.0.4(@ant-design/icons-vue@7.0.1)(@vueuse/core@10.11.1)(ant-design-vue@4.2.6)(await-to-js@3.0.0)(lodash-es@4.17.21)(vue@3.5.13)(vxe-table@4.5.21)
+        specifier: ^1.1.2
+        version: 1.1.2(@ant-design/icons-vue@7.0.1)(@vueuse/core@10.11.1)(ant-design-vue@4.2.6)(await-to-js@3.0.0)(lodash-es@4.17.21)(vue@3.5.13)(vxe-table@4.5.21)
       '@sirpho/utils':
         specifier: ^2.0.0
         version: 2.0.0
@@ -3069,12 +3069,12 @@ packages:
       '@sinonjs/commons': 1.8.6
     dev: false
 
-  /@sirpho/components@1.0.4(@ant-design/icons-vue@7.0.1)(@vueuse/core@10.11.1)(ant-design-vue@4.2.6)(await-to-js@3.0.0)(lodash-es@4.17.21)(vue@3.5.13)(vxe-table@4.5.21):
-    resolution: {integrity: sha512-C9Gc4x83miQdYozOf/NsNWI5VDssUXWIE2j5Lr3t/YeyRaUG0kl8eso0Apg069TUSxqVa7G2KZSGEIzKL5NOQA==}
+  /@sirpho/components@1.1.2(@ant-design/icons-vue@7.0.1)(@vueuse/core@10.11.1)(ant-design-vue@4.2.6)(await-to-js@3.0.0)(lodash-es@4.17.21)(vue@3.5.13)(vxe-table@4.5.21):
+    resolution: {integrity: sha512-K5VodatKaIGdwH2CDL9g+NZ3bmOekn0hsd3mg+olLumqos0W6Ar2oOdOi0otvgiSeVGy0+7gdGLuIWnfopDm2w==}
     peerDependencies:
       '@ant-design/icons-vue': '>=6.1.0'
       '@vueuse/core': '>=8.9.0'
-      ant-design-vue: '>=3.2.0'
+      ant-design-vue: '>=4.2.0'
       await-to-js: '>=3.0.0'
       lodash-es: '>=4.17.0'
       vue: '>=3.2.25'
