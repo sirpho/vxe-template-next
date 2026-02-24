@@ -315,7 +315,14 @@
     const res = await list(formState).finally(() => {
       tableLoading.value = false;
     });
-    tableList.value = res.data || [];
+    tableList.value = (res.data || []).map((item) => ({
+      ...item,
+      fileList:
+        item.files?.split(',').map((url: string) => ({
+          url: url,
+          name: url,
+        })) || [],
+    }));
     totalDuration.value = divide(adds(...tableList.value.map((item) => item.duration)), 60).toFixed(
       2,
     );
