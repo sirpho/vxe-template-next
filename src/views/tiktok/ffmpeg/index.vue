@@ -20,13 +20,66 @@
         <div class="btn-row">
           <Input v-model:value="dropBeforeTime" placeholder="格式：00:00:00" style="width: 140px" />
           <Button type="primary" @click="handleDrop">去掉开头部分</Button>
+
+          <div class="up-down-wrapper">
+            <div class="up-down-inner inner1">
+              <div class="up-down-cell">
+                <column-height-outlined
+                  @wheel="(event) => handleWheelEvent('dropBeforeTime', event, 0)"
+                />
+              </div>
+              <div class="up-down-cell">
+                <column-height-outlined
+                  @wheel="(event) => handleWheelEvent('dropBeforeTime', event, 1)"
+                />
+              </div>
+              <div class="up-down-cell">
+                <column-height-outlined
+                  @wheel="(event) => handleWheelEvent('dropBeforeTime', event, 2)"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         <Divider>截取中间一部分（精确截取时间段）</Divider>
         <div class="btn-row">
-          <Input v-model:value="startTime" placeholder="开始时间：00:00:49" style="width: 140px" />
-          <Input v-model:value="endTime" placeholder="结束时间：00:02:00" style="width: 140px" />
+          <Input v-model:value="startTime" placeholder="开始时间：00:00:00" style="width: 140px" />
+          <Input v-model:value="endTime" placeholder="结束时间：00:00:00" style="width: 140px" />
           <Button type="primary" @click="handleCapture">截取中间一部分</Button>
+
+          <div class="up-down-wrapper">
+            <div class="up-down-inner inner2">
+              <div class="up-down-cell">
+                <column-height-outlined
+                  @wheel="(event) => handleWheelEvent('startTime', event, 0)"
+                />
+              </div>
+              <div class="up-down-cell">
+                <column-height-outlined
+                  @wheel="(event) => handleWheelEvent('startTime', event, 1)"
+                />
+              </div>
+              <div class="up-down-cell">
+                <column-height-outlined
+                  @wheel="(event) => handleWheelEvent('startTime', event, 2)"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="up-down-wrapper">
+            <div class="up-down-inner inner3">
+              <div class="up-down-cell">
+                <column-height-outlined @wheel="(event) => handleWheelEvent('endTime', event, 0)" />
+              </div>
+              <div class="up-down-cell">
+                <column-height-outlined @wheel="(event) => handleWheelEvent('endTime', event, 1)" />
+              </div>
+              <div class="up-down-cell">
+                <column-height-outlined @wheel="(event) => handleWheelEvent('endTime', event, 2)" />
+              </div>
+            </div>
+          </div>
         </div>
 
         <Divider>裁剪视频比例</Divider>
@@ -58,6 +111,7 @@
           <Button @click="handleMetadata">删除元数据</Button>
           <Button type="primary" @click="handleNvidia">重新编码 英伟达</Button>
           <Button type="primary" @click="handleAmd">重新编码 AMD</Button>
+          <Button type="primary" @click="handleTranspose">旋转90度</Button>
         </div>
 
         <Divider>
@@ -83,11 +137,12 @@
   import dayjs from 'dayjs';
   import hljs from 'highlight.js/lib/core';
   import { copyText } from '@/utils/copyTextToClipboard';
+  import { ColumnHeightOutlined } from '@ant-design/icons-vue';
 
   // 时间参数
   const dropBeforeTime = ref('00:00:00');
-  const startTime = ref('00:00:49');
-  const endTime = ref('00:02:00');
+  const startTime = ref('00:00:00');
+  const endTime = ref('00:00:00');
   // 总序号
   const totalIndex = ref<number>(1);
   // 裁剪比例参数
@@ -103,6 +158,7 @@
    * 清空文件列表
    */
   const handeClear = () => {
+    copyText('', null);
     fileList.value = [];
     if (ffmpegCode.value) {
       ffmpegCode.value.textContent = '';
@@ -131,13 +187,15 @@
    * 获取文件后缀名
    */
   const getSuffix = (fileName: string) => {
-    return fileName?.split('.').pop() || 'mp4'; // 默认MP4格式
+    const suffix = fileName?.split('.').pop() || 'mp4'; // 默认MP4格式
+    return suffix.toLowerCase();
   };
 
   /**
    * 去掉开头部分（从指定时间截取到结尾）
    */
   const handleDrop = () => {
+    copyText('', null);
     if (fileList.value.length === 0) {
       message.warning('请先选择视频文件');
       return;
@@ -159,6 +217,7 @@
    * 截取中间部分（指定开始和结束时间）
    */
   const handleCapture = () => {
+    copyText('', null);
     if (fileList.value.length === 0) {
       message.warning('请先选择视频文件');
       return;
@@ -179,6 +238,7 @@
    * 删除视频元数据
    */
   const handleMetadata = () => {
+    copyText('', null);
     if (fileList.value.length === 0) {
       message.warning('请先选择视频文件');
       return;
@@ -199,6 +259,7 @@
    * 英伟达GPU重新编码（H.264）
    */
   const handleNvidia = () => {
+    copyText('', null);
     if (fileList.value.length === 0) {
       message.warning('请先选择视频文件');
       return;
@@ -219,6 +280,7 @@
    * AMD GPU重新编码（H.264）
    */
   const handleAmd = () => {
+    copyText('', null);
     if (fileList.value.length === 0) {
       message.warning('请先选择视频文件');
       return;
@@ -236,9 +298,31 @@
   };
 
   /**
+   * 旋转90度
+   */
+  const handleTranspose = () => {
+    copyText('', null);
+    if (fileList.value.length === 0) {
+      message.warning('请先选择视频文件');
+      return;
+    }
+    const timestamp = dayjs().format('_HHmm');
+    const result = fileList.value.map(
+      (item) =>
+        `ffmpeg -i "${item.name}" -vf "transpose=1" -c:v libx264 -crf 18 -preset medium -c:a copy "output_transpose${timestamp}_${totalIndex.value++}.${getSuffix(item.name)}"`,
+    );
+    if (ffmpegCode.value) {
+      ffmpegCode.value.textContent = result.join('\n');
+      scriptList.value = [...result];
+      hljs.highlightElement(ffmpegCode.value);
+    }
+  };
+
+  /**
    * 保留视频左侧指定比例部分
    */
   const handleLeft = () => {
+    copyText('', null);
     if (fileList.value.length === 0) {
       message.warning('请先选择视频文件');
       return;
@@ -263,6 +347,7 @@
    * 保留视频右侧指定比例部分
    */
   const handleRight = () => {
+    copyText('', null);
     if (fileList.value.length === 0) {
       message.warning('请先选择视频文件');
       return;
@@ -332,6 +417,70 @@ pause > nul`;
   const handleCopy = () => {
     copyText(scriptList.value.join(' && '));
   };
+
+  const handleWheelEvent = (
+    arg: 'dropBeforeTime' | 'startTime' | 'endTime',
+    event: WheelEvent,
+    index: number,
+  ) => {
+    event.preventDefault();
+    // 获取滚动量
+    const deltaY = event.deltaY;
+
+    if (deltaY > 0) {
+      handleUpDown(arg, 'down', index);
+    } else {
+      handleUpDown(arg, 'up', index);
+    }
+  };
+
+  /**
+   * 调整时间
+   */
+  const handleUpDown = (
+    arg: 'dropBeforeTime' | 'startTime' | 'endTime',
+    mode: 'up' | 'down',
+    index: number,
+  ) => {
+    let time;
+    switch (arg) {
+      case 'dropBeforeTime':
+        time = dropBeforeTime.value;
+        break;
+      case 'startTime':
+        time = startTime.value;
+        break;
+      case 'endTime':
+        time = endTime.value;
+        break;
+    }
+    const array = time.split(':');
+    const timeList = [parseInt(array[0]) || 0, parseInt(array[1]) || 0, parseInt(array[2]) || 0];
+    if (mode === 'up') {
+      timeList[index] = (timeList[index] + 1) % 60;
+    }
+    if (mode === 'down') {
+      timeList[index] = timeList[index] > 1 ? timeList[index] - 1 : 59;
+    }
+    time =
+      timeList[0].toString().padStart(2, '0') +
+      ':' +
+      timeList[1].toString().padStart(2, '0') +
+      ':' +
+      timeList[2].toString().padStart(2, '0');
+
+    switch (arg) {
+      case 'dropBeforeTime':
+        dropBeforeTime.value = time;
+        break;
+      case 'startTime':
+        startTime.value = time;
+        break;
+      case 'endTime':
+        endTime.value = time;
+        break;
+    }
+  };
 </script>
 <script lang="ts">
   export default {
@@ -388,6 +537,7 @@ pause > nul`;
 
   .btn-row {
     display: flex;
+    position: relative;
     align-items: center;
     justify-content: center;
     gap: 8px;
@@ -396,5 +546,49 @@ pause > nul`;
     :deep(.ant-input-number) {
       max-width: 140px !important;
     }
+  }
+
+  .up-down-row {
+    display: flex;
+    position: relative;
+    z-index: 1;
+    top: -26px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .up-down-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+
+    .up-down-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+  }
+
+  .up-down-inner {
+    display: flex;
+    position: relative;
+    align-items: center;
+    width: 60px;
+    gap: 5px;
+  }
+
+  .inner1 {
+    right: 91px;
+  }
+
+  .inner2 {
+    right: 171px;
+  }
+
+  .inner3 {
+    right: 24px;
   }
 </style>
