@@ -140,11 +140,15 @@ export const repeatColumns = [
     field: 'md5',
     title: 'md5',
     sortable: true,
+    filters: [{}],
+    filterRender: { name: 'FilterExtend' },
   },
   {
     field: 'author',
     title: '作者',
     sortable: true,
+    filters: [{}],
+    filterRender: { name: 'FilterExtend' },
     width: 120,
   },
   {
