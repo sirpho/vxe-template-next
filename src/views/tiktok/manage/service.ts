@@ -1,4 +1,6 @@
 import { defHttp } from '@/utils/http/axios';
+import { formatDuration } from '@sirpho/utils';
+import { formatSize } from '@/utils/formatter';
 
 enum Api {
   list = '/api/tiktok/list',
@@ -175,3 +177,46 @@ export const fieldComboboxOption = {
   option: { label: 'title', value: 'field' },
   style: { width: '200px' },
 } as any;
+
+/**
+ * 作者下拉配置
+ */
+export const authorOptions: any = {
+  variant: 'TiktokAuthor',
+  gridProps: {
+    columns: [
+      { field: 'author', title: '作者' },
+      { field: 'duration', title: '播放时长' },
+      { field: 'size', title: '存储容量' },
+      { field: 'videoCount', title: '视频数量' },
+    ],
+  },
+  autoFill: false,
+  requestTrigger: 'onMount',
+  option: { label: 'author', value: 'author' },
+  transformData: (list) => {
+    return list.map((item) => ({
+      ...item,
+      duration: formatDuration(item.totalDuration || 0),
+      size: formatSize(item.totalSize || 0),
+    }));
+  },
+};
+
+/**
+ * 标签下拉配置
+ */
+export const classOptions: any = {
+  variant: 'TiktokClass',
+  gridProps: {
+    columns: [
+      { field: 'id', title: '代码', visible: false },
+      { field: 'name', title: '标签' },
+    ],
+  },
+  autoFill: false,
+  requestTrigger: 'onFocus',
+  mode: 'multiple',
+  option: { label: 'name', value: 'id' },
+  style: 'width: 100%',
+};

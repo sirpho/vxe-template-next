@@ -34,3 +34,19 @@ export const update = (data: any) => {
 export const remove = (id: string) => {
   return defHttp.get({ url: `${Api.remove}${id}` });
 };
+
+/**
+ * 物品下拉配置
+ */
+export const utensilOptions: any = {
+  variant: 'TagUtensilCombox',
+  gridProps: {
+    columns: [
+      { field: 'name', title: '名称' },
+      { field: 'qty', title: '数量' },
+    ],
+  },
+  autoFill: false,
+  action: 'onMount',
+  option: { label: 'name', value: 'name' },
+};

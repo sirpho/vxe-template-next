@@ -3,13 +3,14 @@
     <QueryFilterContainer>
       <Form name="form" :model="formState" layout="inline" @finish="() => handleQuery()">
         <FormItem label="作者" name="author">
-          <TiktokAuthorCombox v-model:value="formState.author" />
+          <ComboBox v-bind="{ ...authorOptions }" v-model:value="formState.author" />
         </FormItem>
         <FormItem label="文件名" name="name">
           <Input size="small" v-model:value="formState.name" />
         </FormItem>
         <FormItem label="标签" name="classIdList">
-          <TiktokClassCombox
+          <ComboBox
+            v-bind="{ ...classOptions }"
             :data="classList"
             v-model:value="formState.classIdList"
             style="width: 260px"
@@ -74,7 +75,8 @@
         </template>
         <!-- 标签 -->
         <template #classIdList="{ row }">
-          <TiktokClassCombox
+          <ComboBox
+            v-bind="{ ...classOptions }"
             :data="classList"
             v-model:value="row.classIdList"
             @change="(option: any) => changeClass(row, option)"
@@ -94,6 +96,8 @@
   import { Form, FormItem, Space, Button, Input, Tag, message } from 'ant-design-vue';
   import { VxeTableInstance } from 'vxe-table';
   import {
+    authorOptions,
+    classOptions,
     batch,
     defaultColumns,
     optionalColumns,
@@ -102,7 +106,6 @@
     list,
     potPlayer,
   } from './service';
-  import { TiktokClassCombox, TiktokAuthorCombox } from '@/features/components/Profession';
   import { formatBitrate, formatSize } from '@/utils/formatter';
   import { add, adds, arrayFieldRepeat, formatDuration, thousandsSeparator } from '@sirpho/utils';
   import { TIKTOK_TABLE_COLUMNS_KEY } from '@/enums/cacheEnum';

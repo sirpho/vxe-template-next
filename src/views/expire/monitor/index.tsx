@@ -1,4 +1,4 @@
-import { remove, list } from './service';
+import { remove, list, utensilOptions } from './service';
 import OperationModal from './components/OperationModal';
 import { Modal, Empty, Button, InputSearch, Row, Col, Card, CardMeta } from 'ant-design-vue';
 import dayjs from 'dayjs';
@@ -6,13 +6,12 @@ import './index.less';
 import { ExclamationCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { Loading } from '@/components/Loading';
 import { defineComponent, onMounted, reactive, ref } from 'vue';
-import { PageContainer, VxeContainer } from '@sirpho/components';
-import { TagUtensilCombox } from '@/features/components/Profession';
+import { ComboBox, PageContainer, VxeContainer } from '@sirpho/components';
 
 const { confirm } = Modal;
 
 export default defineComponent({
-  components: { OperationModal, Loading, Empty, DeleteOutlined, EditOutlined, TagUtensilCombox },
+  components: { OperationModal, Loading, Empty, DeleteOutlined, EditOutlined },
   setup() {
     const operationRef = ref();
 
@@ -111,15 +110,17 @@ export default defineComponent({
                 <Button class="buoy" type={'primary'} onClick={() => handleAdd()}>
                   录入
                 </Button>
-                <TagUtensilCombox
+                <ComboBox
                   class={'search-select'}
+                  {...utensilOptions}
                   inputProps={{ size: 'default', placeholder: '标签' } as any}
                   v-model:value={formState.tag}
+                  variant="TagUtensilCombox"
                   onChange={() => getTableList()}
                 />
-
-                <TagUtensilCombox
+                <ComboBox
                   class={'search-select'}
+                  {...utensilOptions}
                   inputProps={{ size: 'default', placeholder: '分类' } as any}
                   v-model:value={formState.type}
                   variant="TypeUtensilCombox"
