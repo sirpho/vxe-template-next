@@ -83,34 +83,14 @@
         </template>
         <!-- 附件 -->
         <template #files="{ row }">
-          <div class="file-name-wrapper">
-            <FileUploader
-              :fileList="row.fileList"
-              :showUploadList="false"
-              @change="(files: any[]) => handleChangeFile(row, files)"
-            />
-            <Tag
-              v-for="(item, index) in row.fileList"
-              :key="item.url"
-              closable
-              color="default"
-              @click="() => handlePreview(item.url)"
-              @close="() => handleRemoveFile(row, index)"
-            >
-              {{ filterFileName(item.url) }}
-            </Tag>
-          </div>
+          <FilePopover
+            v-model:file-list="row.fileList"
+            @handle-change-file="(fileList) => handleChangeFile(row, fileList)"
+            @handle-remove-file="(index) => handleRemoveFile(row, index)"
+          />
         </template>
       </vxe-grid>
     </VxeContainer>
-    <Image
-      style="display: none"
-      :preview="{
-        visible: previewVisible,
-        onVisibleChange: (value) => (previewVisible = value),
-      }"
-      :src="previewSrc"
-    />
   </PageContainer>
 </template>
 <script lang="ts" setup>
@@ -126,16 +106,14 @@
     Select,
     InputNumber,
     DatePicker,
-    Image,
-    Tag,
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
   import dayjs from 'dayjs';
   import { useDict } from '@/hooks/web/useDict';
   import { isNumber } from '@/utils/is';
-  import FileUploader from '@/components/FileUploader';
   import { PageContainer, QueryFilterContainer, VxeContainer } from '@sirpho/components';
+  import FilePopover from '@/components/FilePopover/index.vue';
 
   interface FormState {
     date: string;
@@ -148,9 +126,6 @@
     type: '', // 类型
     location: '', // 地点
   });
-
-  const previewSrc = ref('');
-  const previewVisible = ref(false);
 
   const xTable = ref({} as VxeTableInstance);
   const tableList = ref<any[]>([]);
@@ -273,7 +248,7 @@
       fileList:
         item.files?.split(',').map((url: string) => ({
           url: url,
-          name: url,
+          name: filterFileName(url),
         })) || [],
     }));
   };
@@ -352,31 +327,9 @@
   const filterFileName = (url: string) => {
     return url?.split('/')?.pop();
   };
-
-  /**
-   * 预览
-   * @param record
-   */
-  const handlePreview = (record) => {
-    console.log(record);
-    previewSrc.value = record;
-    previewVisible.value = true;
-  };
 </script>
 <script lang="ts">
   export default {
     name: 'DelicacyList',
   };
 </script>
-<style lang="less" scoped>
-  .file-name-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    width: 100%;
-  }
-
-  ::v-deep(.ant-image) {
-    display: none;
-  }
-</style>

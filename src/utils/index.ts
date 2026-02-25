@@ -172,3 +172,22 @@ const circleNumberList = [
 export const getCircleNumber = (number: number) => {
   return circleNumberList[number] || String(number);
 };
+
+/**
+ * 文件url处理特殊字符
+ */
+export const encodeFileUrl = (url: string) => {
+  if (!url) {
+    return undefined;
+  }
+  const array = decodeURIComponent(url).split('/');
+  const text = array.pop();
+  return [...array, encodeURIComponent(text!)].join('/');
+};
+
+/**
+ * 展示文件名字
+ */
+export const filterFileName = (url: string) => {
+  return url ? decodeURIComponent(url)?.split('/')?.pop() : '';
+};

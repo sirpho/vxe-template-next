@@ -94,34 +94,14 @@
         </template>
         <!-- 附件 -->
         <template #files="{ row }">
-          <div class="file-name-wrapper">
-            <FileUploader
-              :fileList="row.fileList"
-              :showUploadList="false"
-              @change="(files: any[]) => handleChangeFile(row, files)"
-            />
-            <Tag
-              v-for="(item, index) in row.fileList"
-              :key="item.url"
-              closable
-              color="default"
-              @click="() => handlePreview(item.url)"
-              @close="() => handleRemoveFile(row, index)"
-            >
-              {{ filterFileName(item.url) }}
-            </Tag>
-          </div>
+          <FilePopover
+            v-model:file-list="row.fileList"
+            @handle-change-file="(fileList) => handleChangeFile(row, fileList)"
+            @handle-remove-file="(index) => handleRemoveFile(row, index)"
+          />
         </template>
       </vxe-grid>
     </VxeContainer>
-    <Image
-      style="display: none"
-      :preview="{
-        visible: previewVisible,
-        onVisibleChange: (value) => (previewVisible = value),
-      }"
-      :src="previewSrc"
-    />
   </PageContainer>
 </template>
 <script lang="ts" setup>
@@ -136,15 +116,14 @@
     Input,
     Select,
     InputNumber,
-    Tag,
-    Image,
   } from 'ant-design-vue';
   import { VxeTableInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
   import { batch, list } from './service';
   import { useDict } from '@/hooks/web/useDict';
   import { adds, thousandsSeparator, divide } from '@sirpho/utils';
   import { PageContainer, QueryFilterContainer, VxeContainer } from '@sirpho/components';
-  import FileUploader from '@/components/FileUploader';
+  import { filterFileName } from '@/utils';
+  import FilePopover from '@/components/FilePopover/index.vue';
 
   interface FormState {
     name: string;
@@ -297,6 +276,7 @@
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
         minWidth: 200,
+        showOverflow: false,
       },
     ],
     showHeaderOverflow: 'tooltip',
@@ -315,12 +295,12 @@
     const res = await list(formState).finally(() => {
       tableLoading.value = false;
     });
-    tableList.value = (res.data || []).map((item) => ({
+    tableList.value = (res.data || []).map((item: any) => ({
       ...item,
       fileList:
         item.files?.split(',').map((url: string) => ({
           url: url,
-          name: url,
+          name: filterFileName(url),
         })) || [],
     }));
     totalDuration.value = divide(adds(...tableList.value.map((item) => item.duration)), 60).toFixed(
@@ -393,25 +373,7 @@
    */
   const handleRemoveFile = (row: any, index: number) => {
     row.fileList.splice(index, 1);
-    row.files = row.fileList.map((item) => item.url)?.join(',');
-  };
-
-  /**
-   * 展示文件名字
-   */
-  const filterFileName = (url: string) => {
-    return url?.split('/')?.pop();
-  };
-  const previewSrc = ref('');
-  const previewVisible = ref(false);
-  /**
-   * 预览
-   * @param record
-   */
-  const handlePreview = (record) => {
-    console.log(record);
-    previewSrc.value = record;
-    previewVisible.value = true;
+    row.files = row.fileList.map((item: any) => item.url)?.join(',');
   };
 </script>
 <script lang="ts">
@@ -419,15 +381,3 @@
     name: 'FilmList',
   };
 </script>
-<style lang="less" scoped>
-  .file-name-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    width: 100%;
-  }
-
-  ::v-deep(.ant-image) {
-    display: none;
-  }
-</style>

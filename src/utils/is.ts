@@ -70,3 +70,7 @@ export function isPascalCase(str: string): boolean {
   const regex = /^[A-Z][A-Za-z]*$/;
   return regex.test(str);
 }
+
+export function isImgTypeByName(name: string) {
+  return /\.(jpg|jpeg|png|gif)$/i.test(name);
+}
