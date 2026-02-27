@@ -264,6 +264,7 @@
     const record = {
       date: dayjs().format('YYYY-MM-DD'),
       type: typeList.value?.[0]?.value,
+      brand: typeList.value?.[0]?.value === '油费' ? '金盾' : undefined,
     };
     const { row: newRow } = await xTable.value.insertAt(record, null);
     await xTable.value.setEditRow(newRow);
@@ -316,9 +317,13 @@
       case '车险':
         return '#cd201f';
       case '保养':
-        return '#3b5999';
-      default:
         return '#FF9500';
+      case '油费':
+        return '#38bdf8';
+      case '维修':
+        return '#fc5531';
+      default:
+        return '#f0ad4e';
     }
   };
 </script>
