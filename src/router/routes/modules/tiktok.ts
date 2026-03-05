@@ -1,7 +1,7 @@
 import type { AppRouteModule } from '@/router/types';
 import { LAYOUT } from '@/router/constant';
 import { t } from '@/hooks/web/useI18n';
-import { envVersion } from '@/features/utils';
+// import { envVersion } from '@/features/utils';
 
 export enum Attrs {
   TIKTOK = 110, //权限
@@ -19,7 +19,8 @@ const route: AppRouteModule = {
     icon: 'ri:tiktok-fill',
     title: t('routes.tiktok.tiktok'),
     orderNo: 30,
-    roles: envVersion === 'development' ? undefined : [Attrs.TIKTOK],
+    // roles: envVersion === 'development' ? undefined : [Attrs.TIKTOK],
+    roles: [Attrs.TIKTOK],
   },
   children: [
     /**

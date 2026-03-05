@@ -56,6 +56,13 @@
         },
         component: 'InputNumber',
         required: true,
+        componentProps: {
+          onKeyup: (event: KeyboardEvent) => {
+            if (event.key === 'Enter') {
+              handleAuthorize();
+            }
+          },
+        } as any,
       },
     ],
   });

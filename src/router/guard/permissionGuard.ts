@@ -8,6 +8,7 @@ import { useUserStoreWithOut } from '@/store/modules/user';
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic';
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
+const SPECIAL_PAGE = PageEnum.SPECIAL_PAGE;
 
 const whitePathList: PageEnum[] = [LOGIN_PATH];
 
@@ -20,6 +21,7 @@ export function createPermissionGuard(router: Router) {
     // Whitelist can be directly entered
     if (whitePathList.includes(to.path as PageEnum)) {
       if (to.path === LOGIN_PATH && token) {
+        // 登录是否已过期
         const isSessionTimeout = userStore.getSessionTimeout;
         try {
           await userStore.afterLoginAction();
@@ -63,6 +65,15 @@ export function createPermissionGuard(router: Router) {
       } catch (err) {
         next();
         return;
+      }
+    }
+
+    // 特殊授权
+    if (to.path === SPECIAL_PAGE) {
+      if (to.query?.authorizeKey) {
+        const authorizeKey = to.query.authorizeKey as string;
+        const roleList = userStore.getRoleList || [];
+        userStore.setRoleList([...roleList, parseInt(authorizeKey, 10)]);
       }
     }
 

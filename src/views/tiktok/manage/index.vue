@@ -141,7 +141,7 @@
     showFooter: true,
     footerMethod: ({ columns, data }) => {
       return [
-        columns.map((column, columnIndex) => {
+        columns.map((column: any, columnIndex: number) => {
           if (columnIndex === 1) {
             return '合计';
           }
@@ -154,15 +154,13 @@
             return thousandsSeparator(data.length);
           }
           // 文件大小
-          if (['size'].includes(column.field)) {
-            const result = adds(...data.map((item) => item[column.field] || 0));
-            if (column.field === 'size') {
-              return formatSize(result || 0);
-            }
+          if (['readableSize'].includes(column.field)) {
+            const result = adds(...data.map((item: any) => item.size || 0));
+            return formatSize(result || 0);
           }
           // 时长
           if (['duration'].includes(column.field)) {
-            const result = adds(...data.map((item) => item[column.field] || 0));
+            const result = adds(...data.map((item: any) => item[column.field] || 0));
             const hour = Math.floor(result / 3600);
             const minute = Math.floor((result % 3600) / 60);
             const second = result % 60;

@@ -69,7 +69,10 @@
   function handleAuthorize() {
     openModal(true);
     nextTick(() => {
-      document.querySelector('.ant-modal .ant-input-number input')?.focus();
+      const input: HTMLInputElement = document.querySelector('.ant-modal .ant-input-number input');
+      if (input) {
+        input.focus();
+      }
     });
   }
 
