@@ -103,6 +103,42 @@
         <template #author="{ row }">
           <Input v-model:value="row.author" size="small" />
         </template>
+        <!-- 身高 -->
+        <template #height="{ row }">
+          <InputNumber
+            v-model:value="row.height"
+            :precision="0"
+            size="small"
+            :controls="false"
+            addon-after="cm"
+          />
+        </template>
+        <!-- 体重 -->
+        <template #weight="{ row }">
+          <InputNumber
+            v-model:value="row.weight"
+            :precision="0"
+            size="small"
+            :controls="false"
+            addon-after="斤"
+          />
+        </template>
+        <!-- 罩杯 -->
+        <template #cup="{ row }">
+          <Input v-model:value="row.cup" size="small" />
+        </template>
+        <!-- 年岁 -->
+        <template #year="{ row }">
+          <Input v-model:value="row.year" size="small" />
+        </template>
+        <!-- 职业 -->
+        <template #occupation="{ row }">
+          <Input v-model:value="row.occupation" size="small" />
+        </template>
+        <!-- 别名 -->
+        <template #alias="{ row }">
+          <Input v-model:value="row.alias" size="small" />
+        </template>
       </vxe-grid>
     </VxeContainer>
   </PageContainer>
@@ -161,7 +197,7 @@
     editRules: validRules.value,
     columns: [
       { type: 'checkbox', width: 50, fixed: 'left', align: 'center' },
-      { type: 'seq', title: '序号', width: 100, align: 'center' },
+      { type: 'seq', title: '序号', width: 60, align: 'center' },
       {
         field: 'identification',
         title: '唯一标识',
@@ -170,6 +206,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 130,
       },
       {
         field: 'author',
@@ -179,33 +216,37 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        minWidth: 130,
       },
       {
         field: 'videoCount',
-        title: '视频数量',
+        title: '视频',
         editRender: { autofocus: '.ant-input-number-input' },
         slots: { edit: 'videoCount' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 100,
       },
       {
         field: 'totalSize',
-        title: '存储容量',
+        title: '容量',
         editRender: { autofocus: '.ant-input-number-input' },
         slots: { edit: 'totalSizeEdit', default: 'totalSize' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 100,
       },
       {
         field: 'totalDuration',
-        title: '播放时长',
+        title: '时长',
         editRender: { autofocus: '.ant-input-number-input' },
         slots: { edit: 'totalDurationEdit', default: 'totalDuration' },
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 100,
       },
       {
         field: 'bitrate',
@@ -215,6 +256,7 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        width: 120,
       },
       {
         field: 'tags',
@@ -224,6 +266,8 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        cellType: 'string',
+        minWidth: 180,
       },
       {
         field: 'memo',
@@ -233,6 +277,80 @@
         sortable: true,
         filters: [{}],
         filterRender: { name: 'FilterExtend' },
+        cellType: 'string',
+        minWidth: 180,
+      },
+      {
+        field: 'year',
+        title: '年岁',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'year' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        cellType: 'string',
+        width: 120,
+      },
+      {
+        field: 'height',
+        title: '身高',
+        editRender: { autofocus: '.ant-input-number-input' },
+        slots: { edit: 'height' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        cellType: 'number',
+        width: 120,
+        formatter: ({ row }) => {
+          return row.height ? `${row.height}cm` : '';
+        },
+      },
+      {
+        field: 'weight',
+        title: '体重',
+        editRender: { autofocus: '.ant-input-number-input' },
+        slots: { edit: 'weight' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        cellType: 'number',
+        width: 120,
+        formatter: ({ row }) => {
+          return row.weight ? `${row.weight}斤` : '';
+        },
+      },
+      {
+        field: 'cup',
+        title: '罩杯',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'cup' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        cellType: 'string',
+        width: 120,
+      },
+      {
+        field: 'occupation',
+        title: '职业',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'occupation' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        cellType: 'string',
+        width: 120,
+      },
+      {
+        field: 'alias',
+        title: '别名',
+        editRender: { autofocus: '.ant-input' },
+        slots: { edit: 'alias' },
+        sortable: true,
+        filters: [{}],
+        filterRender: { name: 'FilterExtend' },
+        cellType: 'string',
+        width: 120,
       },
     ],
     showHeaderOverflow: 'tooltip',

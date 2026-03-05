@@ -65,10 +65,6 @@
         <template #bitrate="{ row }">
           {{ formatBitrate(row.bitrate || 0) }}
         </template>
-        <!-- 大小 格式化显示 -->
-        <template #size="{ row }">
-          {{ formatSize(row.size || 0) }}
-        </template>
         <!-- 时长 格式化显示 -->
         <template #duration="{ row }">
           {{ formatDuration(row.duration || 0) }}

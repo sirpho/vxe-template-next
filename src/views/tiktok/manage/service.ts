@@ -70,12 +70,12 @@ export const defaultColumns = [
     width: 120,
   },
   {
-    field: 'size',
+    field: 'readableSize',
     title: '存储容量',
     sortable: true,
+    sortBy: 'size',
     filters: [{}],
     filterRender: { name: 'FilterExtend' },
-    slots: { default: 'size' },
     width: 120,
   },
   {
